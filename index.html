@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dhruva Uppaluri — Engineering Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="title">Your Name</div>
+      <div class="subtitle">Electrical Engineering • Hardware • Circuits</div>
+    </div>
+    <nav class="quicklinks">
+      <a href="resume.html">Resume</a>
+      <a href="projects.html">Projects</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <div class="hint">Click a component to navigate.</div>
+
+    <!-- CIRCUIT SVG -->
+    <svg class="circuit" viewBox="0 0 1200 600" role="img" aria-label="Interactive circuit navigation">
+      <!-- traces -->
+      <path class="trace" d="M120 300 H380" />
+      <path class="trace" d="M520 300 H760" />
+      <path class="trace" d="M900 300 H1080" />
+
+      <!-- VIN node -->
+      <g class="node" id="nav-home" tabindex="0" role="link" aria-label="Home">
+        <circle class="pad" cx="120" cy="300" r="16"></circle>
+        <text class="label" x="120" y="340" text-anchor="middle">VIN</text>
+        <text class="ref" x="120" y="285" text-anchor="middle">TP0</text>
+      </g>
+
+      <!-- U1 (About) -->
+      <g class="node component" id="nav-about" tabindex="0" role="link" aria-label="About">
+        <rect class="chip" x="380" y="240" width="140" height="120" rx="12"></rect>
+        <text class="ref" x="450" y="235" text-anchor="middle">U1</text>
+        <text class="label" x="450" y="310" text-anchor="middle">About</text>
+      </g>
+
+      <!-- R1 (Projects) -->
+      <g class="node component" id="nav-projects" tabindex="0" role="link" aria-label="Projects">
+        <rect class="res" x="760" y="280" width="140" height="40" rx="8"></rect>
+        <text class="ref" x="830" y="270" text-anchor="middle">R1</text>
+        <text class="label" x="830" y="350" text-anchor="middle">Projects</text>
+      </g>
+
+      <!-- TP1 (Resume) -->
+      <g class="node" id="nav-resume" tabindex="0" role="link" aria-label="Resume">
+        <circle class="pad" cx="1080" cy="300" r="16"></circle>
+        <text class="ref" x="1080" y="285" text-anchor="middle">TP1</text>
+        <text class="label" x="1080" y="340" text-anchor="middle">Resume</text>
+      </g>
+    </svg>
+
+    <div class="tooltip" id="tooltip" aria-hidden="true"></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
