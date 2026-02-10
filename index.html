@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Electrical Engineering Portfolio — Circuits, Embedded Systems, PCB Design" />
+  <title>Electrical Engineering Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="#" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="hero-tag">Electrical Engineer</p>
+      <h1 class="hero-title">
+        <span class="line">Design.</span>
+        <span class="line">Build.</span>
+        <span class="line accent">Ship.</span>
+      </h1>
+      <p class="hero-desc">
+        Hardware, embedded systems, and PCB design — from schematic to deployment.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      </div>
+    </section>
+
+    <section class="circuit-schematic" aria-label="Portfolio navigation">
+      <svg class="schematic-svg" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <style>.schematic-wire{fill:none;stroke:currentColor;stroke-width:1.5;}.schematic-symbol{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}</style>
+        </defs>
+        <!-- VCC rail -->
+        <path class="schematic-wire" d="M 20 20 H 380" />
+        <!-- GND rail -->
+        <path class="schematic-wire" d="M 20 240 H 380" />
+        <path class="schematic-wire" d="M 80 240 v 12 M 75 252 h 10" />
+        <path class="schematic-wire" d="M 160 240 v 12 M 155 252 h 10" />
+        <path class="schematic-wire" d="M 240 240 v 12 M 235 252 h 10" />
+        <path class="schematic-wire" d="M 320 240 v 12 M 315 252 h 10" />
+        <!-- About: resistor -->
+        <a href="#about" class="circuit-link" aria-label="Go to About section">
+          <g class="circuit-component" data-section="about">
+            <path class="schematic-wire" d="M 80 20 V 55" />
+            <path class="schematic-symbol symbol" d="M 80 55 L 92 65 L 68 75 L 92 85 L 68 95 L 80 105" />
+            <path class="schematic-wire" d="M 80 105 V 240" />
+            <text x="80" y="195" text-anchor="middle" class="schematic-label">About</text>
+          </g>
+        </a>
+        <!-- Skills: capacitor -->
+        <a href="#skills" class="circuit-link" aria-label="Go to Skills section">
+          <g class="circuit-component" data-section="skills">
+            <path class="schematic-wire" d="M 160 20 V 52 M 160 88 V 240" />
+            <path class="schematic-symbol symbol" d="M 145 52 H 175 M 145 88 H 175" />
+            <text x="160" y="195" text-anchor="middle" class="schematic-label">Skills</text>
+          </g>
+        </a>
+        <!-- Projects: IC -->
+        <a href="#projects" class="circuit-link" aria-label="Go to Projects section">
+          <g class="circuit-component" data-section="projects">
+            <path class="schematic-wire" d="M 240 20 V 48" />
+            <rect class="schematic-symbol symbol" x="218" y="48" width="44" height="72" rx="2" />
+            <circle class="schematic-symbol symbol" cx="218" cy="62" r="2.5" fill="currentColor" />
+            <circle class="schematic-symbol symbol" cx="218" cy="84" r="2.5" fill="currentColor" />
+            <circle class="schematic-symbol symbol" cx="218" cy="106" r="2.5" fill="currentColor" />
+            <circle class="schematic-symbol symbol" cx="262" cy="62" r="2.5" fill="currentColor" />
+            <circle class="schematic-symbol symbol" cx="262" cy="84" r="2.5" fill="currentColor" />
+            <circle class="schematic-symbol symbol" cx="262" cy="106" r="2.5" fill="currentColor" />
+            <path class="schematic-wire" d="M 240 48 V 48 M 240 120 V 240" />
+            <text x="240" y="195" text-anchor="middle" class="schematic-label">Projects</text>
+          </g>
+        </a>
+        <!-- Contact: connector -->
+        <a href="#contact" class="circuit-link" aria-label="Go to Contact section">
+          <g class="circuit-component" data-section="contact">
+            <path class="schematic-wire" d="M 320 20 V 62" />
+            <circle class="schematic-symbol symbol" cx="308" cy="82" r="6" />
+            <circle class="schematic-symbol symbol" cx="320" cy="82" r="6" />
+            <circle class="schematic-symbol symbol" cx="332" cy="82" r="6" />
+            <path class="schematic-wire" d="M 320 62 V 76 M 320 88 V 240" />
+            <text x="320" y="195" text-anchor="middle" class="schematic-label">Contact</text>
+          </g>
+        </a>
+      </svg>
+    </section>
+
+    <section id="about" class="section">
+      <h2 class="section-title">About</h2>
+      <div class="about-content">
+        <p>
+          I'm an electrical engineer focused on <strong>circuit design</strong>, <strong>embedded systems</strong>,
+          and <strong>hardware-software integration</strong>. I enjoy taking ideas from concept to working prototypes
+          and production-ready designs.
+        </p>
+        <p>
+          Whether it's analog/digital circuits, microcontroller firmware, or PCB layout, I aim for clean,
+          reliable solutions that are well-documented and maintainable.
+        </p>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <h2 class="section-title">Skills & Tools</h2>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <span class="skill-icon">⚡</span>
+          <h3>Circuit Design</h3>
+          <p>Analog & digital design, power electronics, signal conditioning</p>
+        </div>
+        <div class="skill-card">
+          <span class="skill-icon">🔌</span>
+          <h3>Embedded Systems</h3>
+          <p>C/C++, RTOS, bare-metal firmware, drivers</p>
+        </div>
+        <div class="skill-card">
+          <span class="skill-icon">📐</span>
+          <h3>PCB Design</h3>
+          <p>KiCad, Altium, layout, DFM, prototyping</p>
+        </div>
+        <div class="skill-card">
+          <span class="skill-icon">🛠</span>
+          <h3>Tools</h3>
+          <p>Oscilloscopes, multimeters, soldering, debugging</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <h2 class="section-title">Projects</h2>
+      <div class="projects-list">
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2024</span>
+            <span class="project-tags">PCB · Embedded · C</span>
+          </div>
+          <h3 class="project-title">Custom Development Board</h3>
+          <p class="project-desc">
+            STM32-based dev board with power management, USB-C, and expansion headers.
+            Designed in KiCad; firmware in C with FreeRTOS.
+          </p>
+          <a href="#" class="project-link">View details →</a>
+        </article>
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2024</span>
+            <span class="project-tags">Analog · Sensors</span>
+          </div>
+          <h3 class="project-title">Sensor Interface Module</h3>
+          <p class="project-desc">
+            Low-noise analog front-end for strain gauges and thermocouples with 24-bit ADC
+            and SPI interface to host MCU.
+          </p>
+          <a href="#" class="project-link">View details →</a>
+        </article>
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2023</span>
+            <span class="project-tags">Power · PCB</span>
+          </div>
+          <h3 class="project-title">LED Driver Board</h3>
+          <p class="project-desc">
+            Constant-current LED driver with dimming and thermal protection. Designed for
+            industrial lighting applications.
+          </p>
+          <a href="#" class="project-link">View details →</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 class="section-title">Contact</h2>
+      <div class="contact-content">
+        <p>Open to collaboration, internships, and full-time roles in hardware and embedded systems.</p>
+        <div class="contact-links">
+          <a href="mailto:your.email@example.com" class="contact-link">Email</a>
+          <a href="https://github.com/dhruvauppaluri" target="_blank" rel="noopener" class="contact-link">GitHub</a>
+          <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener" class="contact-link">LinkedIn</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — Built for GitHub Pages</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
