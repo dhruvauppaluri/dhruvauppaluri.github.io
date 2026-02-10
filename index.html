@@ -106,13 +106,18 @@
       <h2 class="section-title">About</h2>
       <div class="about-content">
         <p>
-          I'm an electrical engineer focused on <strong>circuit design</strong>, <strong>embedded systems</strong>,
-          and <strong>hardware-software integration</strong>. I enjoy taking ideas from concept to working prototypes
-          and production-ready designs.
+          Electrical Engineering student at <strong>Las Positas College</strong> (transferring to a four-year university) 
+          with hands-on experience building, simulating, and troubleshooting analog circuits. Skilled in circuit analysis 
+          (KVL/KCL, Thevenin/Norton, Ohm's Law) and validation using <strong>LTspice</strong>, breadboarding, and DMM measurements. 
+          I bring clear technical communication and leadership from teaching advanced math and running operations for a 
+          student-led tutoring organization.
         </p>
         <p>
-          Whether it's analog/digital circuits, microcontroller firmware, or PCB layout, I aim for clean,
-          reliable solutions that are well-documented and maintainable.
+          Seeking <strong>Summer 2026</strong> electrical engineering internship opportunities in hardware design, 
+          power systems, semiconductor design, test, or wiring/harness/PCB-adjacent work.
+        </p>
+        <p class="about-education">
+          <strong>Education:</strong> Las Positas College (Livermore, CA) — Dublin High School.
         </p>
       </div>
     </section>
@@ -122,23 +127,23 @@
       <div class="skills-grid">
         <div class="skill-card">
           <span class="skill-icon">⚡</span>
-          <h3>Circuit Design</h3>
-          <p>Analog & digital design, power electronics, signal conditioning</p>
+          <h3>Circuit Design & Analysis</h3>
+          <p>LTspice, breadboarding, DMM, KVL/KCL, Thevenin/Norton, Ohm's Law, schematic interpretation</p>
         </div>
         <div class="skill-card">
           <span class="skill-icon">🔌</span>
-          <h3>Embedded Systems</h3>
-          <p>C/C++, RTOS, bare-metal firmware, drivers</p>
+          <h3>Embedded & Control</h3>
+          <p>Arduino/C++, HIL, signal processing (EMA), control theory, serial telemetry</p>
         </div>
         <div class="skill-card">
           <span class="skill-icon">📐</span>
-          <h3>PCB Design</h3>
-          <p>KiCad, Altium, layout, DFM, prototyping</p>
+          <h3>Verification & Tools</h3>
+          <p>Troubleshooting, root-cause analysis, MATLAB, OrCAD (in progress)</p>
         </div>
         <div class="skill-card">
           <span class="skill-icon">🛠</span>
-          <h3>Tools</h3>
-          <p>Oscilloscopes, multimeters, soldering, debugging</p>
+          <h3>Professional</h3>
+          <p>Technical communication, cross-functional collaboration, leadership</p>
         </div>
       </div>
     </section>
@@ -149,38 +154,26 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2024</span>
-            <span class="project-tags">PCB · Embedded · C</span>
+            <span class="project-tags">HIL · Embedded C++ · Control · Signal Processing</span>
           </div>
-          <h3 class="project-title">Custom Development Board</h3>
+          <h3 class="project-title">1-Axis Attitude Control HIL Test Bench</h3>
           <p class="project-desc">
-            STM32-based dev board with power management, USB-C, and expansion headers.
-            Designed in KiCad; firmware in C with FreeRTOS.
+            Hardware-in-the-Loop test bench for validating steer-by-wire latency and sensor fusion (ESP-style subsystem for 1/10th scale RC). Closed-loop: joystick → Arduino Uno → SG90 servo with MPU6050 MEMS gyro feedback. Implemented EMA filter and bias calibration in firmware; characterized actuator latency (&lt;50ms) via 115.2kbps serial telemetry.
           </p>
           <a href="#" class="project-link">View details →</a>
         </article>
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2024</span>
-            <span class="project-tags">Analog · Sensors</span>
+            <span class="project-tags">Circuit Analysis · LTspice · DMM</span>
           </div>
-          <h3 class="project-title">Sensor Interface Module</h3>
+          <h3 class="project-title">Introduction to Circuit Analysis Lab</h3>
           <p class="project-desc">
-            Low-noise analog front-end for strain gauges and thermocouples with 24-bit ADC
-            and SPI interface to host MCU.
+            Built prototype circuits on breadboards from schematics to validate Circuit Analysis concepts. Used DMMs to measure resistance and voltage, verifying KVL; modeled behavior in LTspice before build; troubleshooted tolerance errors and connection faults.
           </p>
-          <a href="#" class="project-link">View details →</a>
         </article>
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-year">2023</span>
-            <span class="project-tags">Power · PCB</span>
-          </div>
-          <h3 class="project-title">LED Driver Board</h3>
-          <p class="project-desc">
-            Constant-current LED driver with dimming and thermal protection. Designed for
-            industrial lighting applications.
-          </p>
-          <a href="#" class="project-link">View details →</a>
+        <article class="project-card project-card--placeholder">
+          <p class="project-desc">More projects coming soon.</p>
         </article>
       </div>
     </section>
@@ -188,11 +181,12 @@
     <section id="contact" class="section">
       <h2 class="section-title">Contact</h2>
       <div class="contact-content">
-        <p>Open to collaboration, internships, and full-time roles in hardware and embedded systems.</p>
+        <p>Seeking Summer 2026 electrical engineering internships. Open to collaboration and full-time roles in hardware, power systems, and PCB-adjacent work.</p>
         <div class="contact-links">
-          <a href="mailto:your.email@example.com" class="contact-link">Email</a>
+          <a href="mailto:dhruva@uppaluri.net" class="contact-link">Email</a>
+          <a href="tel:9497429508" class="contact-link">949-742-9508</a>
           <a href="https://github.com/dhruvauppaluri" target="_blank" rel="noopener" class="contact-link">GitHub</a>
-          <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener" class="contact-link">LinkedIn</a>
+          <a href="https://www.linkedin.com/in/dhruva-uppaluri-6303b4204" target="_blank" rel="noopener" class="contact-link">LinkedIn</a>
         </div>
       </div>
     </section>

@@ -270,6 +270,11 @@ body {
   font-weight: 500;
 }
 
+.about-education {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+}
+
 /* --- Skills grid --- */
 .skills-grid {
   display: grid;
@@ -365,6 +370,15 @@ body {
 
 .project-link:hover {
   text-decoration: underline;
+}
+
+.project-card--placeholder {
+  opacity: 0.7;
+}
+
+.project-card--placeholder .project-desc {
+  margin: 0;
+  font-style: italic;
 }
 
 /* --- Contact --- */
