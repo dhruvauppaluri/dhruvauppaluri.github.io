@@ -23,28 +23,15 @@
     });
   }
 
-  // Circuit schematic: scroll spy — highlight the component for the section in view
-  var sectionIds = ["about", "skills", "projects", "contact"];
-  var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+  // Circuit schematic: highlight the component under the cursor (hover)
   var circuitLinks = document.querySelectorAll(".circuit-schematic .circuit-link");
-
-  if (sections.length && circuitLinks.length) {
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var id = entry.target.id;
-          circuitLinks.forEach(function (link) {
-            if (link.getAttribute("href") === "#" + id) {
-              link.classList.add("active");
-            } else {
-              link.classList.remove("active");
-            }
-          });
-        });
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
-    );
-    sections.forEach(function (section) { observer.observe(section); });
-  }
+  circuitLinks.forEach(function (link) {
+    link.addEventListener("mouseenter", function () {
+      circuitLinks.forEach(function (l) { l.classList.remove("active"); });
+      link.classList.add("active");
+    });
+    link.addEventListener("mouseleave", function () {
+      link.classList.remove("active");
+    });
+  });
 })();
