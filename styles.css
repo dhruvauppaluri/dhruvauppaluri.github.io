@@ -133,6 +133,11 @@ body {
   color: var(--accent);
 }
 
+.hero-title--name {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  letter-spacing: 0.02em;
+}
+
 .hero-desc {
   color: var(--text-muted);
   font-size: 1.15rem;
