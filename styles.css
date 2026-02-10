@@ -381,6 +381,132 @@ body {
   font-style: italic;
 }
 
+/* --- Project detail pages --- */
+.project-detail {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem var(--space) 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.project-detail__back {
+  margin-bottom: 2rem;
+}
+
+.project-detail__back--bottom {
+  margin-top: 3rem;
+  margin-bottom: 0;
+}
+
+.project-detail__header {
+  margin-bottom: 2.5rem;
+}
+
+.project-detail__meta {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.project-detail__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.project-detail__subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.project-detail__section {
+  margin-bottom: 2.5rem;
+}
+
+.project-detail__section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  color: var(--text);
+}
+
+.project-detail__section h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--text);
+}
+
+.project-detail__section p,
+.project-detail__section ul {
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.project-detail__section ul {
+  padding-left: 1.5rem;
+}
+
+.project-detail__section li {
+  margin-bottom: 0.35rem;
+}
+
+.project-detail__figure-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 2rem 0 0.5rem;
+  color: var(--text);
+}
+
+.project-detail__figure-title:first-of-type {
+  margin-top: 0;
+}
+
+.project-detail__figure {
+  margin: 1.5rem 0;
+}
+
+.project-detail__figure img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  min-height: 120px;
+}
+
+.project-detail__figure figcaption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.project-detail__figure code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--accent);
+}
+
+.project-detail__code {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.project-detail__code code {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
 /* --- Contact --- */
 .contact-content p {
   color: var(--text-muted);

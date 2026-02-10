@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Introduction to Circuit Analysis Lab — Analog circuit design and verification" />
+  <title>Circuit Analysis Lab | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2024 · Circuit Analysis · LTspice · DMM</span>
+      <h1 class="project-detail__title">Introduction to Circuit Analysis Lab</h1>
+      <p class="project-detail__subtitle">Analog circuit design & verification | Las Positas College</p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Overview</h2>
+      <p>Constructed physical prototype circuits on breadboards based on theoretical schematics to validate Circuit Analysis concepts. Used Digital Multimeters (DMM) to measure resistance drops and voltage potentials across components, verifying compliance with calculated values from Kirchhoff's Voltage Law (KVL). Modeled circuit behavior in LTspice before physical build to predict voltage nodes and identify potential component failures. Troubleshot discrepancies between theoretical models and physical measurements, identifying tolerance errors in resistors and connection faults.</p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Skills applied</h2>
+      <ul>
+        <li>Breadboarding & prototyping</li>
+        <li>DMM measurements (resistance, voltage)</li>
+        <li>KVL and schematic interpretation</li>
+        <li>LTspice simulation before build</li>
+        <li>Root-cause analysis (tolerance errors, connection faults)</li>
+      </ul>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script>
+    (function () {
+      var y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
+      var btn = document.querySelector(".menu-btn");
+      var nav = document.querySelector(".nav");
+      if (btn && nav) btn.addEventListener("click", function () { nav.classList.toggle("open"); });
+    })();
+  </script>
+</body>
+</html>

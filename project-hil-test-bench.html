@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="1-Axis Attitude Control HIL Test Bench — Hardware-in-the-Loop validation of steer-by-wire latency" />
+  <title>HIL Test Bench | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2024 · HIL · Embedded C++ · Control · Signal Processing</span>
+      <h1 class="project-detail__title">1-Axis Attitude Control HIL Test Bench</h1>
+      <p class="project-detail__subtitle">Hardware-in-the-Loop validation of steer-by-wire latency and sensor fusion algorithms.</p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Objective</h2>
+      <p>To design and build a Hardware-in-the-Loop (HIL) test bench capable of characterizing the mechanical latency and control dynamics of an electromechanical actuator. The system validates the difference between &quot;commanded&quot; input and &quot;actual&quot; physical response, simulating a satellite attitude control subsystem (and applicable to steer-by-wire / ESP for 1/10th scale RC).</p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>System Architecture</h2>
+      <p>Closed-loop control architecture:</p>
+      <ul>
+        <li><strong>Reference Input:</strong> Joystick (analog voltage) representing driver/flight computer intent.</li>
+        <li><strong>Controller:</strong> Arduino Uno (C++ firmware) — signal mapping and data processing.</li>
+        <li><strong>Plant (Actuator):</strong> SG90 servo motor representing the physical steering rack or gimbal.</li>
+        <li><strong>Feedback Sensor:</strong> MPU6050 (MEMS gyroscope) measuring actual physical yaw rate.</li>
+        <li><strong>Telemetry:</strong> High-speed UART (115200 baud) to a ground station PC for analysis.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Technical Implementation</h2>
+      <h3>Hardware integration</h3>
+      <p>Integrated a 6-axis MEMS IMU via I2C to capture real-time dynamics. The system drives a PWM servo while polling the gyroscope at 50Hz, creating a synchronous control loop to measure system response time.</p>
+      <h3>Signal processing (firmware)</h3>
+      <p>Raw MEMS data has significant thermal noise and zero-rate bias. Implemented:</p>
+      <ul>
+        <li><strong>Automated calibration:</strong> Startup routine samples the sensor 200 times to calculate and subtract zero-rate drift.</li>
+        <li><strong>Digital filtering:</strong> Exponential Moving Average (EMA) filter (α=0.2) to smooth high-frequency noise and improve SNR with minimal added latency.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Key visuals & data</h2>
+      <h3 class="project-detail__figure-title">Figure 1: Telemetry Analysis (Step Response)</h3>
+      <figure class="project-detail__figure">
+        <img src="images/hil-step-response.png" alt="Telemetry: raw vs filtered gyro step response" />
+        <figcaption>Caption: Real-time telemetry comparison. The Green line represents the raw, noisy MEMS gyro signal. The Orange line represents the output of the custom EMA filter implemented in firmware, showing a clean, usable control signal with minimal added latency.</figcaption>
+      </figure>
+      <h3 class="project-detail__figure-title">Figure 2: Hardware Test Bench</h3>
+      <figure class="project-detail__figure">
+        <img src="images/hil-hardware.png" alt="HIL test rig with Arduino, joystick, servo, MPU6050" />
+        <figcaption>Caption: The HIL test rig featuring the Elegoo Arduino Uno (Controller), Joystick (Input), Servo (Actuator), and MPU6050 (Sensor) wired for I2C and PWM communication.</figcaption>
+      </figure>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Firmware highlight</h2>
+      <p>EMA filter implementation for sensor conditioning:</p>
+      <pre class="project-detail__code"><code>// Signal conditioning: reduce MEMS noise without heavy latency
+void processTelemetry() {
+  float rawRate = readGyroDS();
+  // Alpha (0.2) balances latency vs. smoothness
+  filteredRate = (alpha * rawRate) + ((1.0 - alpha) * filteredRate);
+  sendTelemetry(filteredRate);
+}</code></pre>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Engineering impact & skills</h2>
+      <ul>
+        <li><strong>HIL:</strong> Validated actuator latency (&lt;50ms) by comparing input commands to physical sensor feedback.</li>
+        <li><strong>Signal processing:</strong> Mitigated MEMS noise with digital filtering and startup bias calibration.</li>
+        <li><strong>Embedded C++:</strong> I2C sensor polling and high-speed UART telemetry (115200 baud).</li>
+        <li><strong>Control theory:</strong> Characterized open-loop vs closed-loop system dynamics.</li>
+      </ul>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script>
+    (function () {
+      var y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
+      var btn = document.querySelector(".menu-btn");
+      var nav = document.querySelector(".nav");
+      if (btn && nav) btn.addEventListener("click", function () { nav.classList.toggle("open"); });
+    })();
+  </script>
+</body>
+</html>
