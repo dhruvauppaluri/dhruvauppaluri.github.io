@@ -485,6 +485,16 @@ body {
   min-height: 120px;
 }
 
+.project-detail__placeholder {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
 .project-detail__figure figcaption {
   font-size: 0.9rem;
   color: var(--text-muted);
