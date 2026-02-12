@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Digital Logic Control Unit (Virtual EV Transmission) — Hardware-based state machine for validating digital powertrain logic" />
+  <title>Digital Logic Control Unit (In Progress) | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 · Digital Logic · TTL · State Machine · EV</span>
+      <h1 class="project-detail__title">Digital Logic Control Unit (Virtual EV Transmission) — In Progress</h1>
+      <p class="project-detail__subtitle">Hardware-based state machine design for validating digital powertrain logic.</p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Objective</h2>
+      <p>To design and validate a hard-wired digital state machine capable of simulating a 4-speed manual transmission for an electric vehicle testbed. This system validates the foundational logic of a &quot;Virtual Gearbox&quot; using discrete TTL components, decoupling critical state management from the main microcontroller software.</p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>System Architecture</h2>
+      <p>Discrete logic architecture:</p>
+      <ul>
+        <li><strong>Reference Input:</strong> Mechanical shift lever (SPDT momentary switches) representing driver intent.</li>
+        <li><strong>Controller:</strong> 74LS-series TTL logic (discrete gates) — purely hardware-based state management.</li>
+        <li><strong>State Machine:</strong> 74LS192 synchronous up/down counter tracking the &quot;Virtual Gear&quot; (N, 1, 2, 3, 4).</li>
+        <li><strong>Visual Feedback:</strong> 74LS47 BCD-to-7-segment decoder driving a common anode LED display.</li>
+        <li><strong>Safety Logic:</strong> 74LS08 (AND) and 74LS00 (NAND) gates implementing hard limits to prevent over-shifting.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Technical Implementation</h2>
+      <h3>Wave 1: Signal conditioning & safety logic</h3>
+      <p>The core counter logic is supported by a robust &quot;Wave 1&quot; conditioning layer to ensure signal integrity and prevent illegal states:</p>
+      <ul>
+        <li><strong>74LS14 (Hex Inverter with Schmitt Trigger):</strong> Conditions noisy mechanical switch signals. The Schmitt trigger's hysteresis eliminates contact bounce, converting jagged voltage spikes into clean, square-wave clock pulses for the counter.</li>
+        <li><strong>74LS08 (Quad 2-Input AND Gate):</strong> Implements the &quot;Hard Stop&quot; interlock. By AND-ing the &quot;Shift Up&quot; signal with the &quot;Current State &lt; 4&quot; condition, this chip physically cuts the clock line when the limit is reached, preventing the counter from rolling over to zero.</li>
+        <li><strong>74LS00 (Quad 2-Input NAND Gate):</strong> Used for inverted logic and latching functions to stabilize state transitions during rapid shifting.</li>
+        <li><strong>74LS32 (Quad 2-Input OR Gate):</strong> Merges multiple fault conditions (e.g., limit reached OR emergency stop) into a single system-wide inhibit signal.</li>
+      </ul>
+      <h3>Hardware integration</h3>
+      <p>Constructed a modular logic unit on a breadboard to operate independently of the flight controller. The system interfaces with the main vehicle via a 4-bit parallel binary bus, isolating &quot;Decision Making&quot; (Logic Unit) from &quot;Actuation&quot; (Microcontroller).</p>
+      <h3>Power regulation</h3>
+      <p>Dedicated LM2596 buck converter providing a stable, isolated 5.0V logic rail, protecting sensitive TTL gates from voltage sags caused by the main drive motor.</p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Key visuals & data</h2>
+      <h3 class="project-detail__figure-title">Figure 1: Logic State Diagram & Schematic</h3>
+      <figure class="project-detail__figure">
+        <div class="project-detail__placeholder">In progress — will be updated soon.</div>
+        <figcaption>Caption: The core state machine architecture. The 74LS192 (Counter) receives conditioned pulses from the 74LS14 (Schmitt Trigger). Combinational logic gates (74LS08/00) detect &quot;State 4&quot; and &quot;State 1&quot; to physically inhibit further counting.</figcaption>
+      </figure>
+      <h3 class="project-detail__figure-title">Figure 2: Hardware Prototype</h3>
+      <figure class="project-detail__figure">
+        <div class="project-detail__placeholder">In progress — will be updated soon.</div>
+        <figcaption>Caption: The breadboard validation unit featuring the 74LS192 Counter, 74LS47 Decoder, and 7-Segment Display. The distinct wiring groups separate the Input Conditioning (Left), Logic Core (Center), and Output Stage (Right).</figcaption>
+      </figure>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Schematic highlight</h2>
+      <p><strong>Debounce & state limiting logic:</strong></p>
+      <p>Note: This logic is implemented in hardware wiring using the 74LS08 and 74LS14, not code.</p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Engineering impact & skills</h2>
+      <ul>
+        <li><strong>Digital logic design:</strong> Designed a synchronous state machine using discrete counters, decoders, and logic gates.</li>
+        <li><strong>Signal integrity:</strong> Diagnosed and resolved switch bounce issues using analog RC filters and 74LS14 Schmitt triggers.</li>
+        <li><strong>System integration:</strong> Created a parallel binary interface to communicate state data to a separate microcontroller.</li>
+      </ul>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script>
+    (function () {
+      var y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
+      var btn = document.querySelector(".menu-btn");
+      var nav = document.querySelector(".nav");
+      if (btn && nav) btn.addEventListener("click", function () { nav.classList.toggle("open"); });
+    })();
+  </script>
+</body>
+</html>
