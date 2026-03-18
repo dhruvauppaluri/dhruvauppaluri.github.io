@@ -100,7 +100,7 @@
       <div class="section-body">
         <p>
           I am a Computer Engineering student transferring to UC Santa Cruz in Fall 2026. Most of what I know came from building things outside of class —
-          a discrete logic gearbox with no microcontroller, a hardware-in-the-loop test bench for an RC vehicle I am turning into an F1-style car from scratch,
+          a discrete logic gearbox with no microcontroller, a hardware-in-the-loop test bench and Axiom control stack for an RC vehicle I am turning into an F1-style car from scratch,
           and a film photography light meter I built because I needed one and could not justify buying one.
         </p>
         <p>
@@ -154,6 +154,18 @@
             I wanted to know if my components were fast enough to support real-time steering correction on an RC car I am building from scratch. This bench measures end-to-end latency from joystick input through gyroscope response. The answer was under 50 ms. First step done.
           </p>
           <a href="project-hil-test-bench.html" class="project-link">View details →</a>
+        </article>
+
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">Arduino/C++ · Python · BLE · WebSocket</span>
+          </div>
+          <h3 class="project-title">Axiom — RC Car Control Stack</h3>
+          <p class="project-desc">
+            After the HIL bench proved sub-50 ms latency, this is the drive stack for the F1-style RC car I am building: four-motor firmware, a Python daemon over BLE and USB, a browser UI, and a serial probe for when motor wiring does not match the schematic. Open source on GitHub.
+          </p>
+          <a href="project-axiom.html" class="project-link">View details →</a>
         </article>
 
         <article class="project-card">

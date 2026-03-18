@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Axiom — firmware, Python daemon, and web UI for a scratch-built F1-style RC car with BLE and USB control." />
+  <title>Axiom — RC Car Control Stack | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html#top" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 - Arduino/C++ - Python - BLE - WebSocket</span>
+      <h1 class="project-detail__title">Axiom</h1>
+      <p class="project-detail__subtitle">
+        Control stack for a scratch-built F1-style RC car: motor firmware, a host daemon, browser UI, and bench tools for when the wiring lies to you.
+      </p>
+      <p class="project-detail__subtitle">
+        <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a>
+      </p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Project Overview</h2>
+      <ul>
+        <li>Role: solo project</li>
+        <li>Key hardware: Arduino Uno, four-motor H-bridge drive, SG90-style servo, HC-SR04 ultrasonic, HM-10 BLE module</li>
+        <li>Stack: <code>robot_car.ino</code> firmware, <code>rc_daemon.py</code> (BLE + USB + WebSocket), browser control UI, <code>probe.ino</code> for circuit bring-up</li>
+        <li>Repository: <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a></li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Objective</h2>
+      <p>
+        The latency test bench showed my steering and sensing path could stay under 50 ms. Axiom is what comes after that question — actually driving the platform I am building toward an F1-style RC car, not just measuring a subsystem on the bench.
+        I needed a way to command four drive motors and steering from a laptop or phone, over USB when I am at the desk and over BLE when the car is on the floor, without rewriting the control path every time I change how I connect.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>System architecture</h2>
+      <ul>
+        <li>Firmware (<code>firmware/robot_car/</code>): text commands over USB serial and HM-10 BLE — forward, tank turn, per-motor PWM, servo angle, ultrasonic distance, motor identify sweep.</li>
+        <li>Host daemon (<code>control/rc_daemon.py</code>): one process owns BLE and USB, exposes a WebSocket API on port 8766, reconnects when links drop, fans telemetry out to clients.</li>
+        <li>Web UI (<code>control/index.html</code>): D-pad driving, cruise speed, servo slider, live distance readout, connection status for BLE vs USB.</li>
+        <li>Probe (<code>probe/probe.ino</code>): serial bench tool — pin voltage reads, continuity checks, motor-pin scan when a transistor stage is miswired.</li>
+        <li>BLE passthrough (<code>firmware/bt_passthrough/</code>): minimal bridge for debugging the radio link before the full robot sketch is loaded.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Implementation</h2>
+
+      <h3>Robot firmware</h3>
+      <p>
+        Four PWM motor channels on a differential layout, software servo timing, and ultrasonic ranging on shared digital pins. Commands are line-oriented and identical whether they arrive on USB or BLE.
+        Motor outputs are forced LOW at boot with direct port writes so the car does not jerk on reset — small detail, but it mattered when I was debugging drivers hot enough to smell wrong.
+      </p>
+
+      <h3>Control daemon</h3>
+      <p>
+        Python asyncio ties together Bleak for GATT writes to the HM-10, pyserial for the Arduino USB path, and websockets for the browser. The daemon scans for known BLE names, clears stale macOS Bluetooth pairings when the module disappears, and broadcasts serial responses to every connected UI client.
+      </p>
+
+      <h3>Web interface</h3>
+      <p>
+        A single-page controller that talks to the daemon over WebSocket — no native app required. Connection state is visible at a glance (BLE only, USB only, both, or scanning) so I know whether a failed command is a UI bug or a dead link.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Debugging &amp; iteration</h2>
+      <ul>
+        <li>I did not trust the motor wiring until I could prove which pin was actually switching — that is what <code>probe.ino</code> is for.</li>
+        <li>Cause: a bad solder joint or wrong transistor leg looks like “firmware is broken” until you read the node with a jumper and see 0 V when you expected 5 V.</li>
+        <li>Fix: live voltage commands, per-pin drive tests, and a SCAN mode that walks the motor outputs while reporting analog readings.</li>
+        <li>Outcome: separate “is the circuit alive” from “is the protocol wrong” before I spend an hour in the daemon logs.</li>
+      </ul>
+      <p>
+        BLE added its own class of problems — stale connections on macOS, modules that need a power cycle, and the difference between seeing the radio in a scan and actually getting a READY back from firmware. The daemon retries with backoff and can bounce Bluetooth through <code>blueutil</code> when the link ghosts.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Reflection</h2>
+      <p>
+        Axiom is still moving — stability control and closed-loop steering are the direction, building on the HIL numbers. What I have now is the unglamorous foundation: a car that moves when I tell it to, over more than one transport, with tools to debug the hardware when it does not.
+      </p>
+      <p>
+        Most of the repo is not clever algorithms. It is command parsing, connection management, and sketches I wrote because I got tired of guessing which motor pin was live. That is the work that has to exist before the F1-style systems do.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Repository</h2>
+      <p>
+        Source, firmware, and the web UI live in the open repo:
+        <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a>.
+        Clone <code>control/rc_daemon.py</code>, flash <code>firmware/robot_car/robot_car.ino</code>, open <code>control/index.html</code> while the daemon is running.
+      </p>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
