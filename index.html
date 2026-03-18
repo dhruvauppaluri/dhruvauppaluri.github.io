@@ -147,13 +147,15 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">HIL · Embedded C++ · Control · Signal Processing</span>
+            <span class="project-tags">Arduino/C++ · Control · Signal Processing</span>
           </div>
-          <h3 class="project-title">1-Axis Attitude Control HIL Test Bench</h3>
+          <h3 class="project-title">Steering-Actuator Latency Test Bench</h3>
           <p class="project-desc">
-            Hardware-in-the-loop rig that compares “driver intent” (joystick) vs. “vehicle dynamics” (MPU6050 MEMS gyro) through an Arduino-controlled servo.
-            Implemented bias calibration and an EMA filter to clean up noisy yaw-rate data and verified a &lt;50 ms loop response over 115.2 kbps UART.
+            Designed and prototyped an ESP-style subsystem for a 1/10-scale RC vehicle; built a hardware-in-the-loop latency test bench to validate steering-actuator latency.
+            Firmware compares driver intent (joystick) vs. vehicle dynamics (MEMS gyroscope), applies an EMA filter to reduce sensor noise, and verifies control-loop latency
+            &lt; 50 ms using 115.2 kbps serial telemetry.
           </p>
+          <a href="project-hil-test-bench.html" class="project-link">View details →</a>
         </article>
 
         <article class="project-card">
@@ -166,18 +168,7 @@
             Discrete 74LS-based control unit that implements a 4-speed “virtual gearbox” in hardware. Uses counters, decoders, Schmitt-trigger debouncing, and
             safety interlocks to validate powertrain logic before it ever runs in firmware.
           </p>
-        </article>
-
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-year">2025</span>
-            <span class="project-tags">Circuit Analysis · LTspice · DMM</span>
-          </div>
-          <h3 class="project-title">Introduction to Circuit Analysis Lab</h3>
-          <p class="project-desc">
-            Breadboarded textbook circuits, predicted behavior in LTspice, and then verified node voltages and resistor drops with a DMM.
-            Used discrepancies between theory and measurement to track down tolerance issues and wiring mistakes.
-          </p>
+          <a href="project-digital-logic-control.html" class="project-link">View details →</a>
         </article>
       </div>
     </section>
