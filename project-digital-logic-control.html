@@ -32,85 +32,123 @@
     </div>
 
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · Digital Logic · TTL · State Machine · EV</span>
-      <h1 class="project-detail__title">Digital Logic Control Unit (Virtual EV Transmission) — In Progress</h1>
-      <p class="project-detail__subtitle">Hardware-based state machine design for validating digital powertrain logic.</p>
+      <span class="project-detail__meta">2026 - Digital Logic - XOR - 74LS74 - 74HC14</span>
+      <h1 class="project-detail__title">Digital Logic Control Unit</h1>
+      <p class="project-detail__subtitle">A 2-bit synchronous state machine for an EV gearbox using XOR-based discrete logic.</p>
     </header>
 
     <section class="project-detail__section">
-      <h2>Objective</h2>
-      <p>
-        Design and validate a hard‑wired digital state machine that behaves like a 4‑speed manual transmission for an EV testbed.
-        The project proves out the core “virtual gearbox” logic using discrete TTL, so critical state decisions don’t depend on microcontroller firmware.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>System architecture</h2>
-      <p>Discrete logic architecture:</p>
+      <h2>Project Overview</h2>
       <ul>
-        <li><strong>Reference input:</strong> Mechanical shift lever with SPDT momentary switches representing driver intent.</li>
-        <li><strong>Controller:</strong> 74LS‑series TTL logic implementing the state machine in hardware.</li>
-        <li><strong>State machine:</strong> 74LS192 synchronous up/down counter tracking the “virtual gear” (N, 1, 2, 3, 4).</li>
-        <li><strong>Visual feedback:</strong> 74LS47 BCD‑to‑7‑segment decoder driving a common‑anode LED display.</li>
-        <li><strong>Safety logic:</strong> 74LS08 (AND) and 74LS00 (NAND) gates enforcing hard limits to prevent over‑shifting.</li>
+        <li><strong>Role:</strong> Lead Designer (Solo Project)</li>
+        <li><strong>Key Hardware:</strong> 74LS74 (dual D flip-flops), 74LS86 (quad XOR gates), 74HC14 (Schmitt-trigger inverters)</li>
+        <li><strong>Tools Used:</strong> KiCad schematic export, breadboard prototyping, 5V logic rail (LM2596 if applicable)</li>
       </ul>
     </section>
 
     <section class="project-detail__section">
-      <h2>Technical implementation</h2>
-      <h3>Wave 1: Signal conditioning & safety</h3>
+      <h2>The Challenge (The "Why")</h2>
       <p>
-        A “Wave 1” conditioning layer cleans up mechanical inputs and prevents illegal states before they ever reach the counter:
+        The goal was to design a hardware-level "gearbox" controller for an electric vehicle testbed.
+        Instead of using a microcontroller and software, I built a 2-bit synchronous state machine using discrete logic chips
+        to manage four gear states (00 to 11) from manual shift inputs.
       </p>
-      <ul>
-        <li><strong>74LS14 Schmitt trigger inverter:</strong> debounces noisy switch contacts and converts bouncy edges into clean clock pulses.</li>
-        <li><strong>74LS08 AND gates:</strong> implement a hard‑stop interlock so “shift up” only clocks when the current gear is less than 4.</li>
-        <li><strong>74LS00 NAND gates:</strong> provide inverted logic and simple latching to stabilize transitions during rapid shifts.</li>
-        <li><strong>74LS32 OR gates:</strong> merge multiple inhibit conditions (limits, emergency stop) into a single block signal.</li>
-      </ul>
-
-      <h3>Hardware integration</h3>
       <p>
-        The logic unit is built on a breadboard as a self‑contained module. A 4‑bit parallel bus exposes the current gear to a separate microcontroller,
-        which can then drive motors or displays while the discrete logic owns the state machine.
-      </p>
-
-      <h3>Power regulation</h3>
-      <p>
-        A dedicated LM2596 buck converter provides a stable, isolated 5.0 V logic rail so the TTL gates stay within spec even when the main drive motor
-        causes current spikes on the rest of the system.
+        This iteration focuses on <strong>Shift Up</strong>: each valid input advances the state through
+        00 -> 01 -> 10 -> 11 -> 00 (cyclic four-gear behavior).
       </p>
     </section>
 
     <section class="project-detail__section">
-      <h2>Key visuals & data</h2>
+      <h2>Requirements</h2>
+      <ul>
+        <li><strong>Stable synchronous behavior:</strong> state updates must behave like a synchronous state machine (stored in 74LS74 flip-flops).</li>
+        <li><strong>Clean input clocking:</strong> mechanical shift inputs must be debounced and squared using 74HC14 Schmitt-trigger inverters.</li>
+        <li><strong>Discrete "gearbox logic":</strong> transition behavior must be defined by XOR-based discrete logic (74LS86), not by software.</li>
+      </ul>
+    </section>
 
-      <h3 class="project-detail__figure-title">Figure 1: Logic State Diagram & Schematic</h3>
-      <figure class="project-detail__figure">
-        <div class="project-detail__placeholder">In progress — will be updated soon.</div>
-        <figcaption>
-          Caption: The core state machine architecture. The 74LS192 counter receives conditioned pulses from the 74LS14 Schmitt trigger.
-          Combinational logic (74LS08/74LS00) detects first and fourth gear and physically blocks further counting at the limits.
-        </figcaption>
-      </figure>
+    <section class="project-detail__section">
+      <h2>Design & Logic</h2>
+      <h3>Logic Theory</h3>
+      <p>
+        I derived the excitation/next-state mapping for a 2-bit gearbox state machine.
+        The XOR-based combinational network determines whether the state should toggle on the next synchronous update,
+        while the 74LS74 flip-flops hold the gear state.
+      </p>
+      <p>
+        Shift Up state flow (cyclic): 00 -> 01 -> 10 -> 11 -> 00.
+      </p>
 
-      <h3 class="project-detail__figure-title">Figure 2: Hardware Prototype</h3>
+      <h3 class="project-detail__figure-title">Schematic: XOR transition network + state storage</h3>
       <figure class="project-detail__figure">
-        <div class="project-detail__placeholder">In progress — will be updated soon.</div>
+        <img src="gearbox_pcb_schematic.png" alt="KiCad schematic for XOR-based 2-bit discrete gearbox controller" />
         <figcaption>
-          Caption: Breadboard prototype with clustered wiring: input conditioning on the left, counter and core logic in the center,
-          and the 7‑segment output stage on the right.
+          Caption: The 2-bit synchronous gearbox controller schematic. The 74HC14 conditions mechanical inputs,
+          the 74LS86 XOR network computes next-state behavior, and the 74LS74 flip-flops store the gear state.
+          Power regulation provides the stable logic rail for the discrete families.
         </figcaption>
       </figure>
     </section>
 
     <section class="project-detail__section">
-      <h2>Engineering impact & skills</h2>
+      <h2>Implementation (The "How")</h2>
+
+      <h3>Prototype Phase</h3>
+      <figure class="project-detail__figure">
+        <div class="project-detail__placeholder">Prototype photo pending — upload soon.</div>
+        <figcaption>
+          Caption: Breadboard validation of the discrete gearbox controller (input conditioning, XOR transition logic, and 74LS74 state storage).
+        </figcaption>
+      </figure>
+
+      <h3>Component Selection</h3>
       <ul>
-        <li><strong>Digital logic design:</strong> Built a synchronous state machine using discrete counters, decoders, and glue logic.</li>
-        <li><strong>Signal integrity:</strong> Solved switch bounce and illegal state transitions with Schmitt triggers and hard interlocks.</li>
-        <li><strong>System integration:</strong> Defined a clean 4‑bit interface so a microcontroller can consume gear state without owning the logic.</li>
+        <li><strong>74LS74 (dual D flip-flops):</strong> stores the 2-bit gear state synchronously.</li>
+        <li><strong>74LS86 (quad XOR gates):</strong> implements XOR-based transition/excitation logic.</li>
+        <li><strong>74HC14 (Schmitt-trigger inverters):</strong> squares noisy mechanical shift inputs so clock pins see clean transitions.</li>
+      </ul>
+
+      <h3>Signal Conditioning</h3>
+      <p>
+        The 74HC14 Schmitt trigger converts bouncy switch edges into fast, reliable digital transitions,
+        which is critical for preventing erratic state changes on synchronous flip-flops.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Engineering Reflection (Real Engineering)</h2>
+      <ul>
+        <li><strong>Handling Mechanical Inputs:</strong> switch bounce can cause flicker/erratic state toggling.</li>
+        <li><strong>The Fix:</strong> route the shift inputs through the 74HC14 Schmitt trigger and keep XOR-to-flip-flop wiring organized
+          to maintain stable logic levels during synchronous updates.</li>
+        <li><strong>Next Iteration:</strong> add Shift Down control and the missing down-transition mapping to complete full up/down gearbox behavior.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Final Result & Validation</h2>
+
+      <figure class="project-detail__figure">
+        <img src="gearbox_circuit.png" alt="Finished gearbox discrete logic controller" />
+        <figcaption>
+          Caption: Finished gearbox controller hardware prototype for the 2-bit EV gearbox state machine.
+        </figcaption>
+      </figure>
+
+      <figure class="project-detail__figure">
+        <video controls preload="metadata">
+          <source src="gearboxv1.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>
+          Caption: Final product validation video showing reliable cycling through the four gear states (Shift Up).
+        </figcaption>
+      </figure>
+
+      <ul>
+        <li><strong>Functional Goal:</strong> reliably cycles through 00 -> 01 -> 10 -> 11 -> 00 on Shift Up.</li>
+        <li><strong>Key Takeaway:</strong> synchronous logic works only when input conditioning and wiring preserve clean transitions.</li>
       </ul>
     </section>
 
