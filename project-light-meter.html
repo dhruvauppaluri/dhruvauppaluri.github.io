@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="DIY light meter for film and mirrorless cameras — handheld exposure helper built with Arduino, LDR, and LCD." />
+  <meta name="description" content="DIY light meter for film and mirrorless cameras — LDR and Arduino estimate scene lux (illuminance) and compute exposure for manual lenses." />
   <title>DIY Light Meter — Film &amp; Mirrorless | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -40,6 +40,19 @@
     </header>
 
     <section class="project-detail__section">
+      <h2>Background</h2>
+      <p>
+        I’m passionate about <strong>photography</strong>. I’ve been getting into <strong>film</strong> more, and I shoot with a <strong>manual lens</strong> on my <strong>mirrorless</strong> camera.
+        With no lens–body electronic link, the body doesn’t get aperture data the way it would with a native lens, and its metering doesn’t line up — so it doesn’t really give trustworthy <strong>ISO and shutter</strong> guidance for how I’m shooting.
+        I wanted one small device I could use on that mirrorless rig and on <strong>film cameras</strong> too, which is what motivated this project.
+      </p>
+      <p>
+        If you’re interested in my photography, I post on
+        <a href="https://www.instagram.com/dhruvuh.jpg/" target="_blank" rel="noopener noreferrer">Instagram (@dhruvuh.jpg)</a>.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
         <li><strong>Role:</strong> Solo project</li>
@@ -51,8 +64,8 @@
     <section class="project-detail__section">
       <h2>The Challenge</h2>
       <p>
-        Shooting fully manual with a manual lens means setting aperture, ISO, and shutter speed yourself with no in-lens communication to the camera body.
-        In-camera meters are easy to misread off bright or dark subjects. A small dedicated light meter gives you a separate exposure readout while you dial settings on the body.
+        When you set aperture, ISO, and shutter by hand, you want a brightness readout you can trust beside the camera.
+        In-camera reflected meters are easy to misread off very bright or dark subjects. A small dedicated light meter gives a separate exposure readout while you dial settings on the body.
         Good handheld meters are often expensive; this one was built from scratch around an LDR, an Arduino, and a simple UI.
       </p>
     </section>
@@ -60,7 +73,7 @@
     <section class="project-detail__section">
       <h2>Requirements</h2>
       <ul>
-        <li><strong>Lux to exposure:</strong> convert sensed illuminance into standard photographic EV and match to standard shutter speeds on a log scale.</li>
+        <li><strong>Lux to exposure:</strong> estimate scene brightness as <strong>lux</strong> (illuminance — lumens of visible light per square meter falling on the sensor) and convert that into standard photographic EV, then match to standard shutter speeds on a log scale.</li>
         <li><strong>Film / SLR mode:</strong> user sets aperture and roll ISO; device outputs the correct shutter speed, with encoder-driven UI to edit aperture vs ISO.</li>
         <li><strong>Mirrorless mode:</strong> user sets aperture only; firmware walks ISO upward until shutter speed meets a hand-hold threshold (≥ 1/60s), similar to Auto-ISO on a digital body.</li>
         <li><strong>Responsive UI:</strong> rotary encoder must register every detent — no blocking <code>delay()</code> that skips pulses.</li>
@@ -75,8 +88,15 @@
         An LDR (light-dependent resistor) sits in a voltage divider with a 10KΩ resistor. The Arduino reads the junction voltage on an analog input (A0) and converts it
         to an approximate lux value using the LDR&apos;s resistance curve.
       </p>
+      <p>
+        <strong>Lux</strong> measures <strong>illuminance</strong>: how much visible light lands on a surface, in <strong>lumens per square meter</strong>.
+        Brighter scenes mean higher lux; the firmware uses that number as a bridge from raw ADC counts to the photographic exposure equations below.
+      </p>
 
       <h3>Exposure value formula</h3>
+      <p>
+        Once the code has a lux estimate, it plugs into the usual EV-at-ISO-100 relation — lux is the light side of the equation, EV is the camera-neutral “brightness” step photographers use for aperture, shutter, and ISO.
+      </p>
       <p>The meter implements the standard photographic EV formula:</p>
       <pre class="project-detail__code"><code>EV₁₀₀ = log₂(lux / 2.5)</code></pre>
       <p>
@@ -100,15 +120,15 @@
 
       <h3>Calibration</h3>
       <p>
-        The photoresistor is not factory-calibrated. A scalar calibration constant (<code>CAL</code>) in firmware scales the lux output. Calibration was performed by comparing meter output
-        against a reference light meter app across multiple lighting conditions (indoor tungsten, shade, overcast, direct sun) and adjusting <code>CAL</code> until readings agreed within one-third stop.
+        The photoresistor is not factory-calibrated. A scalar calibration constant (<code>CAL</code>) in firmware scales the lux estimate so it tracks real-world illuminance well enough for exposure math.
+        Calibration was performed by comparing meter output against a reference light meter app across multiple lighting conditions (indoor tungsten, shade, overcast, direct sun) and adjusting <code>CAL</code> until readings agreed within one-third stop.
       </p>
 
       <h3 class="project-detail__figure-title">System overview</h3>
       <figure class="project-detail__figure">
-        <img src="light_meter_block_diagram.svg" alt="Block diagram: LDR and encoder inputs to Arduino, EV math, exposure output to LCD1602" />
+        <img src="light_meter_block_diagram_v2.svg" alt="Block diagram: LDR and encoder inputs to Arduino, EV math, exposure output to LCD1602" />
         <figcaption>
-          Caption: High-level signal path from LDR divider → ADC → lux/EV math → shutter &amp; ISO solution → LCD1602; encoder and switch timing handled in a non-blocking loop.
+          High-level signal path from LDR divider → ADC → lux/EV math → shutter &amp; ISO solution → LCD1602; encoder and switch timing handled in a non-blocking loop.
         </figcaption>
       </figure>
     </section>
@@ -120,7 +140,7 @@
       <figure class="project-detail__figure">
         <img src="lightmeterbreadboard.jpg" alt="Breadboard prototype: Arduino UNO, LDR light sensor, LCD1602, rotary encoder, and wiring" />
         <figcaption>
-          Caption: Breadboard build with Arduino UNO, LDR divider, LCD1602, rotary encoder, and contrast pot.
+          Breadboard build with Arduino UNO, LDR divider, LCD1602, rotary encoder, and contrast pot.
         </figcaption>
       </figure>
 
@@ -167,7 +187,7 @@
         <li>Encoder read on every loop iteration (falling-edge detection) for zero missed pulses</li>
         <li>LCD and LDR updates on independent millisecond timers (120ms / 100ms)</li>
         <li>Short click vs long press detection on encoder SW for dual-function button</li>
-        <li>Serial debug output streams ADC, lux, EV, ISO, and shutter speed at 9600 baud</li>
+        <li>Serial debug at 9600 baud streams ADC, estimated lux (illuminance), EV, ISO, and shutter speed</li>
       </ul>
 
       <h3>Controls &amp; LCD layout</h3>
@@ -225,8 +245,8 @@ ISO: 400  1/250</code></pre>
         <li><strong>Result:</strong> Fewer spurious toggles; one detent maps to one UI step.</li>
       </ul>
       <ul>
-        <li><strong>The problem:</strong> Calibrating lux from an uncharacterized LDR.</li>
-        <li><strong>Why it broke:</strong> Film mode fixes ISO, so lux error shows up directly as shutter error; mirrorless mode can mask bias by bumping ISO to hit the 1/60s floor.</li>
+        <li><strong>The problem:</strong> Turning an uncharacterized LDR into a trustworthy lux (illuminance) estimate.</li>
+        <li><strong>Why it broke:</strong> Film mode fixes ISO, so errors in lux propagate straight into shutter speed; mirrorless mode can mask bias by bumping ISO to hit the 1/60s floor.</li>
         <li><strong>The fix:</strong> Tune scalar <code>CAL</code> against a reference meter across scenes; use the film vs mirrorless asymmetry to spot offset.</li>
         <li><strong>Result:</strong> Readings within about one-third stop of the reference app across tungsten, shade, overcast, and sun.</li>
       </ul>
@@ -252,7 +272,7 @@ ISO: 400  1/250</code></pre>
       <figure class="project-detail__figure">
         <p class="project-detail__placeholder">Demo video or in-use photo coming soon.</p>
         <figcaption>
-          Caption: Real-time exposure readout on the LCD1602 in film and mirrorless modes, with encoder-driven aperture/ISO and mode switching.
+          Real-time exposure readout on the LCD1602 in film and mirrorless modes, with encoder-driven aperture/ISO and mode switching.
         </figcaption>
       </figure>
 
