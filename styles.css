@@ -612,7 +612,7 @@ body {
 .project-detail__table th,
 .project-detail__table td {
   border: 1px solid var(--border);
-  padding: 0.6rem 0.75rem;
+  padding: 1rem 0.85rem;
   text-align: left;
   vertical-align: top;
 }

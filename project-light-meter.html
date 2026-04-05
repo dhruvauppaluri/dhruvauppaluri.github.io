@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DIY light meter for film and mirrorless cameras — handheld exposure helper built with Arduino, LDR, and LCD." />
+  <title>DIY Light Meter — Film &amp; Mirrorless | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html#top" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 - Arduino/C++ - LDR - Photography - Embedded UI</span>
+      <h1 class="project-detail__title">DIY Light Meter — Film &amp; Mirrorless Cameras</h1>
+      <p class="project-detail__subtitle">
+        A handheld light meter built from discrete components that outputs aperture, ISO, and shutter combinations for film SLRs and mirrorless bodies in real time.
+      </p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Project Overview</h2>
+      <ul>
+        <li><strong>Role:</strong> Solo project</li>
+        <li><strong>Key hardware:</strong> Arduino UNO, LDR + 10KΩ divider, LCD1602, rotary encoder (CLK/DT/SW), contrast potentiometer, breadboard</li>
+        <li><strong>Tools used:</strong> Arduino IDE (C++/AVR), serial monitor (9600 baud debug), reference light meter app for calibration</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>The Challenge</h2>
+      <p>
+        Shooting fully manual with a manual lens means setting aperture, ISO, and shutter speed yourself with no in-lens communication to the camera body.
+        In-camera meters are easy to misread off bright or dark subjects. A small dedicated light meter gives you a separate exposure readout while you dial settings on the body.
+        Good handheld meters are often expensive; this one was built from scratch around an LDR, an Arduino, and a simple UI.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Requirements</h2>
+      <ul>
+        <li><strong>Lux to exposure:</strong> convert sensed illuminance into standard photographic EV and match to standard shutter speeds on a log scale.</li>
+        <li><strong>Film / SLR mode:</strong> user sets aperture and roll ISO; device outputs the correct shutter speed, with encoder-driven UI to edit aperture vs ISO.</li>
+        <li><strong>Mirrorless mode:</strong> user sets aperture only; firmware walks ISO upward until shutter speed meets a hand-hold threshold (≥ 1/60s), similar to Auto-ISO on a digital body.</li>
+        <li><strong>Responsive UI:</strong> rotary encoder must register every detent — no blocking <code>delay()</code> that skips pulses.</li>
+        <li><strong>Field calibration:</strong> uncalibrated LDR scaled by firmware constant <code>CAL</code>, tuned against a reference meter across multiple lighting conditions.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Design &amp; Logic</h2>
+      <h3>Light sensing</h3>
+      <p>
+        An LDR (light-dependent resistor) sits in a voltage divider with a 10KΩ resistor. The Arduino reads the junction voltage on an analog input (A0) and converts it
+        to an approximate lux value using the LDR&apos;s resistance curve.
+      </p>
+
+      <h3>Exposure value formula</h3>
+      <p>The meter implements the standard photographic EV formula:</p>
+      <pre class="project-detail__code"><code>EV₁₀₀ = log₂(lux / 2.5)</code></pre>
+      <p>
+        Where EV<sub>100</sub> is the exposure value calibrated to ISO 100. From there, shutter speed is solved algebraically:
+      </p>
+      <pre class="project-detail__code"><code>t = N² / 2^(EV₁₀₀ + log₂(ISO / 100))</code></pre>
+      <p>Where <em>N</em> is the f-number (aperture) and <em>t</em> is shutter speed in seconds. The result is matched to the nearest standard shutter speed on a log scale.</p>
+
+      <h3>Two metering modes</h3>
+      <p><strong>Film / SLR mode</strong></p>
+      <ul>
+        <li>The user sets aperture and film ISO (locked per roll). The meter outputs the correct shutter speed.</li>
+        <li>A short click on the rotary encoder toggles the cursor between aperture and ISO selection.</li>
+      </ul>
+      <p><strong>Mirrorless mode</strong></p>
+      <ul>
+        <li>The user sets aperture only.</li>
+        <li>The meter walks the ISO ladder from 100 upward, solving for shutter speed at each step, and outputs the lowest ISO that produces a hand-holdable shutter speed (≥ 1/60s).</li>
+        <li>This mirrors how a camera&apos;s Auto-ISO logic works internally.</li>
+      </ul>
+
+      <h3>Calibration</h3>
+      <p>
+        The photoresistor is not factory-calibrated. A scalar calibration constant (<code>CAL</code>) in firmware scales the lux output. Calibration was performed by comparing meter output
+        against a reference light meter app across multiple lighting conditions (indoor tungsten, shade, overcast, direct sun) and adjusting <code>CAL</code> until readings agreed within one-third stop.
+      </p>
+
+      <h3 class="project-detail__figure-title">System overview</h3>
+      <figure class="project-detail__figure">
+        <p class="project-detail__placeholder">Block diagram or bench photo coming soon.</p>
+        <figcaption>
+          Caption: High-level signal path from LDR divider → ADC → lux/EV math → shutter &amp; ISO solution → LCD1602; encoder and switch timing handled in a non-blocking loop.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Implementation</h2>
+
+      <h3>Prototype phase</h3>
+      <figure class="project-detail__figure">
+        <p class="project-detail__placeholder">Hardware prototype photo coming soon.</p>
+        <figcaption>
+          Caption: Breadboard build with Arduino UNO, LDR divider, LCD1602, rotary encoder, and contrast pot.
+        </figcaption>
+      </figure>
+
+      <h3>Hardware</h3>
+      <table class="project-detail__table">
+        <thead>
+          <tr>
+            <th scope="col">Component</th>
+            <th scope="col">Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Arduino UNO</td>
+            <td>ADC, EV math, UI logic</td>
+          </tr>
+          <tr>
+            <td>LDR + 10KΩ resistor</td>
+            <td>Voltage divider light sensor</td>
+          </tr>
+          <tr>
+            <td>LCD1602</td>
+            <td>Real-time exposure display</td>
+          </tr>
+          <tr>
+            <td>Rotary encoder (CLK/DT/SW)</td>
+            <td>Aperture and ISO input, mode toggle</td>
+          </tr>
+          <tr>
+            <td>Potentiometer</td>
+            <td>LCD contrast adjustment</td>
+          </tr>
+          <tr>
+            <td>Breadboard + jumper wires</td>
+            <td>Prototyping</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Firmware architecture</h3>
+      <ul>
+        <li>Written in C++ for Arduino (AVR)</li>
+        <li>Fully non-blocking main loop — no <code>delay()</code> calls</li>
+        <li>Encoder read on every loop iteration (falling-edge detection) for zero missed pulses</li>
+        <li>LCD and LDR updates on independent millisecond timers (120ms / 100ms)</li>
+        <li>Short click vs long press detection on encoder SW for dual-function button</li>
+        <li>Serial debug output streams ADC, lux, EV, ISO, and shutter speed at 9600 baud</li>
+      </ul>
+
+      <h3>Controls &amp; LCD layout</h3>
+      <table class="project-detail__table">
+        <thead>
+          <tr>
+            <th scope="col">Input</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Rotate encoder</td>
+            <td>Change aperture (or ISO in film mode when selected)</td>
+          </tr>
+          <tr>
+            <td>Short click</td>
+            <td>Film mode: toggle cursor between aperture and ISO</td>
+          </tr>
+          <tr>
+            <td>Long press (1s)</td>
+            <td>Toggle Film ↔ mirrorless mode</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Film mode (editing aperture):</p>
+      <pre class="project-detail__code"><code>FILM&gt;f/5.6
+ISO: 400  1/250</code></pre>
+      <p>Film mode (editing ISO):</p>
+      <pre class="project-detail__code"><code>FILM f/5.6
+ISO:&gt;400  1/250</code></pre>
+      <p>Mirrorless mode (firmware shows <code>DIGI</code> on the LCD):</p>
+      <pre class="project-detail__code"><code>DIGI&gt;f/5.6
+ISO: 400  1/250</code></pre>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Debugging &amp; Iteration</h2>
+      <ul>
+        <li><strong>The problem:</strong> The encoder direction appeared stuck — it only stepped one way.</li>
+        <li><strong>Why it broke:</strong> Arduino UNO pin 13 has a built-in LED and series resistor tied to ground, so ENC_DT could not float HIGH correctly and the direction bit was wrong.</li>
+        <li><strong>The fix:</strong> Moved DT to pin 12.</li>
+        <li><strong>Result:</strong> Reliable clockwise/counterclockwise decoding.</li>
+      </ul>
+      <ul>
+        <li><strong>The problem:</strong> The UI felt laggy and the encoder skipped detents.</li>
+        <li><strong>Why it broke:</strong> A <code>delay(150)</code> in the main loop limited polling to ~6 Hz, so most mechanical steps happened between samples.</li>
+        <li><strong>The fix:</strong> Removed all blocking delays; poll the encoder every loop iteration (~10k iter/s) and refresh LCD/LDR on separate millis timers.</li>
+        <li><strong>Result:</strong> Immediate, repeatable encoder response.</li>
+      </ul>
+      <ul>
+        <li><strong>The problem:</strong> Occasional false or double steps on cheap encoder edges.</li>
+        <li><strong>Why it broke:</strong> Noisy transitions on both edges of CLK.</li>
+        <li><strong>The fix:</strong> Count only the falling edge of CLK for each detent.</li>
+        <li><strong>Result:</strong> Fewer spurious toggles; one detent maps to one UI step.</li>
+      </ul>
+      <ul>
+        <li><strong>The problem:</strong> Calibrating lux from an uncharacterized LDR.</li>
+        <li><strong>Why it broke:</strong> Film mode fixes ISO, so lux error shows up directly as shutter error; mirrorless mode can mask bias by bumping ISO to hit the 1/60s floor.</li>
+        <li><strong>The fix:</strong> Tune scalar <code>CAL</code> against a reference meter across scenes; use the film vs mirrorless asymmetry to spot offset.</li>
+        <li><strong>Result:</strong> Readings within about one-third stop of the reference app across tungsten, shade, overcast, and sun.</li>
+      </ul>
+      <p>
+        Wiring discipline matters too: keep analog sensor leads short and avoid routing sensitive lines next to noisy digital edges where possible on a breadboard build.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Reflection</h2>
+      <ul>
+        <li><strong>Analog front end:</strong> voltage divider + ADC is simple, but the LDR curve and <code>CAL</code> dominate absolute accuracy — mirrorless mode&apos;s Auto-ISO behavior changes how errors appear.</li>
+        <li><strong>What I learned:</strong> Non-blocking structure is not optional for mechanical encoders; pin choice on Arduino (e.g. pin 13) is part of the schematic, not just firmware.</li>
+        <li><strong>Exposure math:</strong> Implementing log-scale EV and standard shutter snapping in firmware reinforced how cameras expose under the hood.</li>
+        <li><strong>Skills:</strong> ADC and divider design, embedded C++ state machine, hardware debug (pin conflict, signal integrity), reference-based calibration.</li>
+        <li><strong>Next iteration:</strong> enclosure-ready PCB in KiCAD; BH1750 for factory-calibrated lux; ±1 stop bracketing on LCD; 3D-printed or laser-cut enclosure with optional diffusion dome over the sensor.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Final Result &amp; Validation</h2>
+
+      <figure class="project-detail__figure">
+        <p class="project-detail__placeholder">Demo video or in-use photo coming soon.</p>
+        <figcaption>
+          Caption: Real-time exposure readout on the LCD1602 in film and mirrorless modes, with encoder-driven aperture/ISO and mode switching.
+        </figcaption>
+      </figure>
+
+      <ul>
+        <li>Computed EV drives correct shutter for user-set aperture/ISO (film) or Auto-ISO-style behavior to ≥ 1/60s (mirrorless).</li>
+        <li>A responsive meter depends as much on firmware architecture and pin-level hardware awareness as on the exposure equations.</li>
+      </ul>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
