@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Electrical Engineering Portfolio — Dhruva Uppaluri" />
-  <title>Dhruva Uppaluri | Electrical Engineering</title>
+  <meta name="description" content="Computer Engineering — Dhruva Uppaluri. Hardware, embedded, and projects built to learn." />
+  <title>Dhruva Uppaluri | Computer Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -30,7 +30,7 @@
     <!-- Hero -->
     <section class="hero">
       <h1 class="hero-title hero-title--name">Dhruva Uppaluri</h1>
-      <p class="hero-subtitle">Electrical engineering student focused on analog circuits, digital logic, and control systems.</p>
+      <p class="hero-subtitle">Computer engineering student who builds things to understand them.</p>
       <div class="hero-cta">
         <a href="#projects" class="btn btn-primary">View Projects</a>
         <a href="#contact" class="btn btn-ghost">Get in Touch</a>
@@ -99,15 +99,16 @@
       <h2 class="section-title">About</h2>
       <div class="section-body">
         <p>
-          I’m an Electrical Engineering student at Las Positas College, planning to transfer to a four-year university after May 2026.
-          I like building and debugging real circuits — from breadboard prototypes to hardware-in-the-loop test benches.
+          I am a Computer Engineering student transferring to UC Santa Cruz in Fall 2026. Most of what I know came from building things outside of class —
+          a discrete logic gearbox with no microcontroller, a hardware-in-the-loop test bench for an RC vehicle I am turning into an F1-style car from scratch,
+          and a film photography light meter I built because I needed one and could not justify buying one.
         </p>
         <p>
-          My current work focuses on analog circuit analysis, digital logic, and embedded control:
-          validating ideas first in simulation (LTspice), then on the bench with DMMs.
+          I like the part of engineering where something does not work and you have to figure out why. Switch bounce, firmware bottlenecks, noisy sensor data —
+          the debugging is where most of the learning happens for me.
         </p>
         <p>
-          I’m looking for Summer 2026 electrical engineering internships where I can own a small piece of a real system and prove it works.
+          I am looking for a Summer 2026 hardware or embedded systems internship where I can contribute to something real from day one.
         </p>
       </div>
     </section>
@@ -119,27 +120,22 @@
         <article class="skill-card">
           <span class="skill-icon">⚡</span>
           <h3>Equipment</h3>
-          <p>Power supply, digital multimeter (DMM), breadboard wiring.</p>
+          <p>Power supply, digital multimeter, breadboard prototyping.</p>
         </article>
         <article class="skill-card">
           <span class="skill-icon">🔧</span>
           <h3>Electronics</h3>
-          <p>Arduino, 74-series TTL logic.</p>
+          <p>Arduino (Uno/ESP32), 74-series TTL logic, MPU6050 MEMS, SG90 servo, LDR/analog sensors, I²C, UART, PWM.</p>
         </article>
         <article class="skill-card">
           <span class="skill-icon">🧠</span>
           <h3>Programming</h3>
-          <p>Python, C++, MATLAB, Verilog (IP).</p>
+          <p>C++, Python, MATLAB.</p>
         </article>
         <article class="skill-card">
           <span class="skill-icon">🗂️</span>
           <h3>Software Tools</h3>
-          <p>LTspice, KiCAD, Solidworks, Fusion360, OrCAD, Altium(IP), LaTeX, Microsoft Office.</p>
-        </article>
-        <article class="skill-card">
-          <span class="skill-icon">📚</span>
-          <h3>Communication & Leadership</h3>
-          <p>Technical communication, explaining circuits clearly, cross-functional collaboration, and leadership.</p>
+          <p>KiCAD, LTSpice, LaTeX.</p>
         </article>
       </div>
     </section>
@@ -151,26 +147,11 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Arduino/C++ · LDR · Photography · Embedded UI</span>
-          </div>
-          <h3 class="project-title">DIY Light Meter — Film &amp; Mirrorless</h3>
-          <p class="project-desc">
-            Handheld light meter from discrete components: LDR voltage divider, EV math on Arduino, LCD1602 and rotary encoder UI.
-            Outputs shutter and ISO for manual film bodies or mirrorless-style Auto-ISO (hand-hold threshold) without relying on in-camera metering alone.
-          </p>
-          <a href="project-light-meter.html" class="project-link">View details →</a>
-        </article>
-
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-year">2026</span>
-            <span class="project-tags">Arduino/C++ · Control · Signal Processing</span>
+            <span class="project-tags">Arduino/C++ · Control · Signal Processing · HIL</span>
           </div>
           <h3 class="project-title">Steering-Actuator Latency Test Bench</h3>
           <p class="project-desc">
-            Designed and prototyped an ESP-style subsystem for a 1/10-scale RC vehicle; built a hardware-in-the-loop latency test bench to validate steering-actuator latency.
-            Firmware compares driver intent (joystick) vs. vehicle dynamics (MEMS gyroscope), applies an EMA filter to reduce sensor noise, and verifies control-loop latency
-            &lt; 50 ms using 115.2 kbps serial telemetry.
+            I wanted to know if my components were fast enough to support real-time steering correction on an RC car I am building from scratch. This bench measures end-to-end latency from joystick input through gyroscope response. The answer was under 50 ms. First step done.
           </p>
           <a href="project-hil-test-bench.html" class="project-link">View details →</a>
         </article>
@@ -182,10 +163,21 @@
           </div>
           <h3 class="project-title">Virtual EV Transmission — Discrete Logic Gearbox (In Progress)</h3>
           <p class="project-desc">
-            2-bit synchronous state machine for a virtual EV gearbox using discrete XOR logic. Uses 74LS74 flip-flops for state storage and 74LS86 XOR
-            gates for next-state excitation, with 74HC14 Schmitt-trigger conditioning for clean manual shift inputs.
+            A hardware-only gearbox controller that cycles through four gear states using nothing but 74-series logic chips. No microcontroller, no firmware. Switch bounce was the first real problem. The 74HC14 Schmitt trigger was the fix. Shift Down is next.
           </p>
           <a href="project-digital-logic-control.html" class="project-link">View details →</a>
+        </article>
+
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">Arduino/C++ · LDR · Embedded UI</span>
+          </div>
+          <h3 class="project-title">DIY Light Meter — Film &amp; Mirrorless</h3>
+          <p class="project-desc">
+            I shoot film with fully manual lenses and needed a way to meter light in the field. Dedicated meters cost more than I wanted to spend. So I built one. The firmware bottleneck that caused missed encoder inputs at 6Hz taught me more about embedded architecture than any tutorial did. It still lives on a breadboard. Getting it into an enclosure is what comes next.
+          </p>
+          <a href="project-light-meter.html" class="project-link">View details →</a>
         </article>
       </div>
     </section>
