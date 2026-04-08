@@ -519,6 +519,13 @@ body {
   color: var(--text);
 }
 
+.project-detail__section h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin: 1rem 0 0.35rem;
+  color: var(--text);
+}
+
 .project-detail__section p {
   color: var(--text-muted);
   margin: 0 0 1rem;

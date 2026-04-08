@@ -42,9 +42,9 @@
     <section class="project-detail__section">
       <h2>Background</h2>
       <p>
-        I’m passionate about <strong>photography</strong>. I’ve been getting into <strong>film</strong> more, and I shoot with a <strong>manual lens</strong> on my <strong>mirrorless</strong> camera.
-        With no lens–body electronic link, the body doesn’t get aperture data the way it would with a native lens, and its metering doesn’t line up — so it doesn’t really give trustworthy <strong>ISO and shutter</strong> guidance for how I’m shooting.
-        I wanted one small device I could use on that mirrorless rig and on <strong>film cameras</strong> too, which is what motivated this project.
+        I’m passionate about photography. I’ve been getting into film more, and I shoot with a manual lens on my mirrorless camera.
+        With no lens–body electronic link, the body doesn’t get aperture data the way it would with a native lens, and its metering doesn’t line up — so it doesn’t really give trustworthy ISO and shutter guidance for how I’m shooting.
+        I wanted one small device I could use on that mirrorless rig and on film cameras too, which is what motivated this project.
       </p>
       <p>
         If you’re interested in my photography, I post on
@@ -55,9 +55,9 @@
     <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
-        <li><strong>Role:</strong> Solo project</li>
-        <li><strong>Key hardware:</strong> Arduino UNO, LDR + 10KΩ divider, LCD1602, rotary encoder (CLK/DT/SW), contrast potentiometer, breadboard</li>
-        <li><strong>Tools used:</strong> Arduino IDE (C++/AVR), serial monitor (9600 baud debug), reference light meter app for calibration</li>
+        <li>Role: solo project</li>
+        <li>Key hardware: Arduino UNO, LDR + 10KΩ divider, LCD1602, rotary encoder (CLK/DT/SW), contrast potentiometer, breadboard</li>
+        <li>Tools used: Arduino IDE (C++/AVR), serial monitor (9600 baud debug), reference light meter app for calibration</li>
       </ul>
     </section>
 
@@ -73,11 +73,11 @@
     <section class="project-detail__section">
       <h2>Requirements</h2>
       <ul>
-        <li><strong>Lux to exposure:</strong> estimate scene brightness as <strong>lux</strong> (illuminance — lumens of visible light per square meter falling on the sensor) and convert that into standard photographic EV, then match to standard shutter speeds on a log scale.</li>
-        <li><strong>Film / SLR mode:</strong> user sets aperture and roll ISO; device outputs the correct shutter speed, with encoder-driven UI to edit aperture vs ISO.</li>
-        <li><strong>Mirrorless mode:</strong> user sets aperture only; firmware walks ISO upward until shutter speed meets a hand-hold threshold (≥ 1/60s), similar to Auto-ISO on a digital body.</li>
-        <li><strong>Responsive UI:</strong> rotary encoder must register every detent — no blocking <code>delay()</code> that skips pulses.</li>
-        <li><strong>Field calibration:</strong> uncalibrated LDR scaled by firmware constant <code>CAL</code>, tuned against a reference meter across multiple lighting conditions.</li>
+        <li>Lux to exposure: estimate scene brightness as lux (illuminance — lumens of visible light per square meter falling on the sensor) and convert that into standard photographic EV, then match to standard shutter speeds on a log scale.</li>
+        <li>Film / SLR mode: user sets aperture and roll ISO; device outputs the correct shutter speed, with encoder-driven UI to edit aperture vs ISO.</li>
+        <li>Mirrorless mode: user sets aperture only; firmware walks ISO upward until shutter speed meets a hand-hold threshold (≥ 1/60s), similar to Auto-ISO on a digital body.</li>
+        <li>Responsive UI: rotary encoder must register every detent — no blocking <code>delay()</code> that skips pulses.</li>
+        <li>Field calibration: uncalibrated LDR scaled by firmware constant <code>CAL</code>, tuned against a reference meter across multiple lighting conditions.</li>
       </ul>
     </section>
 
@@ -89,7 +89,7 @@
         to an approximate lux value using the LDR&apos;s resistance curve.
       </p>
       <p>
-        <strong>Lux</strong> measures <strong>illuminance</strong>: how much visible light lands on a surface, in <strong>lumens per square meter</strong>.
+        Lux measures illuminance: how much visible light lands on a surface, in lumens per square meter.
         Brighter scenes mean higher lux; the firmware uses that number as a bridge from raw ADC counts to the photographic exposure equations below.
       </p>
 
@@ -106,12 +106,12 @@
       <p>Where <em>N</em> is the f-number (aperture) and <em>t</em> is shutter speed in seconds. The result is matched to the nearest standard shutter speed on a log scale.</p>
 
       <h3>Two metering modes</h3>
-      <p><strong>Film / SLR mode</strong></p>
+      <h4>Film / SLR mode</h4>
       <ul>
         <li>The user sets aperture and film ISO (locked per roll). The meter outputs the correct shutter speed.</li>
         <li>A short click on the rotary encoder toggles the cursor between aperture and ISO selection.</li>
       </ul>
-      <p><strong>Mirrorless mode</strong></p>
+      <h4>Mirrorless mode</h4>
       <ul>
         <li>The user sets aperture only.</li>
         <li>The meter walks the ISO ladder from 100 upward, solving for shutter speed at each step, and outputs the lowest ISO that produces a hand-holdable shutter speed (≥ 1/60s).</li>
@@ -227,28 +227,28 @@ ISO: 400  1/250</code></pre>
     <section class="project-detail__section">
       <h2>Debugging &amp; Iteration</h2>
       <ul>
-        <li><strong>The problem:</strong> The encoder direction appeared stuck — it only stepped one way.</li>
-        <li><strong>Why it broke:</strong> Arduino UNO pin 13 has a built-in LED and series resistor tied to ground, so ENC_DT could not float HIGH correctly and the direction bit was wrong.</li>
-        <li><strong>The fix:</strong> Moved DT to pin 12.</li>
-        <li><strong>Result:</strong> Reliable clockwise/counterclockwise decoding.</li>
+        <li>Problem: the encoder direction appeared stuck — it only stepped one way.</li>
+        <li>Cause: Arduino UNO pin 13 has a built-in LED and series resistor tied to ground, so ENC_DT could not float HIGH correctly and the direction bit was wrong.</li>
+        <li>Fix: moved DT to pin 12.</li>
+        <li>Outcome: reliable clockwise/counterclockwise decoding.</li>
       </ul>
       <ul>
-        <li><strong>The problem:</strong> The UI felt laggy and the encoder skipped detents.</li>
-        <li><strong>Why it broke:</strong> A <code>delay(150)</code> in the main loop limited polling to ~6 Hz, so most mechanical steps happened between samples.</li>
-        <li><strong>The fix:</strong> Removed all blocking delays; poll the encoder every loop iteration (~10k iter/s) and refresh LCD/LDR on separate millis timers.</li>
-        <li><strong>Result:</strong> Immediate, repeatable encoder response.</li>
+        <li>Problem: the UI felt laggy and the encoder skipped detents.</li>
+        <li>Cause: a <code>delay(150)</code> in the main loop limited polling to ~6 Hz, so most mechanical steps happened between samples.</li>
+        <li>Fix: removed all blocking delays; poll the encoder every loop iteration (~10k iter/s) and refresh LCD/LDR on separate millis timers.</li>
+        <li>Outcome: immediate, repeatable encoder response.</li>
       </ul>
       <ul>
-        <li><strong>The problem:</strong> Occasional false or double steps on cheap encoder edges.</li>
-        <li><strong>Why it broke:</strong> Noisy transitions on both edges of CLK.</li>
-        <li><strong>The fix:</strong> Count only the falling edge of CLK for each detent.</li>
-        <li><strong>Result:</strong> Fewer spurious toggles; one detent maps to one UI step.</li>
+        <li>Problem: occasional false or double steps on cheap encoder edges.</li>
+        <li>Cause: noisy transitions on both edges of CLK.</li>
+        <li>Fix: count only the falling edge of CLK for each detent.</li>
+        <li>Outcome: fewer spurious toggles; one detent maps to one UI step.</li>
       </ul>
       <ul>
-        <li><strong>The problem:</strong> Turning an uncharacterized LDR into a trustworthy lux (illuminance) estimate.</li>
-        <li><strong>Why it broke:</strong> Film mode fixes ISO, so errors in lux propagate straight into shutter speed; mirrorless mode can mask bias by bumping ISO to hit the 1/60s floor.</li>
-        <li><strong>The fix:</strong> Tune scalar <code>CAL</code> against a reference meter across scenes; use the film vs mirrorless asymmetry to spot offset.</li>
-        <li><strong>Result:</strong> Readings within about one-third stop of the reference app across tungsten, shade, overcast, and sun.</li>
+        <li>Problem: turning an uncharacterized LDR into a trustworthy lux (illuminance) estimate.</li>
+        <li>Cause: film mode fixes ISO, so errors in lux propagate straight into shutter speed; mirrorless mode can mask bias by bumping ISO to hit the 1/60s floor.</li>
+        <li>Fix: tune scalar <code>CAL</code> against a reference meter across scenes; use the film vs mirrorless asymmetry to spot offset.</li>
+        <li>Outcome: readings within about one-third stop of the reference app across tungsten, shade, overcast, and sun.</li>
       </ul>
       <p>
         Wiring discipline matters too: keep analog sensor leads short and avoid routing sensitive lines next to noisy digital edges where possible on a breadboard build.
@@ -258,11 +258,11 @@ ISO: 400  1/250</code></pre>
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <ul>
-        <li><strong>Analog front end:</strong> voltage divider + ADC is simple, but the LDR curve and <code>CAL</code> dominate absolute accuracy — mirrorless mode&apos;s Auto-ISO behavior changes how errors appear.</li>
-        <li><strong>What I learned:</strong> Non-blocking structure is not optional for mechanical encoders; pin choice on Arduino (e.g. pin 13) is part of the schematic, not just firmware.</li>
-        <li><strong>Exposure math:</strong> Implementing log-scale EV and standard shutter snapping in firmware reinforced how cameras expose under the hood.</li>
-        <li><strong>Skills:</strong> ADC and divider design, embedded C++ state machine, hardware debug (pin conflict, signal integrity), reference-based calibration.</li>
-        <li><strong>Next iteration:</strong> enclosure-ready PCB in KiCAD; BH1750 for factory-calibrated lux; ±1 stop bracketing on LCD; 3D-printed or laser-cut enclosure with optional diffusion dome over the sensor.</li>
+        <li>Analog front end: voltage divider + ADC is simple, but the LDR curve and <code>CAL</code> dominate absolute accuracy — mirrorless mode&apos;s Auto-ISO behavior changes how errors appear.</li>
+        <li>Lesson: non-blocking structure is not optional for mechanical encoders; pin choice on Arduino (e.g. pin 13) is part of the schematic, not just firmware.</li>
+        <li>Exposure math: implementing log-scale EV and standard shutter snapping in firmware reinforced how cameras expose under the hood.</li>
+        <li>Skills: ADC and divider design, embedded C++ state machine, hardware debug (pin conflict, signal integrity), reference-based calibration.</li>
+        <li>Next iteration: enclosure-ready PCB in KiCAD; BH1750 for factory-calibrated lux; ±1 stop bracketing on LCD; 3D-printed or laser-cut enclosure with optional diffusion dome over the sensor.</li>
       </ul>
     </section>
 
@@ -270,7 +270,10 @@ ISO: 400  1/250</code></pre>
       <h2>Final Result &amp; Validation</h2>
 
       <figure class="project-detail__figure">
-        <p class="project-detail__placeholder">Demo video or in-use photo coming soon.</p>
+        <video controls preload="metadata">
+          <source src="lightmetervideo.mov" type="video/quicktime" />
+          Your browser does not support the video tag.
+        </video>
         <figcaption>
           Real-time exposure readout on the LCD1602 in film and mirrorless modes, with encoder-driven aperture/ISO and mode switching.
         </figcaption>

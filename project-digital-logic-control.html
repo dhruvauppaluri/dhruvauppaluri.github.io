@@ -40,9 +40,9 @@
     <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
-        <li><strong>Role:</strong> Solo Project</li>
-        <li><strong>Key Hardware:</strong> 74LS74 (dual D flip-flops), 74LS86 (quad XOR gates), 74HC14 (Schmitt-trigger inverters)</li>
-        <li><strong>Tools Used:</strong> KiCAD, breadboard prototyping, DMM measurements, Arduino for power/GND supplies during testing</li>
+        <li>Role: solo project</li>
+        <li>Key hardware: 74LS74 (dual D flip-flops), 74LS86 (quad XOR gates), 74HC14 (Schmitt-trigger inverters)</li>
+        <li>Tools used: KiCAD, breadboard prototyping, DMM measurements, Arduino for power/GND supplies during testing</li>
       </ul>
     </section>
 
@@ -54,7 +54,7 @@
         The goal was to design a hardware-level "gearbox" controller for an electric vehicle testbed: a 2-bit synchronous state machine that manages four gear states (00 to 11) from manual shift inputs.
       </p>
       <p>
-        This iteration focuses on <strong>Shift Up</strong>: each valid input advances the state through
+        This iteration focuses on Shift Up: each valid input advances the state through
         00 -> 01 -> 10 -> 11 -> 00 (cyclic four-gear behavior).
       </p>
     </section>
@@ -62,9 +62,9 @@
     <section class="project-detail__section">
       <h2>Requirements</h2>
       <ul>
-        <li><strong>Stable synchronous behavior:</strong> state updates must behave like a synchronous state machine (stored in 74LS74 flip-flops).</li>
-        <li><strong>Clean input clocking:</strong> mechanical shift inputs must be debounced and squared using 74HC14 Schmitt-trigger inverters.</li>
-        <li><strong>Discrete "gearbox logic":</strong> transition behavior must be defined by XOR-based discrete logic (74LS86), not by software.</li>
+        <li>Stable synchronous behavior: state updates must behave like a synchronous state machine (stored in 74LS74 flip-flops).</li>
+        <li>Clean input clocking: mechanical shift inputs must be debounced and squared using 74HC14 Schmitt-trigger inverters.</li>
+        <li>Discrete gearbox logic: transition behavior must be defined by XOR-based discrete logic (74LS86), not by software.</li>
       </ul>
     </section>
 
@@ -81,8 +81,8 @@
       </p>
 
       <p>
-        Visual feedback uses three LEDs: <strong>LED1</strong> indicates the manual shift button/actuation state,
-        while <strong>LED2</strong> and <strong>LED3</strong> represent the current <strong>2-bit gear state</strong> (00 to 11).
+        Visual feedback uses three LEDs: LED1 indicates the manual shift button/actuation state,
+        while LED2 and LED3 represent the current 2-bit gear state (00 to 11).
       </p>
 
       <h3 class="project-detail__figure-title">PCB SPICE Schematic - KiCAD</h3>
@@ -109,9 +109,9 @@
 
       <h3>Component Selection</h3>
       <ul>
-        <li><strong>74LS74 (dual D flip-flops):</strong> stores the 2-bit gear state synchronously.</li>
-        <li><strong>74LS86 (quad XOR gates):</strong> implements XOR-based transition/excitation logic.</li>
-        <li><strong>74HC14 (Schmitt-trigger inverters):</strong> squares noisy mechanical shift inputs so clock pins see clean transitions.</li>
+        <li>74LS74 (dual D flip-flops): stores the 2-bit gear state synchronously.</li>
+        <li>74LS86 (quad XOR gates): implements XOR-based transition/excitation logic.</li>
+        <li>74HC14 (Schmitt-trigger inverters): squares noisy mechanical shift inputs so clock pins see clean transitions.</li>
       </ul>
 
       <h3>Signal Conditioning</h3>
@@ -124,10 +124,10 @@
     <section class="project-detail__section">
       <h2>Debugging & Iteration</h2>
       <ul>
-        <li><strong>The problem:</strong> mechanical button bounce created false on/off commands.</li>
-        <li><strong>Why it broke:</strong> the 74LS74 flip-flops treated each micro-bounce as a clock, making the gear state jump unpredictably.</li>
-        <li><strong>The fix:</strong> routed the shift input through the 74HC14 Schmitt-Trigger inverter to use hysteresis and clean the signal before it reached the flip-flops.</li>
-        <li><strong>Result:</strong> one physical press now produces one reliable clock command, so transitions are stable and repeatable.</li>
+        <li>Problem: mechanical button bounce created false on/off commands.</li>
+        <li>Cause: the 74LS74 flip-flops treated each micro-bounce as a clock, making the gear state jump unpredictably.</li>
+        <li>Fix: routed the shift input through the 74HC14 Schmitt-trigger inverter to use hysteresis and clean the signal before it reached the flip-flops.</li>
+        <li>Outcome: one physical press now produces one reliable clock command, so transitions are stable and repeatable.</li>
       </ul>
       <p>
         Wiring discipline also matters for synchronous logic: keeping XOR-to-flip-flop connections organized helps preserve clean logic levels
@@ -138,11 +138,11 @@
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <ul>
-        <li><strong>Handling Mechanical Inputs:</strong> switch bounce can cause flicker/erratic state toggling.</li>
-        <li><strong>What I learned:</strong> synchronous logic only works reliably when input conditioning creates clean transitions
+        <li>Mechanical inputs: switch bounce can cause flicker or erratic state toggling.</li>
+        <li>Lesson: synchronous logic only works reliably when input conditioning creates clean transitions
           and wiring preserves stable logic levels.</li>
-        <li><strong>PCB workflow:</strong> I transitioned the prototype wiring into PCB layout, then worked through manufacturing + test iterations to validate the board-level implementation.</li>
-        <li><strong>Next Iteration:</strong> add Shift Down control and the missing down-transition mapping to complete full up/down gearbox behavior.</li>
+        <li>PCB workflow: I transitioned the prototype wiring into PCB layout, then worked through manufacturing and test iterations to validate the board-level implementation.</li>
+        <li>Next iteration: add Shift Down control and the missing down-transition mapping to complete full up/down gearbox behavior.</li>
       </ul>
     </section>
 

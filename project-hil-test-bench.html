@@ -48,11 +48,11 @@
     <section class="project-detail__section">
       <h2>System architecture</h2>
       <ul>
-        <li><strong>Reference input:</strong> Joystick (analog voltage) representing driver or flight-computer intent.</li>
-        <li><strong>Controller:</strong> Arduino Uno running C++ firmware for signal mapping, filtering, and telemetry.</li>
-        <li><strong>Plant (actuator):</strong> SG90 servo motor representing a steering rack or gimbal.</li>
-        <li><strong>Feedback sensor:</strong> MPU6050 MEMS gyroscope measuring yaw rate.</li>
-        <li><strong>Telemetry:</strong> High-speed UART (115200 baud) streaming data to a host PC for analysis.</li>
+        <li>Reference input: joystick (analog voltage) representing driver or flight-computer intent.</li>
+        <li>Controller: Arduino Uno running C++ firmware for signal mapping, filtering, and telemetry.</li>
+        <li>Plant (actuator): SG90 servo motor representing a steering rack or gimbal.</li>
+        <li>Feedback sensor: MPU6050 MEMS gyroscope measuring yaw rate.</li>
+        <li>Telemetry: high-speed UART (115200 baud) streaming data to a host PC for analysis.</li>
       </ul>
     </section>
 
@@ -67,8 +67,8 @@
       <h3>Signal processing (firmware)</h3>
       <p>Raw gyro data from the low-cost MEMS sensor is noisy and biased. In firmware I implemented:</p>
       <ul>
-        <li><strong>Startup calibration:</strong> sample the gyro 200 times at rest to estimate and subtract zero-rate bias.</li>
-        <li><strong>Exponential Moving Average (EMA):</strong> low-pass filter with α = 0.2 to smooth high-frequency jitter without adding much latency.</li>
+        <li>Startup calibration: sample the gyro 200 times at rest to estimate and subtract zero-rate bias.</li>
+        <li>Exponential moving average (EMA): low-pass filter with α = 0.2 to smooth high-frequency jitter without adding much latency.</li>
       </ul>
     </section>
 
@@ -110,10 +110,10 @@ void processTelemetry() {
     <section class="project-detail__section">
       <h2>Engineering impact & skills</h2>
       <ul>
-        <li><strong>Latency validation:</strong> Measured end‑to‑end loop response (&lt; 50 ms) by comparing joystick commands to sensed yaw rate.</li>
-        <li><strong>Signal processing:</strong> Used calibration plus EMA filtering to turn noisy MEMS data into a stable control signal.</li>
-        <li><strong>Embedded C++:</strong> Implemented I²C sensor reads and high‑speed UART telemetry (115200 baud) on Arduino.</li>
-        <li><strong>Control theory:</strong> Observed open‑loop vs. closed‑loop behavior and how filtering affects stability and response time.</li>
+        <li>Latency validation: measured end‑to‑end loop response (&lt; 50 ms) by comparing joystick commands to sensed yaw rate.</li>
+        <li>Signal processing: calibration plus EMA filtering to turn noisy MEMS data into a stable control signal.</li>
+        <li>Embedded C++: I²C sensor reads and high‑speed UART telemetry (115200 baud) on Arduino.</li>
+        <li>Control theory: open‑loop vs. closed‑loop behavior and how filtering affects stability and response time.</li>
       </ul>
     </section>
 
