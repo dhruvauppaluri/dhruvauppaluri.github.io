@@ -40,8 +40,10 @@
     <section class="project-detail__section">
       <h2>Objective</h2>
       <p>
-        Design and build a hardware-in-the-loop latency test bench that can measure the latency and control dynamics of an electromechanical actuator.
-        The rig compares a commanded input (joystick) against the physical response of a servo and MEMS gyroscope, similar to a satellite attitude or ESP steering subsystem.
+        I want to build an F1-style RC car from scratch. Not kit-built, actually designed and assembled.
+        One of the systems I want on it is active stability control, something that detects when the rear is stepping out and corrects before the driver loses it.
+        But before I could think about correction, I needed to know whether the components I had could even keep up with real-time demands. This bench was the first step.
+        It measures the time between a steering input and the moment the gyroscope detects the physical response. If that number stays under 50 ms, the setup is fast enough to build on. If not, I need different hardware. The answer was under 50 ms.
       </p>
     </section>
 
@@ -65,7 +67,9 @@
       </p>
 
       <h3>Signal processing (firmware)</h3>
-      <p>Raw gyro data from the low-cost MEMS sensor is noisy and biased. In firmware I implemented:</p>
+      <p>
+        A cheap MEMS gyroscope is noisy enough to make latency measurements unreliable if you use the raw data directly. Before I could trust the numbers, I needed to clean the signal without adding delay of its own. In firmware I implemented two things:
+      </p>
       <ul>
         <li>Startup calibration: sample the gyro 200 times at rest to estimate and subtract zero-rate bias.</li>
         <li>Exponential moving average (EMA): low-pass filter with α = 0.2 to smooth high-frequency jitter without adding much latency.</li>
@@ -108,13 +112,28 @@ void processTelemetry() {
     </section>
 
     <section class="project-detail__section">
-      <h2>Engineering impact & skills</h2>
-      <ul>
-        <li>Latency validation: measured end‑to‑end loop response (&lt; 50 ms) by comparing joystick commands to sensed yaw rate.</li>
-        <li>Signal processing: calibration plus EMA filtering to turn noisy MEMS data into a stable control signal.</li>
-        <li>Embedded C++: I²C sensor reads and high‑speed UART telemetry (115200 baud) on Arduino.</li>
-        <li>Control theory: open‑loop vs. closed‑loop behavior and how filtering affects stability and response time.</li>
-      </ul>
+      <h2>Engineering impact &amp; skills</h2>
+      <p>
+        The part that took the longest to get right was the filter. Getting alpha tuned to 0.2 was not a guess — it came from watching the step response graph and adjusting until the filtered line tracked the raw signal closely without lagging behind it.
+        Too low and the filter added its own delay. Too high and the noise came back. The graph is what finally told me it was working. Seeing the orange line settle into a clean shape while the green line spiked around it was the moment the whole thing clicked.
+      </p>
+      <p>
+        The result was under 50 ms end-to-end. That confirms the setup can keep up with what a real-time correction loop would demand. This project did not correct for anything. It measured whether correction is possible with these components, and confirmed that it is.
+        The next step is closing the loop, feeding gyroscope output back into the steering command so the car responds to what it is actually doing rather than just what the driver is asking for. That is where the F1 car build goes from here. This bench gave me the confidence to keep going.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Final result</h2>
+      <figure class="project-detail__figure">
+        <video controls preload="metadata">
+          <source src="hil-telemetry.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </figure>
+      <p>
+        The video shows the telemetry in real time. Raw gyro data on one line, filtered output on the other, latency confirmed under 50 ms. First step done.
+      </p>
     </section>
 
     <div class="project-detail__back project-detail__back--bottom">

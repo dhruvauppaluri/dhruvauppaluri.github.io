@@ -72,13 +72,11 @@
 
     <section class="project-detail__section">
       <h2>Requirements</h2>
-      <ul>
-        <li>Lux to exposure: estimate scene brightness as lux (illuminance — lumens of visible light per square meter falling on the sensor) and convert that into standard photographic EV, then match to standard shutter speeds on a log scale.</li>
-        <li>Film / SLR mode: user sets aperture and roll ISO; device outputs the correct shutter speed, with encoder-driven UI to edit aperture vs ISO.</li>
-        <li>Mirrorless mode: user sets aperture only; firmware walks ISO upward until shutter speed meets a hand-hold threshold (≥ 1/60s), similar to Auto-ISO on a digital body.</li>
-        <li>Responsive UI: rotary encoder must register every detent — no blocking <code>delay()</code> that skips pulses.</li>
-        <li>Field calibration: uncalibrated LDR scaled by firmware constant <code>CAL</code>, tuned against a reference meter across multiple lighting conditions.</li>
-      </ul>
+      <p>
+        I needed it to do three things reliably. First, take a raw lux reading from an uncalibrated LDR and convert it into a shutter speed I could actually trust.
+        Second, handle two different shooting workflows — film mode where ISO is locked to a roll, and mirrorless mode where the firmware walks the ISO ladder until the shutter speed clears a hand-holdable threshold.
+        Third, register every single encoder detent without missing inputs. That last one sounds trivial until you realize how easy it is to get wrong.
+      </p>
     </section>
 
     <section class="project-detail__section">
@@ -257,13 +255,20 @@ ISO: 400  1/250</code></pre>
 
     <section class="project-detail__section">
       <h2>Reflection</h2>
-      <ul>
-        <li>Analog front end: voltage divider + ADC is simple, but the LDR curve and <code>CAL</code> dominate absolute accuracy — mirrorless mode&apos;s Auto-ISO behavior changes how errors appear.</li>
-        <li>Lesson: non-blocking structure is not optional for mechanical encoders; pin choice on Arduino (e.g. pin 13) is part of the schematic, not just firmware.</li>
-        <li>Exposure math: implementing log-scale EV and standard shutter snapping in firmware reinforced how cameras expose under the hood.</li>
-        <li>Skills: ADC and divider design, embedded C++ state machine, hardware debug (pin conflict, signal integrity), reference-based calibration.</li>
-        <li>Next iteration: enclosure-ready PCB in KiCAD; BH1750 for factory-calibrated lux; ±1 stop bracketing on LCD; 3D-printed or laser-cut enclosure with optional diffusion dome over the sensor.</li>
-      </ul>
+      <p>
+        The analog front end looks trivial — a divider into the ADC — but the LDR curve and the <code>CAL</code> constant are what decide if the shutter numbers mean anything.
+        Mirrorless mode and film mode also surface errors differently, which made calibration feel less like a formula and more like chasing a reference until it stopped lying.
+      </p>
+      <p>
+        Implementing EV math and snapping to real shutter speeds in code made the link between what I set on a camera and what the meter thinks is finally click.
+      </p>
+      <p>
+        The thing that surprised me most was how much pin choice matters. Moving ENC_DT off pin 13 because of the built-in LED and series resistor is not something any tutorial warns you about —
+        I only found it by tracing the signal and noticing the direction bit was always wrong. That kind of hardware-level detail is invisible until it breaks something, and finding it taught me more about the Arduino schematic than any documentation did.
+      </p>
+      <p>
+        Next iteration I want a KiCAD PCB that&apos;s closer to enclosure-ready, a BH1750 so lux isn&apos;t a guess, ±1 stop on the LCD for bracketing, and a real box with something sensible over the sensor.
+      </p>
     </section>
 
     <section class="project-detail__section">
@@ -278,11 +283,6 @@ ISO: 400  1/250</code></pre>
           Real-time exposure readout on the LCD1602 in film and mirrorless modes, with encoder-driven aperture/ISO and mode switching.
         </figcaption>
       </figure>
-
-      <ul>
-        <li>Computed EV drives correct shutter for user-set aperture/ISO (film) or Auto-ISO-style behavior to ≥ 1/60s (mirrorless).</li>
-        <li>A responsive meter depends as much on firmware architecture and pin-level hardware awareness as on the exposure equations.</li>
-      </ul>
     </section>
 
     <div class="project-detail__back project-detail__back--bottom">

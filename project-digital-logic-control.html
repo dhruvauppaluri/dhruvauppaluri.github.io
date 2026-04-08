@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Digital Logic Control Unit (Virtual EV Transmission) — Hardware-based state machine for validating digital powertrain logic" />
-  <title>Digital Logic Control Unit | Dhruva Uppaluri</title>
+  <meta name="description" content="Virtual EV Transmission — discrete logic gearbox: four gear states from 74-series TTL, no microcontroller." />
+  <title>Virtual EV Transmission — Discrete Logic Gearbox | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -33,8 +33,10 @@
 
     <header class="project-detail__header">
       <span class="project-detail__meta">2026 - Digital Logic - XOR - 74LS74 - 74HC14</span>
-      <h1 class="project-detail__title">Digital Logic Control Unit</h1>
-      <p class="project-detail__subtitle">A 2-bit synchronous state machine for an EV gearbox using XOR-based discrete logic.</p>
+      <h1 class="project-detail__title">Virtual EV Transmission — Discrete Logic Gearbox</h1>
+      <p class="project-detail__subtitle">
+        A hardware-only gearbox controller that cycles through four gear states using nothing but 74-series logic chips. No microcontroller, no firmware.
+      </p>
     </header>
 
     <section class="project-detail__section">
@@ -51,25 +53,27 @@
       <p>
         I wanted to learn how logic gates and ICs can carry binary information through a circuit, and how that learning connects to PCB design and real-world implementation.
         That motivation grew when I saw Mazda release a fully EV car with electronic gear shifts, and I wanted to replicate the concept using only discrete IC logic (no microcontroller programming).
-        The goal was to design a hardware-level "gearbox" controller for an electric vehicle testbed: a 2-bit synchronous state machine that manages four gear states (00 to 11) from manual shift inputs.
       </p>
       <p>
-        This iteration focuses on Shift Up: each valid input advances the state through
-        00 -> 01 -> 10 -> 11 -> 00 (cyclic four-gear behavior).
+        When I saw Mazda release a fully electric car with electronic gear shifts, I wanted to understand how gear state could be managed at the hardware level, before any software gets involved.
+        The constraint I set for myself was strict: no microcontroller, no firmware, no shortcuts. Every transition had to be decided by gates.
+      </p>
+      <p>
+        This first iteration handles Shift Up. Each press advances the state one step through a four-gear cycle: 00 to 01 to 10 to 11 and back to 00. Shift Down comes next.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Requirements</h2>
-      <ul>
-        <li>Stable synchronous behavior: state updates must behave like a synchronous state machine (stored in 74LS74 flip-flops).</li>
-        <li>Clean input clocking: mechanical shift inputs must be debounced and squared using 74HC14 Schmitt-trigger inverters.</li>
-        <li>Discrete gearbox logic: transition behavior must be defined by XOR-based discrete logic (74LS86), not by software.</li>
-      </ul>
+      <p>
+        I needed three things to be true. The state had to update synchronously, meaning the flip-flops could only change on a clean clock edge, not whenever the input happened to change.
+        The shift button had to produce exactly one clock per press regardless of how bouncy the mechanical contact was.
+        And all of the transition logic had to live in discrete gates, not code. That last constraint was the point of the whole project.
+      </p>
     </section>
 
     <section class="project-detail__section">
-      <h2>Design & Logic</h2>
+      <h2>Design &amp; Logic</h2>
       <h3>Logic Theory</h3>
       <p>
         I derived the excitation/next-state mapping for a 2-bit gearbox state machine.
@@ -108,23 +112,24 @@
       </figure>
 
       <h3>Component Selection</h3>
-      <ul>
-        <li>74LS74 (dual D flip-flops): stores the 2-bit gear state synchronously.</li>
-        <li>74LS86 (quad XOR gates): implements XOR-based transition/excitation logic.</li>
-        <li>74HC14 (Schmitt-trigger inverters): squares noisy mechanical shift inputs so clock pins see clean transitions.</li>
-      </ul>
+      <p>
+        The 74LS74 holds the state. Two D flip-flops that only update on a rising clock edge, which is what makes the behavior synchronous.
+        The 74LS86 is the decision layer — a quad XOR gate network that figures out whether each flip-flop should toggle on the next clock based on the current state.
+        The 74HC14 is what made everything else work. Its Schmitt-trigger inputs use hysteresis to convert a bouncy mechanical switch edge into a clean transition the flip-flops can actually trust. Without it, one physical press looked like several clocks.
+      </p>
 
       <h3>Signal Conditioning</h3>
       <p>
-        The 74HC14 Schmitt trigger converts bouncy switch edges into fast, reliable digital transitions,
-        which is critical for preventing erratic state changes on synchronous flip-flops.
+        A mechanical button does not produce a clean on-off transition. It bounces. The contacts make and break several times in a few milliseconds before settling.
+        To synchronous logic, each bounce looks like a separate clock edge. The 74HC14 uses hysteresis to ignore the noise and output one clean edge per press.
+        That single component is what made the difference between a state machine that worked and one that jumped unpredictably.
       </p>
     </section>
 
     <section class="project-detail__section">
-      <h2>Debugging & Iteration</h2>
+      <h2>Debugging &amp; Iteration</h2>
       <ul>
-        <li>Problem: mechanical button bounce created false on/off commands.</li>
+        <li>I did not know switch bounce was a thing until this project showed me what it looks like in hardware.</li>
         <li>Cause: the 74LS74 flip-flops treated each micro-bounce as a clock, making the gear state jump unpredictably.</li>
         <li>Fix: routed the shift input through the 74HC14 Schmitt-trigger inverter to use hysteresis and clean the signal before it reached the flip-flops.</li>
         <li>Outcome: one physical press now produces one reliable clock command, so transitions are stable and repeatable.</li>
@@ -137,17 +142,17 @@
 
     <section class="project-detail__section">
       <h2>Reflection</h2>
-      <ul>
-        <li>Mechanical inputs: switch bounce can cause flicker or erratic state toggling.</li>
-        <li>Lesson: synchronous logic only works reliably when input conditioning creates clean transitions
-          and wiring preserves stable logic levels.</li>
-        <li>PCB workflow: I transitioned the prototype wiring into PCB layout, then worked through manufacturing and test iterations to validate the board-level implementation.</li>
-        <li>Next iteration: add Shift Down control and the missing down-transition mapping to complete full up/down gearbox behavior.</li>
-      </ul>
+      <p>
+        What I did not expect was how much wiring layout affects behavior on a breadboard. Long runs between the XOR gates and the flip-flop clock pins pick up enough noise to cause phantom transitions.
+        Keeping those connections short and organized was not an aesthetic choice, it was a functional one. I had to break it first to learn that.
+      </p>
+      <p>
+        The next version adds Shift Down, which means working out the down-transition excitation mapping and adding the missing logic to the XOR network. The hardware side is mostly done. The state machine just needs to go both directions.
+      </p>
     </section>
 
     <section class="project-detail__section">
-      <h2>Final Result & Validation</h2>
+      <h2>Final Result &amp; Validation</h2>
 
       <figure class="project-detail__figure">
         <video controls preload="metadata">
@@ -158,11 +163,9 @@
           Final product validation video showing reliable cycling through the four gear states (Shift Up).
         </figcaption>
       </figure>
-
-      <ul>
-        <li>Reliably cycles through 00 → 01 → 10 → 11 → 00 on Shift Up.</li>
-        <li>Synchronous logic only works when input conditioning and wiring preserve clean transitions.</li>
-      </ul>
+      <p>
+        The video shows one press, one gear change, every time. That was the goal. Shift Down is next.
+      </p>
     </section>
 
     <div class="project-detail__back project-detail__back--bottom">
