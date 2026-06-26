@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Axiom — Neural RLHF: EEG-driven preference learning with Muse S and multi-agent OpenAI responses. WeaveHacks 4 — concept and synchronization protocol by Dhruva Uppaluri." />
+  <meta name="description" content="Axiom — Neural RLHF: EEG-driven preference learning built in 24 hours at WeaveHacks 4. Muse S, multi-agent OpenAI, concept and sync protocol by Dhruva Uppaluri." />
   <title>Axiom — Neural RLHF | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,10 +32,10 @@
     </div>
 
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · WeaveHacks 4 · Python · TypeScript · EEG · Redis</span>
+      <span class="project-detail__meta">Jun 2026 · WeaveHacks 4 (24-hour build) · Python · TypeScript · EEG · Redis</span>
       <h1 class="project-detail__title">Axiom — Neural RLHF</h1>
       <p class="project-detail__subtitle">
-        Your brain as the reward model: three AI agents compete to explain a topic while a Muse S headband measures engagement, focus, and valence — no clicks, no thumbs-up, just neural response.
+        Built in 24 hours at WeaveHacks 4: your brain as the reward model — three AI agents compete to explain a topic while a Muse S headband measures engagement, focus, and valence. No clicks, no thumbs-up, just neural response.
       </p>
       <p class="project-detail__subtitle">
         <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a>
@@ -45,7 +45,8 @@
     <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
-        <li>Role: co-creator — originated the project concept; synchronization protocol between EEG ingestion, agent rounds, and reward pipeline (WeaveHacks 4, June 6–7, 2026)</li>
+        <li>Event: WeaveHacks 4 (24-hour build, June 2026)</li>
+        <li>Role: co-creator — originated the project concept; synchronization protocol between EEG ingestion, agent rounds, and reward pipeline</li>
         <li>Hardware: Muse S EEG headband (256 Hz over BLE on macOS)</li>
         <li>Stack: Python backend (BrainFlow, signal processing, neural reward model), React/TypeScript frontend, Redis streams, Weave tracing, OpenAI agent arena</li>
         <li>Repository: <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a></li>
@@ -59,7 +60,7 @@
         Agents that resonate with you get reinforced over rounds; the ones that lose adapt from your neural feedback. No clicking, no typing a score. Just read, think, and let engagement, focus, and valence do the judging.
       </p>
       <p>
-        We built this in a weekend at WeaveHacks 4 with a small team. It is the software and agent side of the same hackathon — Apollo 1 is the physical EEG-driven rover on a <a href="project-apollo-1.html" class="project-link">separate project page</a>.
+        We built this in the same 24-hour window as the rest of our WeaveHacks 4 team — pitch to demo, no second day to clean up. It is the software and agent side of that sprint; <a href="project-apollo-1.html" class="project-link">Apollo 1</a> is the EEG-driven rover I built on hardware during the same hackathon.
       </p>
     </section>
 
@@ -145,7 +146,7 @@
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        I pitched the idea and helped wire the hard parts — less the agent personas themselves, more whether the system could stay in sync under demo pressure. Motion artifacts, bad electrode contact, and whether a spike in beta meant “this explanation is good” or “I am confused” were constant questions; building a sim mode early saved us, and so did treating reward as a smoothed brain-state vector instead of a single noisy sample.
+        I pitched the idea and helped wire the hard parts in a single 24-hour sprint — less the agent personas themselves, more whether the system could stay in sync under demo pressure. Motion artifacts, bad electrode contact, and whether a spike in beta meant “this explanation is good” or “I am confused” were constant questions; building a sim mode early saved us, and so did treating reward as a smoothed brain-state vector instead of a single noisy sample.
       </p>
       <p>
         The architecture — stream EEG, classify state, score agents, trace everything — is the piece I took away. It sits in a different lane from the embedded and hardware projects on this site, but the signal-processing instinct is the same: filter before you act on the data.
