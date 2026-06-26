@@ -7,11 +7,19 @@
   <title>Dhruva Uppaluri | Computer Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="circuit-spine" aria-hidden="true">
+    <svg class="circuit-spine__svg">
+      <path class="circuit-spine__wire circuit-spine__wire--base"></path>
+      <path class="circuit-spine__wire circuit-spine__wire--live"></path>
+      <g class="circuit-spine__nodes"></g>
+    </svg>
+  </div>
 
   <header class="header">
     <a href="#top" class="logo">&lt;/&gt;</a>
@@ -29,11 +37,24 @@
   <main id="top">
     <!-- Hero -->
     <section class="hero">
-      <h1 class="hero-title hero-title--name">Dhruva Uppaluri</h1>
-      <p class="hero-subtitle">Computer engineering student who builds things to understand them.</p>
-      <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">View Projects</a>
-        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <h1 class="hero-title hero-title--name">Dhruva Uppaluri</h1>
+          <p class="hero-subtitle">Computer engineering student who builds things to understand them.</p>
+          <div class="hero-cta">
+            <a href="#projects" class="btn btn-primary">View Projects</a>
+            <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+          </div>
+        </div>
+        <div class="hero-stamp" aria-label="Engineer status summary">
+          <div class="hero-stamp__row"><span>ROLE</span><span>Computer Engineering</span></div>
+          <div class="hero-stamp__row"><span>TRANSFER</span><span>UC Santa Cruz, Fall 2026</span></div>
+          <hr class="hero-stamp__rule" />
+          <div class="hero-stamp__row"><span>SEEKING</span><span>Summer 2026 Internship</span></div>
+          <div class="hero-stamp__row"><span>FOCUS</span><span>Hardware / Embedded</span></div>
+          <hr class="hero-stamp__rule" />
+          <div class="hero-stamp__row"><span>STATUS</span><span class="hero-stamp__status">Open to roles</span></div>
+        </div>
       </div>
     </section>
 
@@ -118,27 +139,27 @@
       <h2 class="section-title">Skills</h2>
       <div class="skills-grid">
         <article class="skill-card">
-          <span class="skill-icon">⚡</span>
+          <span class="skill-icon">[EQUIP]</span>
           <h3>Equipment</h3>
           <p>Power supply, digital multimeter (rail and load probing), breadboard prototyping, Muse S EEG headband.</p>
         </article>
         <article class="skill-card">
-          <span class="skill-icon">🔧</span>
+          <span class="skill-icon">[ELEC]</span>
           <h3>Electronics</h3>
           <p>Arduino (Uno/ESP32), 4WD H-bridge motor drive, transistor switching, BLE (HM-10), SG90 servo, HC-SR04 ultrasonic, MPU6050 MEMS, LDR/analog sensors, 74-series TTL logic, I²C, UART, PWM.</p>
         </article>
         <article class="skill-card">
-          <span class="skill-icon">🧠</span>
+          <span class="skill-icon">[PROG]</span>
           <h3>Programming</h3>
           <p>C++, Python (asyncio, Bleak, pyserial), TypeScript, MATLAB.</p>
         </article>
         <article class="skill-card">
-          <span class="skill-icon">📡</span>
+          <span class="skill-icon">[SIG]</span>
           <h3>Signal Processing &amp; BCI</h3>
           <p>EEG acquisition (BrainFlow, Muse S), band-power features (α, β, θ), focus and engagement ratios, baseline normalization, real-time sensor fusion.</p>
         </article>
         <article class="skill-card">
-          <span class="skill-icon">🗂️</span>
+          <span class="skill-icon">[TOOLS]</span>
           <h3>Software Tools</h3>
           <p>KiCAD, LTSpice, LaTeX, Weave (Weights &amp; Biases), Redis (streams &amp; pub/sub), OpenAI API, React, WebSocket.</p>
         </article>
