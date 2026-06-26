@@ -46,7 +46,7 @@
       <h2>Project Overview</h2>
       <ul>
         <li>Event: WeaveHacks 4 (24-hour build, June 2026)</li>
-        <li>Role: hardware and pipeline — rover mechanicals, motor drive, EEG-to-actuator path</li>
+        <li>Role: hardware builder — assembled the 4WD chassis, motor drive electronics, and wiring; integrated servo, ultrasonic, and camera mounts on the team’s rover design</li>
         <li>Key hardware: Arduino Uno, four-motor H-bridge drive with independent transistor stages, SG90 servo, HC-SR04 ultrasonic, camera for object detection, Muse S EEG headband</li>
         <li>Stack: multi-agent LLM system traced through Weave (Weights &amp; Biases), Redis streams for live signal ingestion, Python host daemon, Arduino firmware</li>
         <li>Repository: <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a></li>
@@ -57,10 +57,10 @@
       <h2>Objective</h2>
       <p>
         The goal at WeaveHacks was to close the loop from thought to motion — not a joystick, not a keyboard, but sustained focus on a Muse S headband translated into real-time drive commands on a rover we built from scratch in a day.
-        Apollo 1 is that rover and the pipeline behind it: intercept EEG focus levels over Bluetooth, normalize them against a stored baseline so ambient neural noise does not masquerade as intent, and map the result to proportional motor PWM on four independent wheel channels.
+        Apollo 1 is that rover: the team’s EEG-to-actuator pipeline intercepts focus levels over Bluetooth, normalizes them against a stored baseline, and maps the result to proportional motor PWM on four independent wheel channels.
       </p>
       <p>
-        On the software side, a multi-agent system on Weave and Redis continuously processes incoming brain-state vectors at the edge. On the hardware side, I needed a platform that could actually respond — not a kit car, but a 4WD chassis with per-motor transistor switching so each wheel’s speed could track focus smoothly instead of snapping on or off.
+        My part was the hardware — not designing the full stack solo, but building the platform the stack needed to run on. Not a kit car: a 4WD chassis I wired with per-motor transistor switching so each wheel’s speed could track focus smoothly instead of snapping on or off.
       </p>
     </section>
 
@@ -81,14 +81,14 @@
 
       <h3>Robot hardware</h3>
       <p>
-        I built the 4WD platform during the hackathon — chassis, motor mounts, and the drive electronics. Each motor got its own transistor switching stage so speed could be modulated independently and proportionally to focus level rather than treated as a single on/off bus.
+        I built the 4WD platform during the hackathon — chassis, motor mounts, drive electronics, and the physical integration for the servo, ultrasonic sensor, and camera. Each motor got its own transistor switching stage so speed could be modulated independently and proportionally to focus level rather than treated as a single on/off bus.
         Motor outputs are forced LOW at boot so the rover does not jerk on reset; that mattered when I was probing stages that were getting hot enough to smell wrong.
       </p>
 
       <h3>Brain signal to motor command</h3>
       <p>
-        The pipeline I architected runs focus level from the headband through baseline normalization and into real-time motor commands. The idea is simple to state and hard to make reliable: higher sustained focus → higher duty cycle on the drive channels; drop below threshold → coast or stop.
-        Separating “user is actually focusing” from “EEG is noisy because someone walked past” was where the multi-agent normalization layer earned its keep.
+        The team’s pipeline runs focus level from the headband through baseline normalization and into real-time motor commands on the Arduino I flashed. Higher sustained focus → higher duty cycle on the drive channels; drop below threshold → coast or stop.
+        Separating “user is actually focusing” from “EEG is noisy because someone walked past” was the software side’s fight; my job was making sure the wheels actually responded when those commands arrived.
       </p>
 
       <h3>Perception and behaviors</h3>
@@ -127,10 +127,10 @@
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        Apollo 1 is the physical half of what we brought to WeaveHacks — a rover that actually moves when your brain says go, built in twenty-four hours on a table covered in jumper wires. The part I am proud of is the full path from signal to wheel: not just reading focus, but making motors respond proportionally on hardware I wired myself.
+        Apollo 1 is the physical half of what we brought to WeaveHacks — a rover that actually moves when your brain says go, built in twenty-four hours on a table covered in jumper wires. I did not design the whole system alone; I built the hardware that made the demo real — chassis, drivers, wiring, and the bench tools that kept us from guessing when something did not move.
       </p>
       <p>
-        The part that stuck with me is power engineering showing up late. I came in thinking about band ratios and agent traces; I left knowing that a marginal battery can waste a week of software work in an afternoon. LiPo is the next hardware revision, and I will size it from measured stall current instead of hope.
+        The part that stuck with me is power engineering showing up late. I came in focused on getting motors to track PWM; I left knowing that a marginal battery can waste an afternoon of integration work. LiPo is the next hardware revision, and I will size it from measured stall current instead of hope.
       </p>
       <p>
         Related work from the same hackathon — the Neural RLHF agent preference system — lives on a separate project page as <a href="project-axiom-neural-rlhf.html" class="project-link">Axiom — Neural RLHF</a>. Same weekend, different slice of the stack.
