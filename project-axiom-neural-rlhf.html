@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Axiom — Neural RLHF: EEG-driven preference learning with Muse S, multi-agent OpenAI responses, and brain-state reward signals. WeaveHacks 4 collaboration." />
+  <title>Axiom — Neural RLHF | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html#top" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 · WeaveHacks 4 · Python · TypeScript · EEG · Redis</span>
+      <h1 class="project-detail__title">Axiom — Neural RLHF</h1>
+      <p class="project-detail__subtitle">
+        Your brain as the reward model: three AI agents compete to explain a topic while a Muse S headband measures engagement, focus, and valence — no clicks, no thumbs-up, just neural response.
+      </p>
+      <p class="project-detail__subtitle">
+        <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a>
+      </p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Project Overview</h2>
+      <ul>
+        <li>Role: collaborator (WeaveHacks 4, June 6–7, 2026)</li>
+        <li>Event: WeaveHacks 4 (June 6–7, 2026)</li>
+        <li>Hardware: Muse S EEG headband (256 Hz over BLE on macOS)</li>
+        <li>Stack: Python backend (BrainFlow, signal processing, neural reward model), React/TypeScript frontend, Redis streams, Weave tracing, OpenAI agent arena</li>
+        <li>Repository: <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a></li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Objective</h2>
+      <p>
+        The idea was to skip explicit human feedback entirely. Instead of rating which AI explanation you prefer, you read three competing responses while wearing an EEG headband — and your brain’s response becomes the reward signal.
+        Agents that resonate with you get reinforced over rounds; the ones that lose adapt from your neural feedback. No clicking, no typing a score. Just read, think, and let engagement, focus, and valence do the judging.
+      </p>
+      <p>
+        We built this in a weekend at WeaveHacks 4. The repo is called Axiom — a separate hackathon project from my solo robot stack, Apollo 1.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>System architecture</h2>
+      <ul>
+        <li>Acquisition: Muse S streams EEG at 256 Hz through BrainFlow (native BLE, band-power and asymmetry features).</li>
+        <li>Brain state engine: derives engagement (β/(α+θ)), focus (β/α), valence (frontal alpha asymmetry), cognitive load (θ/α), and relaxation from live band powers.</li>
+        <li>Neural reward model: maps brain state to per-agent reward scores after each 12-second reading window.</li>
+        <li>Agent arena: three personas via OpenAI — Researcher (depth), Storyteller (narrative), Engineer (practical) — compete on the same topic each round.</li>
+        <li>Adaptation loop: losing agents receive feedback derived from neural rewards; over 3–5 rounds the ensemble drifts toward your preferred style.</li>
+        <li>Infrastructure: Redis for EEG streams and pub/sub reward broadcast; Weave (<code>@weave.op()</code>) traces the full neural → agent → reward pipeline.</li>
+        <li>Frontend: dashboard at <code>localhost:5173</code> — calibration, topic pick, live reading UI, round results.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Demo flow</h2>
+      <ol>
+        <li>Calibrate — 20 s baseline recording (skippable in demo mode).</li>
+        <li>Choose a topic — custom prompt or preset.</li>
+        <li>Read — each agent’s response displays for 12 s while EEG is recorded.</li>
+        <li>Results — neural rewards computed, round winner announced.</li>
+        <li>Adapt — underperforming agents get neural-derived feedback for the next round.</li>
+        <li>Repeat — agents converge on your preferences over several rounds.</li>
+      </ol>
+      <p>
+        Simulation mode (<code>./run_demo.sh --sim</code>) runs the full stack without a headband, which was essential for development when Bluetooth pairing or signal quality was fighting us.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Key signals</h2>
+      <table class="project-detail__table">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Source</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Engagement</td>
+            <td>β / (α + θ)</td>
+            <td>Locked in, interested</td>
+          </tr>
+          <tr>
+            <td>Focus</td>
+            <td>β / α</td>
+            <td>Deep processing</td>
+          </tr>
+          <tr>
+            <td>Valence</td>
+            <td>FAA (AF8 − AF7 α)</td>
+            <td>Positive vs negative affect</td>
+          </tr>
+          <tr>
+            <td>Cognitive load</td>
+            <td>θ / α</td>
+            <td>Confused, overwhelmed</td>
+          </tr>
+          <tr>
+            <td>Relaxation</td>
+            <td>α dominance</td>
+            <td>Disengaged</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Reflection</h2>
+      <p>
+        This was my first time working with live EEG in a product-shaped loop, not just plotting raw traces. The hard part was not the agents — it was trusting the signal: motion artifacts, bad electrode contact, and whether a spike in beta actually meant “this explanation is good” or “I am confused.”
+        Building a sim mode early saved us; so did treating reward as a smoothed brain-state vector instead of a single noisy sample.
+      </p>
+      <p>
+        The architecture — stream EEG, classify state, score agents, trace everything — is the piece I took away. It sits in a different lane from the embedded and hardware projects on this site, but the signal-processing instinct is the same: filter before you act on the data.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Repository</h2>
+      <p>
+        Source and setup instructions live in the team repo:
+        <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a>.
+        Run <code>./setup.sh</code> once, then <code>./run_demo.sh</code> (or <code>--sim</code>) and open the frontend on port 5173.
+      </p>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

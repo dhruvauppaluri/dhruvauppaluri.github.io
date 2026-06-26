@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Axiom — open-source robot control: Arduino firmware, Python BLE/USB daemon, browser UI, and serial bench tools." />
-  <title>Axiom | Dhruva Uppaluri</title>
+  <meta name="description" content="Apollo 1 — open-source robot control: Arduino firmware, Python BLE/USB daemon, browser UI, and serial bench tools." />
+  <title>Apollo 1 | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -33,7 +33,7 @@
 
     <header class="project-detail__header">
       <span class="project-detail__meta">2026 - Arduino/C++ - Python - BLE - WebSocket</span>
-      <h1 class="project-detail__title">Axiom</h1>
+      <h1 class="project-detail__title">Apollo 1</h1>
       <p class="project-detail__subtitle">
         Open-source stack to drive a four-motor robot over USB or BLE: Arduino firmware, a Python daemon, a browser UI, and serial tools for hardware bring-up.
       </p>
@@ -56,7 +56,7 @@
       <h2>Objective</h2>
       <p>
         I wanted one place to drive a robot from my laptop or phone — same commands whether the Arduino is on USB at the desk or on BLE across the room.
-        Axiom is that repo: line-oriented firmware on the Uno, a host daemon that owns both links and exposes WebSocket to a browser, plus a separate probe sketch for when the motors do not move and you need to know if the problem is code or copper.
+        Apollo 1 is that stack: line-oriented firmware on the Uno, a host daemon that owns both links and exposes WebSocket to a browser, plus a separate probe sketch for when the motors do not move and you need to know if the problem is code or copper.
       </p>
     </section>
 
@@ -107,7 +107,7 @@
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        Axiom is the glue between “I flashed the Arduino” and “I can actually drive this thing from a UI.” Most of the repo is unglamorous: parsing text commands, reconnecting BLE when macOS ghosts the pairing, and a probe sketch because transistor stages lie.
+        Apollo 1 is the glue between “I flashed the Arduino” and “I can actually drive this thing from a UI.” Most of the repo is unglamorous: parsing text commands, reconnecting BLE when macOS ghosts the pairing, and a probe sketch because transistor stages lie.
       </p>
       <p>
         What I would do next is tighten the protocol (fewer ad-hoc single-letter commands), add proper docs in the repo, and harden the daemon for long sessions. The architecture — firmware, daemon, web client — is the part I am happy to reuse on other robots without rewriting from scratch.
