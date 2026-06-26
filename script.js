@@ -21,9 +21,7 @@
     var liveWire = spine.querySelector(".circuit-spine__wire--live");
     var nodeGroup = spine.querySelector(".circuit-spine__nodes");
     var waypointSelectors = [".hero", "#about", "#skills", "#projects", "#contact", ".footer"];
-    var trunkX = 28;
-    var jogReach = 18;
-    var jogHalf = 16;
+    var edgeMargin = 28;
     var nodes = [];
     var liveLength = 0;
     var docHeight = 0;
@@ -34,31 +32,40 @@
     }
 
     function build() {
+      docHeight = document.documentElement.scrollHeight;
+      var docWidth = svg.clientWidth || window.innerWidth;
+      svg.setAttribute("viewBox", "0 0 " + docWidth + " " + docHeight);
+      svg.setAttribute("preserveAspectRatio", "none");
+
       var waypoints = waypointSelectors
-        .map(function (sel) {
+        .map(function (sel, idx) {
           var el = document.querySelector(sel);
           if (!el) return null;
           var rect = el.getBoundingClientRect();
-          return { y: rect.top + window.scrollY + 2 };
+          var y = rect.top + window.scrollY + 38;
+          var side = idx % 2 === 0 ? "left" : "right";
+          var x = side === "left" ? rect.left - edgeMargin : rect.right + edgeMargin;
+          x = Math.max(14, Math.min(docWidth - 14, x));
+          return { x: x, y: y };
         })
         .filter(Boolean)
         .sort(function (a, b) {
           return a.y - b.y;
         });
 
-      docHeight = document.documentElement.scrollHeight;
-      var docWidth = svg.clientWidth || window.innerWidth;
-      svg.setAttribute("viewBox", "0 0 " + docWidth + " " + docHeight);
-      svg.setAttribute("preserveAspectRatio", "none");
+      // Bookend the trace with a vertical stem above the first node and below the last,
+      // so it enters/exits the page cleanly while swinging through the center between them.
+      var points = [{ x: waypoints[0].x, y: 0 }]
+        .concat(waypoints)
+        .concat([{ x: waypoints[waypoints.length - 1].x, y: docHeight }]);
 
-      var d = "M " + trunkX + " 0";
-      waypoints.forEach(function (wp) {
-        d += " L " + trunkX + " " + (wp.y - jogHalf);
-        d += " L " + (trunkX + jogReach) + " " + (wp.y - jogHalf);
-        d += " L " + (trunkX + jogReach) + " " + (wp.y + jogHalf);
-        d += " L " + trunkX + " " + (wp.y + jogHalf);
-      });
-      d += " L " + trunkX + " " + docHeight;
+      var d = "M " + points[0].x + " " + points[0].y;
+      for (var i = 1; i < points.length; i++) {
+        var p0 = points[i - 1];
+        var p1 = points[i];
+        var midY = (p0.y + p1.y) / 2;
+        d += " C " + p0.x + " " + midY + ", " + p1.x + " " + midY + ", " + p1.x + " " + p1.y;
+      }
 
       baseWire.setAttribute("d", d);
       liveWire.setAttribute("d", d);
@@ -68,9 +75,9 @@
       nodeGroup.innerHTML = "";
       nodes = waypoints.map(function (wp) {
         var circle = ns("circle");
-        circle.setAttribute("cx", trunkX + jogReach);
+        circle.setAttribute("cx", wp.x);
         circle.setAttribute("cy", wp.y);
-        circle.setAttribute("r", 4.5);
+        circle.setAttribute("r", 5);
         circle.setAttribute("class", "circuit-spine__node");
         nodeGroup.appendChild(circle);
         return { y: wp.y, el: circle };
