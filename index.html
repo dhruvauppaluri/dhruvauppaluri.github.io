@@ -100,8 +100,8 @@
       <div class="section-body">
         <p>
           I am a Computer Engineering student transferring to UC Santa Cruz in Fall 2026. Most of what I know came from building things outside of class —
-          a discrete logic gearbox with no microcontroller, a hardware-in-the-loop test bench, Apollo 1 (robot control firmware and host software on GitHub),
-          a WeaveHacks collaboration on EEG-driven agent preference learning, and a film photography light meter I built because I needed one and could not justify buying one.
+          a discrete logic gearbox with no microcontroller, a hardware-in-the-loop test bench, Apollo 1 (an EEG-driven rover from WeaveHacks 4),
+          a hackathon project I conceived on neural RLHF agent preference learning, and a film photography light meter I built because I needed one and could not justify buying one.
         </p>
         <p>
           I like the part of engineering where something does not work and you have to figure out why. Switch bounce, firmware bottlenecks, noisy sensor data —
@@ -120,22 +120,27 @@
         <article class="skill-card">
           <span class="skill-icon">⚡</span>
           <h3>Equipment</h3>
-          <p>Power supply, digital multimeter, breadboard prototyping.</p>
+          <p>Power supply, digital multimeter (rail and load probing), breadboard prototyping, Muse S EEG headband.</p>
         </article>
         <article class="skill-card">
           <span class="skill-icon">🔧</span>
           <h3>Electronics</h3>
-          <p>Arduino (Uno/ESP32), 74-series TTL logic, MPU6050 MEMS, SG90 servo, LDR/analog sensors, I²C, UART, PWM.</p>
+          <p>Arduino (Uno/ESP32), 4WD H-bridge motor drive, transistor switching, BLE (HM-10), SG90 servo, HC-SR04 ultrasonic, MPU6050 MEMS, LDR/analog sensors, 74-series TTL logic, I²C, UART, PWM.</p>
         </article>
         <article class="skill-card">
           <span class="skill-icon">🧠</span>
           <h3>Programming</h3>
-          <p>C++, Python, MATLAB.</p>
+          <p>C++, Python (asyncio, Bleak, pyserial), TypeScript, MATLAB.</p>
+        </article>
+        <article class="skill-card">
+          <span class="skill-icon">📡</span>
+          <h3>Signal Processing &amp; BCI</h3>
+          <p>EEG acquisition (BrainFlow, Muse S), band-power features (α, β, θ), focus and engagement ratios, baseline normalization, real-time sensor fusion.</p>
         </article>
         <article class="skill-card">
           <span class="skill-icon">🗂️</span>
           <h3>Software Tools</h3>
-          <p>KiCAD, LTSpice, LaTeX.</p>
+          <p>KiCAD, LTSpice, LaTeX, Weave (Weights &amp; Biases), Redis (streams &amp; pub/sub), OpenAI API, React, WebSocket.</p>
         </article>
       </div>
     </section>
@@ -144,6 +149,30 @@
     <section id="projects" class="section">
       <h2 class="section-title">Projects</h2>
       <div class="projects-list">
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">Python · TypeScript · EEG · WeaveHacks · Co-creator</span>
+          </div>
+          <h3 class="project-title">Axiom — Neural RLHF</h3>
+          <p class="project-desc">
+            WeaveHacks 4 team project I pitched: three AI agents compete to explain a topic while a Muse S headband streams EEG — your brain’s engagement, focus, and valence are the reward signal. I designed the synchronization protocol that keeps reading windows, agent rounds, and Redis reward broadcast on the same clock.
+          </p>
+          <a href="project-axiom-neural-rlhf.html" class="project-link">View details →</a>
+        </article>
+
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">EEG · WeaveHacks · Arduino/C++ · Weave · Redis</span>
+          </div>
+          <h3 class="project-title">Apollo 1 — EEG Brain-Wave Controlled Rover</h3>
+          <p class="project-desc">
+            Built in 24 hours at WeaveHacks 4: a hand-built 4WD rover whose motors scale with Muse S focus level — EEG over Bluetooth, multi-agent edge AI on Weave and Redis, and proportional transistor drive per wheel. The main fight was power: 9 V cells sagged under load until a DMM proved we needed LiPo.
+          </p>
+          <a href="project-apollo-1.html" class="project-link">View details →</a>
+        </article>
+
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
@@ -178,30 +207,6 @@
             I shoot film with fully manual lenses and needed a way to meter light in the field. Dedicated meters cost more than I wanted to spend. So I built one. The firmware bottleneck that caused missed encoder inputs at 6Hz taught me more about embedded architecture than any tutorial did. It still lives on a breadboard. Getting it into an enclosure is what comes next.
           </p>
           <a href="project-light-meter.html" class="project-link">View details →</a>
-        </article>
-
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-year">2026</span>
-            <span class="project-tags">Arduino/C++ · Python · BLE · WebSocket</span>
-          </div>
-          <h3 class="project-title">Apollo 1</h3>
-          <p class="project-desc">
-            Open-source robot control: four-motor Arduino firmware, a Python daemon that bridges USB and BLE to WebSocket, a browser UI to drive it, and a serial probe sketch for debugging motor drivers. One command language, two transports, no separate toolchain per link.
-          </p>
-          <a href="project-apollo-1.html" class="project-link">View details →</a>
-        </article>
-
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-year">2026</span>
-            <span class="project-tags">Python · TypeScript · EEG · WeaveHacks · Collaboration</span>
-          </div>
-          <h3 class="project-title">Axiom — Neural RLHF</h3>
-          <p class="project-desc">
-            WeaveHacks 4 team project: three AI agents compete to explain a topic while a Muse S headband streams EEG. Your brain’s engagement, focus, and valence are the reward signal — agents adapt over rounds without a single click. Built with teammates; open source on GitHub.
-          </p>
-          <a href="project-axiom-neural-rlhf.html" class="project-link">View details →</a>
         </article>
       </div>
     </section>

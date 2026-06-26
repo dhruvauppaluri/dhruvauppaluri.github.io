@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Apollo 1 — open-source robot control: Arduino firmware, Python BLE/USB daemon, browser UI, and serial bench tools." />
-  <title>Apollo 1 | Dhruva Uppaluri</title>
+  <meta name="description" content="Apollo 1 — EEG brain-wave controlled rover built at WeaveHacks 4. Muse S focus levels drive a hand-built 4WD robot through Weave, Redis, and a multi-agent edge AI pipeline." />
+  <title>Apollo 1 — EEG Brain-Wave Controlled Rover | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -32,10 +32,10 @@
     </div>
 
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 - Arduino/C++ - Python - BLE - WebSocket</span>
-      <h1 class="project-detail__title">Apollo 1</h1>
+      <span class="project-detail__meta">Jun 2026 · WeaveHacks 4 · EEG · Weave · Redis · Arduino/C++ · Python</span>
+      <h1 class="project-detail__title">Apollo 1 — EEG Brain-Wave Controlled Rover</h1>
       <p class="project-detail__subtitle">
-        Open-source stack to drive a four-motor robot over USB or BLE: Arduino firmware, a Python daemon, a browser UI, and serial tools for hardware bring-up.
+        A hand-built four-wheel rover driven by neurological intent: Muse S focus levels over Bluetooth, a multi-agent edge AI stack on Weave and Redis, and motor commands that scale with how locked-in you are.
       </p>
       <p class="project-detail__subtitle">
         <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a>
@@ -45,9 +45,10 @@
     <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
-        <li>Role: solo project</li>
-        <li>Key hardware: Arduino Uno, four-motor H-bridge drive, SG90-style servo, HC-SR04 ultrasonic, HM-10 BLE module</li>
-        <li>Stack: <code>robot_car.ino</code> firmware, <code>rc_daemon.py</code> (BLE + USB + WebSocket), browser control UI, <code>probe.ino</code> for circuit bring-up</li>
+        <li>Event: WeaveHacks 4 (24-hour build, June 2026)</li>
+        <li>Role: hardware and pipeline — rover mechanicals, motor drive, EEG-to-actuator path</li>
+        <li>Key hardware: Arduino Uno, four-motor H-bridge drive with independent transistor stages, SG90 servo, HC-SR04 ultrasonic, camera for object detection, Muse S EEG headband</li>
+        <li>Stack: multi-agent LLM system traced through Weave (Weights &amp; Biases), Redis streams for live signal ingestion, Python host daemon, Arduino firmware</li>
         <li>Repository: <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a></li>
       </ul>
     </section>
@@ -55,71 +56,93 @@
     <section class="project-detail__section">
       <h2>Objective</h2>
       <p>
-        I wanted one place to drive a robot from my laptop or phone — same commands whether the Arduino is on USB at the desk or on BLE across the room.
-        Apollo 1 is that stack: line-oriented firmware on the Uno, a host daemon that owns both links and exposes WebSocket to a browser, plus a separate probe sketch for when the motors do not move and you need to know if the problem is code or copper.
+        The goal at WeaveHacks was to close the loop from thought to motion — not a joystick, not a keyboard, but sustained focus on a Muse S headband translated into real-time drive commands on a rover we built from scratch in a day.
+        Apollo 1 is that rover and the pipeline behind it: intercept EEG focus levels over Bluetooth, normalize them against a stored baseline so ambient neural noise does not masquerade as intent, and map the result to proportional motor PWM on four independent wheel channels.
+      </p>
+      <p>
+        On the software side, a multi-agent system on Weave and Redis continuously processes incoming brain-state vectors at the edge. On the hardware side, I needed a platform that could actually respond — not a kit car, but a 4WD chassis with per-motor transistor switching so each wheel’s speed could track focus smoothly instead of snapping on or off.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>System architecture</h2>
       <ul>
-        <li>Firmware (<code>firmware/robot_car/</code>): text commands over USB serial and HM-10 BLE — forward, tank turn, per-motor PWM, servo angle, ultrasonic distance, motor identify sweep.</li>
-        <li>Host daemon (<code>control/rc_daemon.py</code>): one process owns BLE and USB, exposes a WebSocket API on port 8766, reconnects when links drop, fans telemetry out to clients.</li>
-        <li>Web UI (<code>control/index.html</code>): D-pad driving, cruise speed, servo slider, live distance readout, connection status for BLE vs USB.</li>
-        <li>Probe (<code>probe/probe.ino</code>): serial bench tool — pin voltage reads, continuity checks, motor-pin scan when a transistor stage is miswired.</li>
-        <li>BLE passthrough (<code>firmware/bt_passthrough/</code>): minimal bridge for debugging the radio link before the full robot sketch is loaded.</li>
+        <li>EEG acquisition: Muse S streams over Bluetooth; focus level (β/α band ratio) is the primary control axis.</li>
+        <li>Signal conditioning: multi-agent pipeline normalizes live EEG against a calibrated baseline, filtering ambient noise to isolate intentional focus shifts.</li>
+        <li>Edge orchestration: Weave traces the neural → agent → command path; Redis handles stream ingestion and pub/sub between the brain-state engine and actuators.</li>
+        <li>Motor layer: Arduino firmware receives focus-scaled commands and drives four wheels through independent transistor switching circuits — PWM duty proportional to measured focus.</li>
+        <li>Perception: servo-mounted ultrasonic ranging plus a camera-based object detection pipeline — the rover can locate targets and execute behaviors (circling, avoiding, or approaching) when focus is held long enough.</li>
+        <li>Fallback control: USB serial and BLE paths in the firmware repo for bench bring-up when the EEG link or power budget was fighting us.</li>
       </ul>
     </section>
 
     <section class="project-detail__section">
       <h2>Implementation</h2>
 
-      <h3>Robot firmware</h3>
+      <h3>Robot hardware</h3>
       <p>
-        Four PWM motor channels on a differential layout, software servo timing, and ultrasonic ranging on shared digital pins. Commands are line-oriented and identical whether they arrive on USB or BLE.
-        Motor outputs are forced LOW at boot with direct port writes so the car does not jerk on reset — small detail, but it mattered when I was debugging drivers hot enough to smell wrong.
+        I built the 4WD platform during the hackathon — chassis, motor mounts, and the drive electronics. Each motor got its own transistor switching stage so speed could be modulated independently and proportionally to focus level rather than treated as a single on/off bus.
+        Motor outputs are forced LOW at boot so the rover does not jerk on reset; that mattered when I was probing stages that were getting hot enough to smell wrong.
       </p>
 
-      <h3>Control daemon</h3>
+      <h3>Brain signal to motor command</h3>
       <p>
-        Python asyncio ties together Bleak for GATT writes to the HM-10, pyserial for the Arduino USB path, and websockets for the browser. The daemon scans for known BLE names, clears stale macOS Bluetooth pairings when the module disappears, and broadcasts serial responses to every connected UI client.
+        The pipeline I architected runs focus level from the headband through baseline normalization and into real-time motor commands. The idea is simple to state and hard to make reliable: higher sustained focus → higher duty cycle on the drive channels; drop below threshold → coast or stop.
+        Separating “user is actually focusing” from “EEG is noisy because someone walked past” was where the multi-agent normalization layer earned its keep.
       </p>
 
-      <h3>Web interface</h3>
+      <h3>Perception and behaviors</h3>
       <p>
-        A single-page controller that talks to the daemon over WebSocket — no native app required. Connection state is visible at a glance (BLE only, USB only, both, or scanning) so I know whether a failed command is a UI bug or a dead link.
+        A servo sweeps an ultrasonic sensor for ranging; a camera feed feeds an object detection pipeline on the host. With focus held, the rover can circle a detected target, back off, or close distance — behaviors gated on sustained neurological intent rather than a button press.
+      </p>
+
+      <h3>Host software</h3>
+      <p>
+        The open repo carries the Arduino sketches, a Python daemon for BLE/USB bridging, and bench tools like <code>probe.ino</code> for when a transistor leg is wrong and firmware looks guilty. Weave instrumentation on the agent side made it possible to see where latency or bad baselines were killing the demo.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Debugging &amp; iteration</h2>
-      <ul>
-        <li>I did not trust the motor wiring until I could prove which pin was actually switching — that is what <code>probe.ino</code> is for.</li>
-        <li>Cause: a bad solder joint or wrong transistor leg looks like “firmware is broken” until you read the node with a jumper and see 0 V when you expected 5 V.</li>
-        <li>Fix: live voltage commands, per-pin drive tests, and a SCAN mode that walks the motor outputs while reporting analog readings.</li>
-        <li>Outcome: separate “is the circuit alive” from “is the protocol wrong” before I spend an hour in the daemon logs.</li>
-      </ul>
+
+      <h3>Power — the main bottleneck</h3>
       <p>
-        BLE added its own class of problems — stale connections on macOS, modules that need a power cycle, and the difference between seeing the radio in a scan and actually getting a READY back from firmware. The daemon retries with backoff and can bounce Bluetooth through <code>blueutil</code> when the link ghosts.
+        The biggest systemic issue was not the EEG pipeline or the motor code — it was sustaining power. Four motors, a servo, radio modules, and the logic overhead of proportional drive pull hard on the supply. We started on 9 V batteries because that is what we had on the bench at 2 AM.
       </p>
+      <p>
+        They were not enough. Under load, rail voltage sagged enough that PWM looked fine in software while wheels barely turned, and the Arduino would brown out when all four channels demanded current at once. I spent a long stretch with a DMM probing the supply at the battery terminals, at the regulator input, and at each motor node — watching voltage collapse under drive versus at idle.
+      </p>
+      <p>
+        That tracing made the failure mode obvious: high internal resistance and poor conversion efficiency on disposable 9 V cells, not a mystery bug in the focus mapper. The fix I am planning is a LiPo pack with proper current delivery and a regulator sized for simultaneous motor load — better conversion, lower sag, and enough headroom to run the perception stack without the rail dipping every time focus ramps speed.
+      </p>
+
+      <h3>Motor wiring and bring-up</h3>
+      <ul>
+        <li>Cause: a bad solder joint or wrong transistor leg looks like “firmware is broken” until you read the node and see 0 V when you expected 5 V.</li>
+        <li>Fix: live voltage commands via <code>probe.ino</code>, per-pin drive tests, and a SCAN mode that walks motor outputs while reporting analog readings.</li>
+        <li>Outcome: separate “is the circuit alive” from “is the protocol wrong” before chasing EEG or agent logs.</li>
+      </ul>
     </section>
 
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        Apollo 1 is the glue between “I flashed the Arduino” and “I can actually drive this thing from a UI.” Most of the repo is unglamorous: parsing text commands, reconnecting BLE when macOS ghosts the pairing, and a probe sketch because transistor stages lie.
+        Apollo 1 is the physical half of what we brought to WeaveHacks — a rover that actually moves when your brain says go, built in twenty-four hours on a table covered in jumper wires. The part I am proud of is the full path from signal to wheel: not just reading focus, but making motors respond proportionally on hardware I wired myself.
       </p>
       <p>
-        What I would do next is tighten the protocol (fewer ad-hoc single-letter commands), add proper docs in the repo, and harden the daemon for long sessions. The architecture — firmware, daemon, web client — is the part I am happy to reuse on other robots without rewriting from scratch.
+        The part that stuck with me is power engineering showing up late. I came in thinking about band ratios and agent traces; I left knowing that a marginal battery can waste a week of software work in an afternoon. LiPo is the next hardware revision, and I will size it from measured stall current instead of hope.
+      </p>
+      <p>
+        Related work from the same hackathon — the Neural RLHF agent preference system — lives on a separate project page as <a href="project-axiom-neural-rlhf.html" class="project-link">Axiom — Neural RLHF</a>. Same weekend, different slice of the stack.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Repository</h2>
       <p>
-        Source, firmware, and the web UI live in the open repo:
+        Rover firmware, daemon, and bench tools:
         <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a>.
-        Clone <code>control/rc_daemon.py</code>, flash <code>firmware/robot_car/robot_car.ino</code>, open <code>control/index.html</code> while the daemon is running.
+        Flash <code>firmware/robot_car/robot_car.ino</code>, run <code>control/rc_daemon.py</code>, and use <code>probe/probe.ino</code> when the motors do not move and you need the DMM less often.
       </p>
     </section>
 

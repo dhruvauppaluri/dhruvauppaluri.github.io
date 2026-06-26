@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Axiom — Neural RLHF: EEG-driven preference learning with Muse S, multi-agent OpenAI responses, and brain-state reward signals. WeaveHacks 4 collaboration." />
+  <meta name="description" content="Axiom — Neural RLHF: EEG-driven preference learning with Muse S and multi-agent OpenAI responses. WeaveHacks 4 — concept and synchronization protocol by Dhruva Uppaluri." />
   <title>Axiom — Neural RLHF | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,8 +45,7 @@
     <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
-        <li>Role: collaborator (WeaveHacks 4, June 6–7, 2026)</li>
-        <li>Event: WeaveHacks 4 (June 6–7, 2026)</li>
+        <li>Role: co-creator — originated the project concept; synchronization protocol between EEG ingestion, agent rounds, and reward pipeline (WeaveHacks 4, June 6–7, 2026)</li>
         <li>Hardware: Muse S EEG headband (256 Hz over BLE on macOS)</li>
         <li>Stack: Python backend (BrainFlow, signal processing, neural reward model), React/TypeScript frontend, Redis streams, Weave tracing, OpenAI agent arena</li>
         <li>Repository: <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a></li>
@@ -56,11 +55,11 @@
     <section class="project-detail__section">
       <h2>Objective</h2>
       <p>
-        The idea was to skip explicit human feedback entirely. Instead of rating which AI explanation you prefer, you read three competing responses while wearing an EEG headband — and your brain’s response becomes the reward signal.
+        I came up with the core idea: skip explicit human feedback entirely. Instead of rating which AI explanation you prefer, you read three competing responses while wearing an EEG headband — and your brain’s response becomes the reward signal.
         Agents that resonate with you get reinforced over rounds; the ones that lose adapt from your neural feedback. No clicking, no typing a score. Just read, think, and let engagement, focus, and valence do the judging.
       </p>
       <p>
-        We built this in a weekend at WeaveHacks 4. The repo is called Axiom — a separate hackathon project from my solo robot stack, Apollo 1.
+        We built this in a weekend at WeaveHacks 4 with a small team. It is the software and agent side of the same hackathon — Apollo 1 is the physical EEG-driven rover on a <a href="project-apollo-1.html" class="project-link">separate project page</a>.
       </p>
     </section>
 
@@ -73,8 +72,19 @@
         <li>Agent arena: three personas via OpenAI — Researcher (depth), Storyteller (narrative), Engineer (practical) — compete on the same topic each round.</li>
         <li>Adaptation loop: losing agents receive feedback derived from neural rewards; over 3–5 rounds the ensemble drifts toward your preferred style.</li>
         <li>Infrastructure: Redis for EEG streams and pub/sub reward broadcast; Weave (<code>@weave.op()</code>) traces the full neural → agent → reward pipeline.</li>
+        <li>Synchronization: shared timing contract so calibration, 12-second reading windows, agent handoffs, and reward computation stay aligned — EEG samples, UI state, and Redis messages reference the same round clock instead of drifting independently.</li>
         <li>Frontend: dashboard at <code>localhost:5173</code> — calibration, topic pick, live reading UI, round results.</li>
       </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>My contribution</h2>
+      <p>
+        I pitched the project at the start of the hackathon — neural RLHF as the reward model, three agents, one headband, no thumbs-up button. Once the team was building, the piece I owned most directly was synchronization: making sure the EEG stream, the 12-second reading windows, the agent arena, and the Redis reward broadcast all agreed on what “round” meant and when state was allowed to change.
+      </p>
+      <p>
+        Without that, you get subtle failures that look like bad ML: rewards attributed to the wrong agent because the UI advanced early, or baseline normalization running against samples from the previous topic. The protocol tied round start/end events, brain-state snapshots, and pub/sub messages to a single timeline so downstream components could trust the timestamps they received.
+      </p>
     </section>
 
     <section class="project-detail__section">
@@ -135,8 +145,7 @@
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        This was my first time working with live EEG in a product-shaped loop, not just plotting raw traces. The hard part was not the agents — it was trusting the signal: motion artifacts, bad electrode contact, and whether a spike in beta actually meant “this explanation is good” or “I am confused.”
-        Building a sim mode early saved us; so did treating reward as a smoothed brain-state vector instead of a single noisy sample.
+        I pitched the idea and helped wire the hard parts — less the agent personas themselves, more whether the system could stay in sync under demo pressure. Motion artifacts, bad electrode contact, and whether a spike in beta meant “this explanation is good” or “I am confused” were constant questions; building a sim mode early saved us, and so did treating reward as a smoothed brain-state vector instead of a single noisy sample.
       </p>
       <p>
         The architecture — stream EEG, classify state, score agents, trace everything — is the piece I took away. It sits in a different lane from the embedded and hardware projects on this site, but the signal-processing instinct is the same: filter before you act on the data.
