@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Apollo Colony — an in-progress swarm robotics platform. Apollo1, the queen robot, is a 2-motor differential-drive ESP32 rover with camera-based (YOLOv8n) obstacle avoidance fused with a VL53L0X ToF sensor, a WebSocket/Bluetooth control bridge, and a SenseCAP Indicator touchscreen control panel." />
+  <meta name="description" content="Apollo Colony — an in-progress swarm robotics platform. Apollo1, the queen robot, is a 2-motor differential-drive ESP32 rover with camera-based (YOLOv8n) obstacle avoidance fused with a VL53L0X ToF sensor, a WebSocket/Bluetooth control bridge, a SenseCAP Indicator touchscreen control panel, and an in-progress MuJoCo/PPO sim-to-real training pipeline." />
   <title>Apollo Colony — Swarm Robotics Platform (In Progress) | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,7 +32,7 @@
     </div>
 
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · In Progress · ESP32 · Computer Vision (YOLOv8n) · LVGL/Touchscreen · FastAPI/WebSocket</span>
+      <span class="project-detail__meta">2026 · In Progress · ESP32 · Computer Vision (YOLOv8n) · LVGL/Touchscreen · FastAPI/WebSocket · MuJoCo/PPO</span>
       <h1 class="project-detail__title">Apollo Colony — Swarm Robotics Platform (In Progress)</h1>
       <p class="project-detail__subtitle">
         A multi-robot swarm platform, starting with one robot: Apollo1, the "queen," built on the chassis from my Apollo 1 rover. It now drives itself around obstacles using a camera and a time-of-flight sensor together, and I recently got a touchscreen panel talking to it over WiFi so I can start/stop it and watch its status without a laptop in the loop.
@@ -46,9 +46,9 @@
       <h2>Project Overview</h2>
       <ul>
         <li>Role: solo project, ongoing</li>
-        <li>Status: drive, distance sensing, and camera-based obstacle avoidance (fused with the ToF sensor) are all verified live on the first robot; a touchscreen control panel is flashed and verified live end-to-end; swarm/multi-robot logic is next</li>
+        <li>Status: drive, distance sensing, and camera-based obstacle avoidance (fused with the ToF sensor) are all verified live on the first robot; a touchscreen control panel is flashed and verified live end-to-end; a MuJoCo sim-to-real RL pipeline is physically stable but doesn't have a working obstacle-avoidance policy yet; swarm/multi-robot logic hasn't started</li>
         <li>Key hardware: the chassis from the Apollo 1 rover build, rebuilt around 2-motor differential drive — ESP32-WROOM-32 DevKitC, a single L298N H-bridge, a fixed-mount VL53L0X time-of-flight sensor, a Seeed XIAO ESP32S3 Sense camera board, and a SeeedStudio SenseCAP Indicator D1 (ESP32-S3 + RP2040, 480×480 touchscreen) as a control panel</li>
-        <li>Stack: Arduino/C++ firmware, Python (FastAPI, WebSocket, OpenCV, YOLOv8n via <code>ultralytics</code>, pyserial), LVGL for the touchscreen UI, macOS <code>blueutil</code> for Bluetooth session management</li>
+        <li>Stack: Arduino/C++ firmware, Python (FastAPI, WebSocket, OpenCV, YOLOv8n via <code>ultralytics</code>, pyserial), LVGL for the touchscreen UI, macOS <code>blueutil</code> for Bluetooth session management, MuJoCo + Gymnasium + Stable-Baselines3 (PPO) for the sim-to-real training pipeline</li>
         <li>Repository: <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a></li>
       </ul>
       <p>
@@ -75,6 +75,7 @@
         <li>Camera-based obstacle avoidance: a Seeed XIAO ESP32S3 Sense streams MJPEG over its own WiFi link; a Python script runs YOLOv8n on the live feed, decides a drive command from detected-object position and size, and fuses it with the VL53L0X reading — the point sensor can only escalate caution, never override the camera toward "clear." Verified live: a held obstacle triggered an immediate stop at the frame it crossed a distance threshold, with auto-resume once it was pulled back.</li>
         <li>Control bridge: a FastAPI + WebSocket server (<code>control/web_ui/server.py</code>) owns the single Bluetooth serial connection to the robot and fans it out to any number of clients at once — the browser D-pad, the vision script, and the touchscreen panel all share the same link without fighting over the serial port.</li>
         <li>Touchscreen control panel: a SeeedStudio SenseCAP Indicator D1 (ESP32-S3 + RP2040 co-processor, 480×480 touchscreen) runs an LVGL UI with a tabbed layout — a live "Apollo 1" start/stop + status tab, and a reserved "Drone 1" placeholder tab for the next robot. Since the Indicator's ESP32-S3 only has BLE radio hardware (no Classic Bluetooth), it reaches the robot over WiFi as a WebSocket client of the same bridge server the browser D-pad uses.</li>
+        <li>Sim-to-real RL (in progress): a MuJoCo model built to the robot's real measured dimensions, wrapped as a Gymnasium environment with the same discrete drive commands and the same 6 sensor readings (VL53L0X + a rangefinder fan standing in for the camera's field of view) the real robot actually has, trained with PPO via Stable-Baselines3. The idea is to train obstacle-avoidance robustness in simulation before ever risking it on the real hardware.</li>
       </ul>
     </section>
 
@@ -103,6 +104,14 @@
       <p>
         <code>control/web_ui/server.py</code> owns the one Bluetooth serial connection to the robot and fans it out to whoever's connected over WebSocket — the browser D-pad, the vision script, the touchscreen panel — so they're not fighting each other for the port. The browser page (<code>control/web_ui/index.html</code>) is a plain D-pad with keyboard shortcuts and a running log of what got sent and what came back.
       </p>
+
+      <h3>Sim-to-real RL: MuJoCo + PPO (in progress, not yet a working policy)</h3>
+      <p>
+        The plan is to train obstacle-avoidance robustness in simulation before ever putting a half-trained policy on real hardware. <code>control/sim/</code> generates a MuJoCo model from the robot's actual measured dimensions (wheelbase, wheel size, chassis footprint, VL53L0X mount height), wraps it as a Gymnasium environment, and trains against it with PPO via Stable-Baselines3. The action space is the same five discrete commands the firmware accepts, not raw wheel velocities, and the observation is the same 6 sensor readings the real robot has — a rangefinder standing in for the VL53L0X, plus a fan of five more approximating the camera's field of view — specifically so a trained policy isn't leaning on information the real robot doesn't have.
+      </p>
+      <p>
+        Right now it's stable but not useful yet. The first full training run looked great on paper — reward climbing, episodes surviving to the step cap — until I actually watched the policy drive and realized it had learned to shuffle forward and backward in place near its spawn point, which happens to be far enough from any obstacle to never crash. The reward was paying for raw distance traveled, so wiggling scored the same as real progress. I fixed that (reward now only counts progress in the direction the robot's actually facing), retrained, and got a policy that at least moves — except it just drives dead straight until it hits something, because the only obstacle-avoidance signal was a penalty on actual collision, which turned out to be too weak and too late for the algorithm to learn "turn before you get there." That part's still unsolved as of this writing.
+      </p>
     </section>
 
     <section class="project-detail__section">
@@ -128,15 +137,23 @@
       <p>
         The lesson I keep relearning: a continuity check with a multimeter only proves a connection is good <em>while the probe is pressed on it</em>. It can't catch a joint that's only bad under the board's own resting weight. The WebSocket bug above was the same shape of problem in a totally different layer of the stack — everything looks fine right up until you actually watch it fail.
       </p>
+
+      <h3>The sim physics only broke once I plugged in real numbers</h3>
+      <p>
+        I built the MuJoCo model with placeholder dimensions first, checked it didn't explode, then swapped in the robot's real measurements — and it immediately did explode: the chassis flung across the room at multiple meters per second, spinning at 30+ radians a second within a single 5-millisecond physics step. Two bugs, both hidden by the placeholder numbers being small enough to get lucky. First, the formula placing the caster wheel had chassis-length terms that canceled out algebraically to nothing, leaving just a sign error that put the caster <em>behind</em> the driven wheels instead of in front — harmless with an 8cm placeholder offset, but with the robot's real 15cm offset it left the whole front of the chassis unsupported. Second, even after fixing that, the wheel motors were applying enough instantaneous torque to spin up against the wheels' tiny rotational inertia that the reaction alone was enough to throw the chassis — fixed by capping the actuator torque to something a small motor could realistically produce, instead of letting the physics solver assume infinite torque was available to hit the target speed instantly.
+      </p>
+      <p>
+        Same lesson as the VL53L0X header pins, really: a check that passes under one set of conditions (small placeholder numbers, a probe pressed on a pin) doesn't mean the underlying thing is actually correct. It just means you haven't hit the case that exposes it yet.
+      </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Current status</h2>
       <p>
-        Where things stand right now: the rebuilt 2-motor chassis drives cleanly in both directions and pivots over Bluetooth. The camera and the VL53L0X are fused and I've watched the override stop a real obstacle, twice. The SenseCAP touchscreen panel is flashed, renders correctly, and holds a live connection to the bridge with a real-time status feed. The one thing still nagging me is that the Bluetooth link between the bridge and the robot can go quiet under live use — restarting the bridge server fixes it, but I haven't built a real auto-recovery path yet.
+        Where things stand right now: the rebuilt 2-motor chassis drives cleanly in both directions and pivots over Bluetooth. The camera and the VL53L0X are fused and I've watched the override stop a real obstacle, twice. The SenseCAP touchscreen panel is flashed, renders correctly, and holds a live connection to the bridge with a real-time status feed. The one thing still nagging me is that the Bluetooth link between the bridge and the robot can go quiet under live use — restarting the bridge server fixes it, but I haven't built a real auto-recovery path yet. On the sim side, the physics are stable and built to the robot's real dimensions, but I don't have a trained policy that actually avoids obstacles yet — it currently just drives straight into things, and I'm mid-way through fixing the reward signal so it learns to turn before it gets there instead of after.
       </p>
       <p>
-        Next up: fix that Bluetooth link for real instead of restarting it by hand, then actually start on the swarm part — multiple robots coordinating, which is the whole reason this is called a "colony." Right now it's one robot. The swarm is still ahead of me.
+        Next up: get the sim actually learning real avoidance behavior, fix the Bluetooth link for real instead of restarting it by hand, then start on the swarm part — multiple robots coordinating, which is the whole reason this is called a "colony." Right now it's one robot. The swarm is still ahead of me.
       </p>
     </section>
 
