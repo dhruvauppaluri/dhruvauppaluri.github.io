@@ -35,7 +35,7 @@
       <span class="project-detail__meta">2026 · In Progress · ESP32 · Computer Vision (YOLOv8n) · LVGL/Touchscreen · FastAPI/WebSocket</span>
       <h1 class="project-detail__title">Apollo Colony — Swarm Robotics Platform (In Progress)</h1>
       <p class="project-detail__subtitle">
-        A multi-robot swarm platform, starting with Apollo1: a differential-drive "queen" robot that reuses the chassis from the Apollo 1 rover build, now with camera-based obstacle avoidance fused with a time-of-flight sensor, a WebSocket/Bluetooth control bridge, and a SenseCAP Indicator touchscreen control panel.
+        A multi-robot swarm platform, starting with one robot: Apollo1, the "queen," built on the chassis from my Apollo 1 rover. It now drives itself around obstacles using a camera and a time-of-flight sensor together, and I recently got a touchscreen panel talking to it over WiFi so I can start/stop it and watch its status without a laptop in the loop.
       </p>
       <p class="project-detail__subtitle">
         <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a>
@@ -52,17 +52,17 @@
         <li>Repository: <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a></li>
       </ul>
       <p>
-        Note: this builds on <a href="project-apollo-1.html" class="project-link">Apollo 1, the WeaveHacks 4 EEG rover</a> — that project's chassis is the starting point here, but this is a separate, ongoing rebuild in its own <code>swarm-project</code> repo: the Arduino Uno and per-motor transistor switching are gone, replaced by an ESP32 platform with a new drive layout, a WebSocket/Bluetooth control bridge, a camera-based perception stack, and a touchscreen control panel. The robot is internally named "Apollo1" here too (the queen of the planned "Apollo Colony" swarm), which is a coincidence worth flagging so the two aren't mixed up.
+        Note: this builds on <a href="project-apollo-1.html" class="project-link">Apollo 1, the WeaveHacks 4 EEG rover</a> — I'm reusing that chassis, but everything on top of it is a fresh rebuild in its own <code>swarm-project</code> repo. The Arduino Uno and per-motor transistors are gone; it's an ESP32 platform now, with a new drive layout, a WebSocket/Bluetooth bridge, a camera-based perception stack, and a touchscreen panel. I also happened to name this robot "Apollo1" too, so I want to flag that up front — same name, different robot, no relation beyond the recycled frame.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Objective</h2>
       <p>
-        The goal is a colony of small robots that can eventually coordinate as a swarm. Before any swarm logic makes sense, one robot has to actually drive, sense, avoid obstacles, and stay reachable and controllable — that's Apollo1, the queen: the existing chassis, carried over and rebuilt with a simpler, more reliable drive layout, a real perception stack, and control surfaces (web D-pad, touchscreen panel) that shake out the platform before a second robot is even started.
+        The eventual goal is a colony of small robots coordinating as a swarm. That's a long way off, and I don't think it's worth chasing until one robot can reliably drive, sense, avoid obstacles, and stay reachable on its own. So that's what Apollo1 has been: the old chassis, rebuilt with a simpler drive layout, real perception, and enough control surfaces — a web D-pad, now a touchscreen panel — to actually trust it before I start on a second robot.
       </p>
       <p>
-        The project has moved from a hardware/control-plane exercise into a working reactive robot: it drives, senses distance, sees and avoids obstacles with a camera, and can be started/stopped/monitored from a touchscreen panel over WiFi. Multi-robot coordination is the next phase, not yet built.
+        It's paid off. This isn't a hardware bring-up exercise anymore; it's a robot that drives itself around obstacles with a camera, and I can start, stop, and watch it from a touchscreen over WiFi. Getting multiple robots talking to each other is still the next big step, and I haven't started on it yet.
       </p>
     </section>
 
@@ -83,39 +83,39 @@
 
       <h3>Chassis redesign: from 4-motor skid-steer to 2-motor differential drive</h3>
       <p>
-        The platform started as the 4WD chassis carried over from the Apollo 1 rover build, driven by 2 L298N modules in skid-steer. After isolating a persistent single-channel wiring fault to one motor's connector (confirmed by a swap test — a known-good motor failed on that channel too, and the suspect motor worked fine elsewhere) rather than the motor or driver itself, the front two wheels were dropped for a free-swiveling caster and the drive rebuilt around a single L298N and 2 rear motors. Simpler electronics, one fewer failure surface, and — since the design no longer needed a servo panning the distance sensor for wider coverage — the servo was retired for good once the camera gave the robot passive wide-field awareness in a single frame with no moving parts.
+        Apollo1 started on the same 4WD chassis as Apollo 1, driven by two L298N modules in skid-steer. One motor channel just wouldn't spin, and a swap test made it obvious this wasn't the motor or the driver — a known-good motor failed on that same channel, and the "bad" motor was fine everywhere else, so it had to be a wiring fault I didn't want to chase down further. I dropped the front two wheels for a free-swiveling caster and rebuilt the drive around a single L298N and two rear motors instead. Simpler electronics, one less thing to go wrong — and once the camera gave the robot wide-field awareness with no moving parts, the servo that used to pan the distance sensor didn't have a job anymore, so I retired it for good.
       </p>
 
       <h3>Camera-based obstacle avoidance</h3>
       <p>
-        <code>control/vision/object_avoidance.py</code> runs YOLOv8n on the XIAO ESP32S3 Sense's live MJPEG stream, turns bounding-box position (left/center/right) and size (a proxy for closeness) into a drive command, and cross-checks it against the VL53L0X reading polled over the existing serial link. A point-blank ToF reading overrides the vision decision outright and stops immediately, bypassing the usual multi-frame debounce; a moderately-close reading while vision reports clear triggers a turn, catching obstacles the camera missed. Both override paths have been confirmed live against a real obstacle, including full auto-resume once it was removed.
+        <code>control/vision/object_avoidance.py</code> runs YOLOv8n on the XIAO ESP32S3 Sense's live MJPEG stream. It turns where an object sits in frame and how big it looks into a drive command, then cross-checks that against the VL53L0X reading over serial — the point sensor can escalate caution but can't override the camera toward "all clear." A point-blank reading stops the robot immediately, no debounce; a moderately close one triggers a turn even if the camera thinks it's fine. I've tested both live against a real obstacle, hand-held in front of the robot while it drove — it stopped right on cue and resumed automatically once I pulled the obstacle back.
       </p>
 
       <h3>SenseCAP Indicator touchscreen panel</h3>
       <p>
-        The touchscreen sketch (<code>firmware/sensecap_display_control</code>) renders an LVGL tab view with START/STOP buttons and a live status label that mirrors whatever the robot's own firmware last printed over serial — forwarded through the WebSocket bridge as plain text. Before flashing this project's own firmware, the board was found still running an unrelated hackathon demo (an environmental air-quality logger on its RP2040 co-processor, and a WiFi-connected ESP-IDF app on its ESP32-S3) — confirmed by reading both processors' live serial output and, read-only, the ESP32-S3's flash image, rather than assuming the board was blank. Flashing this project's own sketch required dropping the upload baud rate (the default 921600 was unreliable on this board's USB path, corrupting mid-transfer; 115200 flashed clean and hash-verified) — and getting from a rendered-but-unreachable screen to a fully live status feed required a real fix in the bridge server itself (below).
+        This one took a while to get right. The touchscreen sketch (<code>firmware/sensecap_display_control</code>) draws an LVGL tab view with START/STOP buttons and a status label that just mirrors whatever the robot's own firmware last printed — forwarded through the WebSocket bridge as plain text. Before I flashed anything, I checked what was actually already running on the board, and it turned out to still be someone else's old hackathon demo: an air-quality logger on the RP2040 side, and a WiFi app on the ESP32-S3 that I could see live over serial and, read-only, straight out of the flash image. Once I got to actually flashing my own sketch, the upload kept failing at the default baud rate (921600 corrupted mid-transfer on this board's USB path) — dropping to 115200 fixed it. Getting from "screen renders" to "screen actually shows live data" took one more real bug, in the bridge server itself (see below).
       </p>
       <p>
-        Display/touch hardware bring-up (ST7701 panel init, PCA9555 IO-expander wiring, the software-SPI command bus, and the LVGL↔Arduino_GFX glue) is adapted near-verbatim from <a href="https://github.com/LongDirtyAnimAlf/SenseCap" target="_blank" rel="noopener noreferrer" class="project-link">LongDirtyAnimAlf/SenseCap</a> — the reference implementation Seeed's own official wiki links to for this board. The touchscreen driver is <a href="https://github.com/mmMicky/TouchLib" target="_blank" rel="noopener noreferrer" class="project-link">mmMicky/TouchLib</a>, also linked from Seeed's docs. Only the WiFi/WebSocket bridge client, the start/stop/status UI, and the tabbed multi-vehicle layout are original to this project.
+        Display and touch bring-up (the ST7701 panel init, the PCA9555 IO-expander wiring, the software-SPI bus, the LVGL↔Arduino_GFX glue) isn't mine — it's adapted near-verbatim from <a href="https://github.com/LongDirtyAnimAlf/SenseCap" target="_blank" rel="noopener noreferrer" class="project-link">LongDirtyAnimAlf/SenseCap</a>, which is the reference implementation Seeed's own wiki points to for this board. The touch driver is <a href="https://github.com/mmMicky/TouchLib" target="_blank" rel="noopener noreferrer" class="project-link">mmMicky/TouchLib</a>, also linked from Seeed's docs. What's mine is the WiFi/WebSocket client, the start/stop/status UI, and the tabbed layout for multiple robots.
       </p>
 
       <h3>Web control UI &amp; bridge</h3>
       <p>
-        <code>control/web_ui/server.py</code> holds the one shared Bluetooth serial connection and fans status/RX lines out to every connected WebSocket client — browser D-pad, vision script, and touchscreen panel alike — so none of them fight over the serial port. The browser page (<code>control/web_ui/index.html</code>) is a plain D-pad with keyboard shortcuts and a live log of sent commands and device responses.
+        <code>control/web_ui/server.py</code> owns the one Bluetooth serial connection to the robot and fans it out to whoever's connected over WebSocket — the browser D-pad, the vision script, the touchscreen panel — so they're not fighting each other for the port. The browser page (<code>control/web_ui/index.html</code>) is a plain D-pad with keyboard shortcuts and a running log of what got sent and what came back.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Debugging &amp; iteration</h2>
 
-      <h3>SenseCAP display: WebSocket bridge dropped the connection immediately after handshake</h3>
+      <h3>SenseCAP display: the bridge kept dropping the connection right after handshake</h3>
       <p>
-        Once the touchscreen panel was flashed and confirmed rendering by direct visual inspection (Serial output turned out not to route to the board's USB-serial path at runtime, so serial logging was a dead end for this one — the screen itself was the only reliable signal), it connected to the bridge and immediately disconnected again, in a tight loop, 3 times in under 10 seconds. The server-side traceback pointed at an unhandled exception: the bridge's initial status message was sent to a freshly-accepted client before the code's own <code>try/except</code> block, so when the ESP32's WebSocket client closed the raw connection right after the handshake — before it was ready to receive, a known rough edge on constrained WebSocket clients — the exception went uncaught and the dead client was never cleaned up. Moving that first send inside the <code>try</code> block and adding a short settle delay fixed it: the connection held stable for 25+ seconds afterward, versus repeated drops before. Confirmed working end-to-end when the display's status label started tracking the bridge's real live broadcasts instead of a static fallback string.
+        Once the panel was flashed, I couldn't tell if it was working from serial — turns out Serial output just doesn't route over this board's USB path at runtime, so the only real signal was the screen itself, which was at least rendering. But it connected to the bridge and dropped again immediately, over and over, three times in under ten seconds. The server-side traceback gave it away: the bridge sent its first status message to a client before it had even entered its own <code>try/except</code> block, so when the ESP32's WebSocket library closed the connection right after the handshake — apparently it needs a beat before it's ready to receive anything — the exception went uncaught and the dead client just sat there. I moved that first send inside the <code>try</code> and added a short delay before it, and that was it: the connection held for 25+ seconds straight afterward instead of dying every few. I knew it actually worked once the display's status label started showing real live data from the bridge instead of a placeholder string.
       </p>
 
-      <h3>Bluetooth SPP — reconnects, three stacked bugs, then a fourth "silent stale" mode</h3>
+      <h3>Bluetooth SPP — three stacked bugs, then a fourth I'm still living with</h3>
       <p>
-        Getting Bluetooth SPP to reconnect cleanly took three independent, stacked fixes, each found by reading raw system logs instead of guessing from symptoms: macOS caching a stale RFCOMM channel number after a reboot (fixed with a scripted unpair → pair → connect cycle before every session), the ESP32's own Bluetooth bond store disagreeing with a freshly re-paired host link key (fixed by clearing the firmware's bond on every disconnect, not just at boot), and a macOS name-resolution race that silently failed to create the <code>/dev/cu.*</code> tty even though pairing succeeded (fixed with a short discovery inquiry between unpair and pair). A fourth, different failure mode later showed up under live use: the link reports connected and accepts writes, but nothing ever comes back — not a repeat of the earlier bugs, since those all fail visibly at a specific layer. Current workaround is restarting the bridge server to force a full reconnect cycle; a permanent auto-recovery fix (treating "no response within N seconds" as a forced-reconnect trigger) isn't implemented yet.
+        Getting Bluetooth SPP to reconnect cleanly took three separate fixes, and I only found any of them by reading raw system logs instead of guessing from what I was seeing on screen: macOS caching a stale RFCOMM channel after a reboot (fixed by forcing a fresh unpair → pair → connect before every session), the ESP32's own bond store disagreeing with a freshly re-paired host key (fixed by clearing the firmware's bond on every disconnect, not just at boot), and a macOS race where pairing would finish before the device's name resolved, which silently killed the serial port even though the Bluetooth link itself was fine (fixed with a short discovery scan in between). There's a fourth failure mode I haven't fully solved: sometimes the link just goes quiet — reports connected, accepts writes, and nothing ever comes back. It's not any of the earlier three; those all fail loudly somewhere specific. For now the fix is just restarting the bridge server, which forces a clean reconnect. I'd like a real auto-recovery path instead of a manual restart, but haven't built it yet.
       </p>
 
       <h3>VL53L0X — "no I2C devices found" traced to unsoldered header pins</h3>
@@ -126,24 +126,24 @@
         <li>Fix: solder the header pins. No wiring or firmware change was needed — the pin assignments and test sketch were already correct.</li>
       </ul>
       <p>
-        The takeaway that carries beyond this one sensor: a passing continuity/idle-voltage check only proves a connection is fine <em>while a probe is actively pressed on it</em> — it can't rule out a mechanically unreliable joint that fails under the board's own resting weight. That same "looks fine at every layer you can directly observe, but isn't" shape showed up again later in the WebSocket bridge bug above, at a completely different layer of the stack.
+        The lesson I keep relearning: a continuity check with a multimeter only proves a connection is good <em>while the probe is pressed on it</em>. It can't catch a joint that's only bad under the board's own resting weight. The WebSocket bug above was the same shape of problem in a totally different layer of the stack — everything looks fine right up until you actually watch it fail.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Current status</h2>
       <p>
-        As of this build: the rebuilt 2-motor chassis drives correctly in both directions and pivot turns over Bluetooth; the VL53L0X and camera-based obstacle avoidance are fused and verified live, including confirmed override stops against a real obstacle; the SenseCAP Indicator touchscreen panel is flashed, renders its UI, and holds a live WebSocket connection to the bridge with a real-time status feed. The Bluetooth link between the bridge and the robot itself can still go silently stale under live use (workaround: restart the bridge server) — a permanent fix isn't in yet.
+        Where things stand right now: the rebuilt 2-motor chassis drives cleanly in both directions and pivots over Bluetooth. The camera and the VL53L0X are fused and I've watched the override stop a real obstacle, twice. The SenseCAP touchscreen panel is flashed, renders correctly, and holds a live connection to the bridge with a real-time status feed. The one thing still nagging me is that the Bluetooth link between the bridge and the robot can go quiet under live use — restarting the bridge server fixes it, but I haven't built a real auto-recovery path yet.
       </p>
       <p>
-        Next: harden the Bluetooth link with a real auto-recovery fix instead of a manual restart, and start on the actual swarm/autonomy logic — multiple robots and coordination — that the "colony" part of this project is named for. Right now there is exactly one robot; the swarm is still ahead.
+        Next up: fix that Bluetooth link for real instead of restarting it by hand, then actually start on the swarm part — multiple robots coordinating, which is the whole reason this is called a "colony." Right now it's one robot. The swarm is still ahead of me.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Repository</h2>
       <p>
-        Firmware, control scripts, and the web UI: <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a>. Flash <code>firmware/motor_polarity_test/motor_polarity_test.ino</code> for drive and sensing, or <code>firmware/sensecap_display_control</code> for the touchscreen panel; run <code>control/web_ui/server.py</code> for the bridge and browser D-pad, or <code>control/vision/object_avoidance.py</code> for camera-based obstacle avoidance.
+        Everything's at <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a>. Flash <code>firmware/motor_polarity_test/motor_polarity_test.ino</code> for drive and sensing, or <code>firmware/sensecap_display_control</code> for the touchscreen panel. Run <code>control/web_ui/server.py</code> for the bridge and browser D-pad, and <code>control/vision/object_avoidance.py</code> if you want the camera driving.
       </p>
     </section>
 
