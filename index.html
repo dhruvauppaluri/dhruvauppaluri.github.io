@@ -227,7 +227,7 @@
           </div>
           <h3 class="project-title">Apollo Colony — Swarm Robotics Platform (In Progress)</h3>
           <p class="project-desc">
-            Working toward a multi-robot swarm, one robot at a time. Apollo1 now drives itself around obstacles using a camera and a ToF sensor together, and I just got a touchscreen panel talking to it live over WiFi. I'm also building out a MuJoCo sim to train obstacle-avoidance in simulation before it touches the real robot — the physics are stable, but the policy doesn't actually avoid anything yet. Swarm logic is still ahead of all of that.
+            Working toward a multi-robot swarm, one robot at a time. Apollo1 now drives itself around obstacles using a camera and a ToF sensor together, and I just got a touchscreen panel talking to it live over WiFi. I've also trained a reinforcement-learning policy in a MuJoCo simulation of the real robot — after finding a sensor bug that had it training blind and a reward-design flaw that let more training make it more reckless, it now avoids obstacles it's never seen before on 99.5% of randomized test layouts. Hasn't touched the real robot yet, and swarm logic is still ahead of all of that.
           </p>
           <a href="project-swarm-colony.html" class="project-link">View details →</a>
         </article>
