@@ -35,7 +35,7 @@
       <span class="project-detail__meta">Jun 2026 · WeaveHacks 4 (24-hour build) · Python · TypeScript · EEG · Redis</span>
       <h1 class="project-detail__title">Axiom — Neural RLHF</h1>
       <p class="project-detail__subtitle">
-        Built in 24 hours at WeaveHacks 4: an assistive communication concept — neural signals for people who cannot easily speak or type, realized as neural RLHF with three AI agents and a Muse S headband reading engagement, focus, and valence.
+        Built in 24 hours at WeaveHacks 4: an assistive communication concept (neural signals for people who cannot easily speak or type), realized as neural RLHF with three AI agents and a Muse S headband reading engagement, focus, and valence.
       </p>
       <p class="project-detail__subtitle">
         <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a>
@@ -46,7 +46,7 @@
       <h2>Project Overview</h2>
       <ul>
         <li>Event: WeaveHacks 4 (24-hour build, June 2026)</li>
-        <li>Role: co-creator — originated the assistive-communication concept; refined startup sync protocol between user calibration signals, EEG band readings, and the AI pipeline</li>
+        <li>Role: co-creator. Originated the assistive-communication concept; refined startup sync protocol between user calibration signals, EEG band readings, and the AI pipeline</li>
         <li>Hardware: Muse S EEG headband (256 Hz over BLE on macOS)</li>
         <li>Stack: Python backend (BrainFlow, signal processing, neural reward model), React/TypeScript frontend, Redis streams, Weave tracing, OpenAI agent arena</li>
         <li>Repository: <a href="https://github.com/anishesg/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/anishesg/axiom</a></li>
@@ -56,13 +56,13 @@
     <section class="project-detail__section">
       <h2>Objective</h2>
       <p>
-        Axiom started from a problem I cared about before the hackathon: people with disabilities who cannot communicate easily through speech, typing, or conventional interfaces still have intent — it just does not have a channel. I pitched using EEG as that channel: read what the brain is already doing, let software interpret it, and route the result somewhere useful without asking the user to click, swipe, or speak.
+        Axiom started from a problem I cared about before the hackathon: people with disabilities who cannot communicate easily through speech, typing, or conventional interfaces still have intent: it just does not have a channel. I pitched using EEG as that channel: read what the brain is already doing, let software interpret it, and route the result somewhere useful without asking the user to click, swipe, or speak.
       </p>
       <p>
-        That is how Axiom came into fruition at WeaveHacks 4. In 24 hours we shaped it into a demo we could actually run: neural RLHF where three AI agents compete to explain a topic while a Muse S headband streams band-power features. Your brain’s response becomes the reward signal — agents that resonate get reinforced; the ones that lose adapt from neural feedback. No thumbs-up button, no typed score. Read, think, and let engagement, focus, and valence do the judging.
+        That is how Axiom came into fruition at WeaveHacks 4. In 24 hours we shaped it into a demo we could actually run: neural RLHF where three AI agents compete to explain a topic while a Muse S headband streams band-power features. Your brain’s response becomes the reward signal: agents that resonate get reinforced; the ones that lose adapt from neural feedback. No thumbs-up button, no typed score. Read, think, and let engagement, focus, and valence do the judging.
       </p>
       <p>
-        The rover side of the same sprint — <a href="project-apollo-1.html" class="project-link">Apollo 1</a> — pushed EEG toward physical action; Axiom pushed it toward language and preference. Same headband, same weekend, two expressions of the same underlying idea.
+        The rover side of the same sprint (<a href="project-apollo-1.html" class="project-link">Apollo 1</a>) pushed EEG toward physical action; Axiom pushed it toward language and preference. Same headband, same weekend, two expressions of the same underlying idea.
       </p>
     </section>
 
@@ -72,34 +72,34 @@
         <li>Acquisition: Muse S streams EEG at 256 Hz through BrainFlow (native BLE, band-power and asymmetry features).</li>
         <li>Brain state engine: derives engagement (β/(α+θ)), focus (β/α), valence (frontal alpha asymmetry), cognitive load (θ/α), and relaxation from live band powers.</li>
         <li>Neural reward model: maps brain state to per-agent reward scores after each 12-second reading window.</li>
-        <li>Agent arena: three personas via OpenAI — Researcher (depth), Storyteller (narrative), Engineer (practical) — compete on the same topic each round.</li>
+        <li>Agent arena: three OpenAI personas (Researcher for depth, Storyteller for narrative, Engineer for practical) compete on the same topic each round.</li>
         <li>Adaptation loop: losing agents receive feedback derived from neural rewards; over 3–5 rounds the ensemble drifts toward your preferred style.</li>
         <li>Infrastructure: Redis for EEG streams and pub/sub reward broadcast; Weave (<code>@weave.op()</code>) traces the full neural → agent → reward pipeline.</li>
-        <li>Startup synchronization: calibration phase aligns the user’s baseline neural state with live EEG band readings (δ, θ, α, β) before the AI pipeline consumes them — round clock, UI state, and Redis messages share one timeline so agents read stabilized features, not stale or mis-timestamped samples.</li>
+        <li>Startup synchronization: calibration phase aligns the user’s baseline neural state with live EEG band readings (δ, θ, α, β) before the AI pipeline consumes them. Round clock, UI state, and Redis messages share one timeline so agents read stabilized features, not stale or mis-timestamped samples.</li>
         <li>Round synchronization: 12-second reading windows, agent handoffs, and reward computation stay locked to the same clock after startup.</li>
-        <li>Frontend: dashboard at <code>localhost:5173</code> — calibration, topic pick, live reading UI, round results.</li>
+        <li>Frontend: dashboard at <code>localhost:5173</code>, with calibration, topic pick, live reading UI, and round results.</li>
       </ul>
     </section>
 
     <section class="project-detail__section">
       <h2>My contribution</h2>
       <p>
-        I brought the original idea to the team — assistive communication through EEG for people who cannot rely on speech or manual input — and that framing is what became Axiom. Once we were building, I helped refine the startup sync protocol: the sequence that ties the user’s calibration signals to live band-power readings before any agent or reward model touches them.
+        I brought the original idea to the team (assistive communication through EEG for people who cannot rely on speech or manual input), and that framing is what became Axiom. Once we were building, I helped refine the startup sync protocol: the sequence that ties the user’s calibration signals to live band-power readings before any agent or reward model touches them.
       </p>
       <p>
-        The failure mode without that step is subtle and brutal. The AI reads β/α focus or engagement ratios that belong to the wrong moment — pre-calibration noise, leftover samples from a previous topic, or band features that arrived before the UI said “start.” The protocol I worked on gates the pipeline: baseline captured, user state marked ready, EEG bands published on Redis with timestamps the agent arena trusts, then rounds advance. Same idea through the demo flow: calibration first, then read windows, then rewards — one clock, no drift.
+        The failure mode without that step is subtle and brutal. The AI reads β/α focus or engagement ratios that belong to the wrong moment: pre-calibration noise, leftover samples from a previous topic, or band features that arrived before the UI said “start.” The protocol I worked on gates the pipeline: baseline captured, user state marked ready, EEG bands published on Redis with timestamps the agent arena trusts, then rounds advance. Same idea through the demo flow: calibration first, then read windows, then rewards, all on one clock, no drift.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Demo flow</h2>
       <ol>
-        <li>Calibrate — 20 s baseline recording (skippable in demo mode).</li>
-        <li>Choose a topic — custom prompt or preset.</li>
-        <li>Read — each agent’s response displays for 12 s while EEG is recorded.</li>
-        <li>Results — neural rewards computed, round winner announced.</li>
-        <li>Adapt — underperforming agents get neural-derived feedback for the next round.</li>
-        <li>Repeat — agents converge on your preferences over several rounds.</li>
+        <li>Calibrate: 20 s baseline recording (skippable in demo mode).</li>
+        <li>Choose a topic: custom prompt or preset.</li>
+        <li>Read: each agent’s response displays for 12 s while EEG is recorded.</li>
+        <li>Results: neural rewards computed, round winner announced.</li>
+        <li>Adapt: underperforming agents get neural-derived feedback for the next round.</li>
+        <li>Repeat: agents converge on your preferences over several rounds.</li>
       </ol>
       <p>
         Simulation mode (<code>./run_demo.sh --sim</code>) runs the full stack without a headband, which was essential for development when Bluetooth pairing or signal quality was fighting us.
@@ -149,7 +149,7 @@
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        I pitched Axiom because assistive communication felt worth building, not because neural RLHF was a trendy demo. The hackathon version is agents and rewards; the through-line is still the same — meet the user where they are neurologically, not where a UI assumes they can point and click.
+        I pitched Axiom because assistive communication felt worth building, not because neural RLHF was a trendy demo. The hackathon version is agents and rewards; the through-line is still the same: meet the user where they are neurologically, not where a UI assumes they can point and click.
       </p>
       <p>
         The startup sync work is what I would carry forward: before any model interprets intent, the system has to agree on what the user’s baseline looks like and which band readings belong to this moment. Motion artifacts and bad electrode contact still dominate the noise; treating reward as a smoothed brain-state vector and building sim mode early kept us honest under demo pressure.

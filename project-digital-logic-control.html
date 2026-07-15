@@ -114,7 +114,7 @@
       <h3>Component Selection</h3>
       <p>
         The 74LS74 holds the state. Two D flip-flops that only update on a rising clock edge, which is what makes the behavior synchronous.
-        The 74LS86 is the decision layer — a quad XOR gate network that figures out whether each flip-flop should toggle on the next clock based on the current state.
+        The 74LS86 is the decision layer: a quad XOR gate network that figures out whether each flip-flop should toggle on the next clock based on the current state.
         The 74HC14 is what made everything else work. Its Schmitt-trigger inputs use hysteresis to convert a bouncy mechanical switch edge into a clean transition the flip-flops can actually trust. Without it, one physical press looked like several clocks.
       </p>
 

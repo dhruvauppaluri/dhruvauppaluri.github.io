@@ -447,6 +447,81 @@ main {
   font-weight: 600;
 }
 
+/* --- About: recent work teaser --- */
+.recent-work {
+  margin: 0.25rem 0 1.75rem;
+}
+
+.recent-work__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.85rem;
+}
+
+.recent-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.recent-work-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  padding: 1.1rem 1.25rem;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.recent-work-card:hover {
+  border-left-color: var(--accent);
+  background: var(--surface);
+}
+
+.recent-work-card__meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+
+.recent-work-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.recent-work-card__desc {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.recent-work-card__link {
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .recent-work-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* --- Skills: a flowing spec list, not a card grid --- */
 .skills-table {
   display: flex;

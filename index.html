@@ -119,13 +119,38 @@
       <h2 class="section-title">About</h2>
       <div class="section-body">
         <p>
-          I am an Electrical Engineering student. Most of what I know came from building things outside of class —
-          a discrete logic gearbox with no microcontroller, a hardware-in-the-loop test bench, Apollo 1 (EEG rover hardware and rover software from a 24-hour WeaveHacks 4 build),
-          Axiom (assistive EEG communication concept I pitched at WeaveHacks 4), and a film photography light meter I built because I needed one and could not justify buying one.
+          I'm an Electrical Engineering student. Classwork gives me the fundamentals, but building things outside
+          of class is where they actually click for me: taking something apart, getting it wrong, and rebuilding it
+          until I understand why.
         </p>
+
+        <div class="recent-work">
+          <span class="recent-work__label">Recent work</span>
+          <div class="recent-work-grid">
+            <a href="project-swarm-colony.html" class="recent-work-card">
+              <span class="recent-work-card__meta">2026 · In progress</span>
+              <h3 class="recent-work-card__title">Apollo Colony — Swarm Robotics</h3>
+              <p class="recent-work-card__desc">A rover that avoids obstacles on camera and lidar, now training in simulation before I trust it on the real hardware.</p>
+              <span class="recent-work-card__link">View project →</span>
+            </a>
+            <a href="project-apollo-1.html" class="recent-work-card">
+              <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
+              <h3 class="recent-work-card__title">Apollo 1 — EEG Rover</h3>
+              <p class="recent-work-card__desc">Built the chassis and firmware for a 4WD rover a Muse S headband drives by focus alone, in 24 hours.</p>
+              <span class="recent-work-card__link">View project →</span>
+            </a>
+            <a href="project-axiom-neural-rlhf.html" class="recent-work-card">
+              <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
+              <h3 class="recent-work-card__title">Axiom — Neural RLHF</h3>
+              <p class="recent-work-card__desc">Three AI agents competing for your attention, scored by your own brain signal instead of a thumbs-up button.</p>
+              <span class="recent-work-card__link">View project →</span>
+            </a>
+          </div>
+        </div>
+
         <p>
-          I like the part of engineering where something does not work and you have to figure out why. Switch bounce, firmware bottlenecks, noisy sensor data —
-          the debugging is where most of the learning happens for me.
+          I like the part of engineering where something does not work and you have to figure out why. Switch bounce, firmware bottlenecks, noisy sensor data:
+          that's where most of the learning happens for me.
         </p>
         <p>
           I am looking for a Summer 2027 hardware or embedded systems internship where I can contribute to something real from day one.
@@ -227,7 +252,7 @@
           </div>
           <h3 class="project-title">Apollo Colony — Swarm Robotics Platform (In Progress)</h3>
           <p class="project-desc">
-            Working toward a multi-robot swarm, one robot at a time. Apollo1 now drives itself around obstacles using a camera and a ToF sensor together, and I just got a touchscreen panel talking to it live over WiFi. I've also trained a reinforcement-learning policy in a MuJoCo simulation of the real robot — after finding a sensor bug that had it training blind and a reward-design flaw that let more training make it more reckless, it now avoids obstacles it's never seen before on 99.5% of randomized test layouts. Hasn't touched the real robot yet, and swarm logic is still ahead of all of that.
+            Working toward a multi-robot swarm, one robot at a time. Apollo1 now drives itself around obstacles using a camera and a ToF sensor together, and I just got a touchscreen panel talking to it live over WiFi. I've also trained a reinforcement-learning policy in a MuJoCo simulation of the real robot. After finding a sensor bug that had it training blind, and a reward-design flaw that let more training make it more reckless, it now avoids obstacles it's never seen before on 99.5% of randomized test layouts. Hasn't touched the real robot yet, and swarm logic is still ahead of all of that.
           </p>
           <a href="project-swarm-colony.html" class="project-link">View details →</a>
         </article>
@@ -239,7 +264,7 @@
           </div>
           <h3 class="project-title">Axiom — Neural RLHF</h3>
           <p class="project-desc">
-            Built in 24 hours at WeaveHacks 4 — I pitched Axiom as assistive communication for people who cannot easily speak or type: EEG band readings drive a neural RLHF demo where three AI agents adapt to your brain’s engagement and focus. I refined the startup sync protocol that aligns user calibration signals with live EEG features before the AI pipeline reads them.
+            Built in 24 hours at WeaveHacks 4. I pitched Axiom as assistive communication for people who cannot easily speak or type: EEG band readings drive a neural RLHF demo where three AI agents adapt to your brain’s engagement and focus. I refined the startup sync protocol that aligns user calibration signals with live EEG features before the AI pipeline reads them.
           </p>
           <a href="project-axiom-neural-rlhf.html" class="project-link">View details →</a>
         </article>
@@ -251,7 +276,7 @@
           </div>
           <h3 class="project-title">Apollo 1 — EEG Brain-Wave Controlled Rover</h3>
           <p class="project-desc">
-            Built in 24 hours at WeaveHacks 4: I built the 4WD rover and refined its firmware and daemon on a team EEG project — motors scale with Muse S focus over Bluetooth while Weave and Redis handle the upstream signal path. Proportional transistor drive per wheel; on my end the fights were software handoff to PWM and power — 9 V cells sagged until a DMM proved we needed LiPo.
+            Built in 24 hours at WeaveHacks 4: I built the 4WD rover and refined its firmware and daemon on a team EEG project. Motors scale with Muse S focus over Bluetooth while Weave and Redis handle the upstream signal path. Proportional transistor drive per wheel; on my end the fights were software handoff to PWM and power, where 9 V cells sagged until a DMM proved we needed LiPo.
           </p>
           <a href="project-apollo-1.html" class="project-link">View details →</a>
         </article>

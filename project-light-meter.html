@@ -43,7 +43,7 @@
       <h2>Background</h2>
       <p>
         I’m passionate about photography. I’ve been getting into film more, and I shoot with a manual lens on my mirrorless camera.
-        With no lens–body electronic link, the body doesn’t get aperture data the way it would with a native lens, and its metering doesn’t line up — so it doesn’t really give trustworthy ISO and shutter guidance for how I’m shooting.
+        With no lens-body electronic link, the body doesn’t get aperture data the way it would with a native lens, and its metering doesn’t line up, so it doesn’t really give trustworthy ISO and shutter guidance for how I’m shooting.
         I wanted one small device I could use on that mirrorless rig and on film cameras too, which is what motivated this project.
       </p>
       <p>
@@ -74,7 +74,7 @@
       <h2>Requirements</h2>
       <p>
         I needed it to do three things reliably. First, take a raw lux reading from an uncalibrated LDR and convert it into a shutter speed I could actually trust.
-        Second, handle two different shooting workflows — film mode where ISO is locked to a roll, and mirrorless mode where the firmware walks the ISO ladder until the shutter speed clears a hand-holdable threshold.
+        Second, handle two different shooting workflows: film mode where ISO is locked to a roll, and mirrorless mode where the firmware walks the ISO ladder until the shutter speed clears a hand-holdable threshold.
         Third, register every single encoder detent without missing inputs. That last one sounds trivial until you realize how easy it is to get wrong.
       </p>
     </section>
@@ -93,7 +93,7 @@
 
       <h3>Exposure value formula</h3>
       <p>
-        Once the code has a lux estimate, it plugs into the usual EV-at-ISO-100 relation — lux is the light side of the equation, EV is the camera-neutral “brightness” step photographers use for aperture, shutter, and ISO.
+        Once the code has a lux estimate, it plugs into the usual EV-at-ISO-100 relation: lux is the light side of the equation, EV is the camera-neutral “brightness” step photographers use for aperture, shutter, and ISO.
       </p>
       <p>The meter implements the standard photographic EV formula:</p>
       <pre class="project-detail__code"><code>EV₁₀₀ = log₂(lux / 2.5)</code></pre>
@@ -181,7 +181,7 @@
       <h3>Firmware architecture</h3>
       <ul>
         <li>Written in C++ for Arduino (AVR)</li>
-        <li>Fully non-blocking main loop — no <code>delay()</code> calls</li>
+        <li>Fully non-blocking main loop: no <code>delay()</code> calls</li>
         <li>Encoder read on every loop iteration (falling-edge detection) for zero missed pulses</li>
         <li>LCD and LDR updates on independent millisecond timers (120ms / 100ms)</li>
         <li>Short click vs long press detection on encoder SW for dual-function button</li>
@@ -225,7 +225,7 @@ ISO: 400  1/250</code></pre>
     <section class="project-detail__section">
       <h2>Debugging &amp; Iteration</h2>
       <ul>
-        <li>Problem: the encoder direction appeared stuck — it only stepped one way.</li>
+        <li>Problem: the encoder direction appeared stuck. It only stepped one way.</li>
         <li>Cause: Arduino UNO pin 13 has a built-in LED and series resistor tied to ground, so ENC_DT could not float HIGH correctly and the direction bit was wrong.</li>
         <li>Fix: moved DT to pin 12.</li>
         <li>Outcome: reliable clockwise/counterclockwise decoding.</li>
@@ -256,14 +256,14 @@ ISO: 400  1/250</code></pre>
     <section class="project-detail__section">
       <h2>Reflection</h2>
       <p>
-        The analog front end looks trivial — a divider into the ADC — but the LDR curve and the <code>CAL</code> constant are what decide if the shutter numbers mean anything.
+        The analog front end looks trivial (a divider into the ADC), but the LDR curve and the <code>CAL</code> constant are what decide if the shutter numbers mean anything.
         Mirrorless mode and film mode also surface errors differently, which made calibration feel less like a formula and more like chasing a reference until it stopped lying.
       </p>
       <p>
         Implementing EV math and snapping to real shutter speeds in code made the link between what I set on a camera and what the meter thinks is finally click.
       </p>
       <p>
-        The thing that surprised me most was how much pin choice matters. Moving ENC_DT off pin 13 because of the built-in LED and series resistor is not something any tutorial warns you about —
+        The thing that surprised me most was how much pin choice matters. Moving ENC_DT off pin 13 because of the built-in LED and series resistor is not something any tutorial warns you about.
         I only found it by tracing the signal and noticing the direction bit was always wrong. That kind of hardware-level detail is invisible until it breaks something, and finding it taught me more about the Arduino schematic than any documentation did.
       </p>
       <p>
