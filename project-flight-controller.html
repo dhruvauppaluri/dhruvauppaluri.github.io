@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A 4-layer STM32F405 flight controller designed from scratch in KiCad, built for one of the drones joining the Chakra swarm platform. Custom power tree, ICM-42688-P IMU, DPS368 barometer, analog OSD, blackbox flash. In progress." />
+  <title>Custom Drone Flight Controller (In Progress) | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html#top" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 · In Progress · KiCad · STM32F405 · 4-Layer PCB · PCBWay</span>
+      <h1 class="project-detail__title">Custom Drone Flight Controller (In Progress)</h1>
+      <p class="project-detail__subtitle">
+        A 4-layer STM32F405 flight controller I designed from scratch in KiCad, sized and voltage-rated for up to a 5S battery. It's built for one of the drones joining the <a href="project-chakra.html" class="project-link">Chakra</a> swarm platform. Schematic and layout are done, gerbers are with PCBWay, and the boards aren't back yet.
+      </p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Project Overview</h2>
+      <ul>
+        <li>Role: solo project, ongoing</li>
+        <li>Status: schematic capture, component selection, and 4-layer routing are complete; gerbers were generated and sent to PCBWay for fabrication; boards haven't come back yet, so nothing below has been bench-tested</li>
+        <li>Key hardware: STM32F405RGTx (LQFP-64, Cortex-M4), ICM-42688-P 6-axis IMU (SPI), DPS368 barometer, AT7456E analog OSD, W25Q128JVPIQ 128Mbit (16MB) blackbox flash, dual TPS62933 synchronous buck converters (5V/10V), dual LP5912-3.3 LDOs on isolated 3.3V rails, USB-C with USBLC6-2SC6 ESD protection</li>
+        <li>Board: 40.1 × 37.5 mm, 4-layer stackup (signal / GND plane / power plane / signal)</li>
+        <li>Tools: KiCad for schematic capture, layout, and DRC; PCBWay for fabrication</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Why Build One</h2>
+      <p>
+        This board exists for a real reason: it's meant to fly on one of the drones joining the <a href="project-chakra.html" class="project-link">Chakra</a> swarm platform, alongside the ground robots I've already built. But the bigger reason I designed it myself instead of buying a SpeedyBee or Mamba board off the shelf was to actually learn PCB design end to end. I'd watched a lot of videos on how flight controllers are put together, and wanted to go through the real process myself: pick real parts, capture a real schematic, route a dense 4-layer board, and eventually bring up my own firmware on it, rather than just flashing something that already works.
+      </p>
+      <p>
+        There aren't any exotic design decisions here beyond sizing it for up to a 5S pack. That was intentional. The point of this build wasn't to innovate on flight controller architecture, it was to go through every step of designing one myself and come out the other side actually understanding it.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Power Architecture</h2>
+      <p>
+        Everything on the board runs off a battery-derived <code>SYS_VIN</code> rail, gated through a PMOS reverse-voltage protection stage backed by a 15V zener and a 28V TVS diode for overvoltage clamping, so a reversed battery connector or a voltage spike doesn't take out anything downstream.
+      </p>
+      <ul>
+        <li><strong>5V 2A buck (TPS62933):</strong> feeds the RX, servo, and general peripheral rail.</li>
+        <li><strong>10V 2A buck (TPS62933):</strong> a second independent buck for the VTX rail, so a hungry video transmitter can't sag the 5V rail everything else depends on.</li>
+        <li><strong>3.3V LDO, general purpose (LP5912-3.3):</strong> powers the MCU and most digital logic off the 5V rail.</li>
+        <li><strong>3.3V LDO, IMU-only (LP5912-3.3):</strong> a second, separate 3.3V regulator feeding only the ICM-42688-P. Splitting the IMU onto its own quiet rail instead of sharing the general 3.3V line keeps switching noise from the MCU and buses off the one sensor where noise actually shows up as bad gyro data.</li>
+        <li><strong>VBAT sensing:</strong> a resistor divider off <code>SYS_VIN</code> feeds an ADC input so firmware can read battery voltage directly.</li>
+        <li><strong>USB-C:</strong> its own VBUS path with ferrite-bead filtering and a USBLC6-2SC6 ESD protection IC on D+/D-, so the board can be powered and configured over USB independent of the battery.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Sensors, Storage &amp; I/O</h2>
+      <p>
+        The MCU is an STM32F405RGTx (LQFP-64, Cortex-M4), the same class of chip most current flight controllers are built around. Around it:
+      </p>
+      <ul>
+        <li><strong>ICM-42688-P</strong> — 6-axis IMU on its own SPI bus and its own quiet 3.3V rail (above), for attitude sensing.</li>
+        <li><strong>DPS368</strong> — barometric pressure sensor on I2C, for altitude reference.</li>
+        <li><strong>AT7456E</strong> — analog on-screen-display chip with its own 27MHz crystal, overlaying flight data onto an analog video feed for FPV.</li>
+        <li><strong>W25Q128JVPIQ</strong> — 128Mbit (16MB) SPI NOR flash for blackbox logging.</li>
+      </ul>
+      <p>
+        I/O is broken out through JST-GH connectors: an 8-pin ESC connector (battery, current sense, telemetry, and four motor signals M1–M4), a 4-pin RX connector carrying SBUS, a 3-pin servo connector, a 6-pin digital VTX connector, and a 6-pin GPS connector that also exposes a second I2C bus for an external compass. SBUS itself comes in inverted, so a small SN74LVC1G14 Schmitt-trigger inverter cleans it up into a normal UART RX line before it reaches the MCU. Analog camera and VTX solderpads, a buzzer driver, three status LEDs, and a full set of SWD/UART debug test points round out the board for bring-up and field debugging.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Layout</h2>
+      <p>
+        The board is 40.1 × 37.5 mm on a 4-layer stackup: signal on the top and bottom copper layers, with a dedicated ground plane and a dedicated power plane sandwiched in between. That's standard practice for a board like this, but it mattered here specifically because of how dense it is — an LQFP-64 MCU, two SPI-connected sensors, an SPI flash chip, an analog OSD chip, and two buck converters all had to be routed and given clean return paths in a footprint barely bigger than a AA battery, without the IMU or the analog video path picking up noise from a switching regulator or a digital bus running underneath them.
+      </p>
+
+      <h3 class="project-detail__figure-title">Schematic</h3>
+      <figure class="project-detail__figure">
+        <img src="fc-schematic.png" alt="KiCad schematic for the custom STM32F405 flight controller, organized into Microcontroller, Power Supply, Sensors & Flash Memory, USB-C, Analog OSD, and Connectors & Solderpads blocks" />
+        <figcaption>
+          Full schematic, organized by function: microcontroller and clocking, power supply (reverse-voltage protection, dual bucks, dual LDOs), sensors and flash, USB-C, analog OSD, and connectors.
+        </figcaption>
+      </figure>
+
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Current Status &amp; What's Next</h2>
+      <p>
+        The design is done: schematic, component selection, and 4-layer routing are complete, and gerbers have already been generated and sent to PCBWay for fabrication. The boards aren't back yet, so none of this has been bench-tested — no bring-up, no power-rail checks, no live IMU data.
+      </p>
+      <p>
+        Once the boards arrive, the plan is to assemble it, bring up and verify each power rail before connecting anything sensitive to it, and then write and bring up my own firmware rather than just flashing something existing. After that, it needs to actually go on one of the swarm's drones, which is still ahead of me too.
+      </p>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

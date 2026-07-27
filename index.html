@@ -133,6 +133,12 @@
               <p class="recent-work-card__desc">Rudra, the queen robot, drives reliably and avoids obstacles on camera and ToF, recovers on its own from a dead Bluetooth link, and is training in simulation before I trust a learned policy on the real hardware.</p>
               <span class="recent-work-card__link">View project →</span>
             </a>
+            <a href="project-flight-controller.html" class="recent-work-card">
+              <span class="recent-work-card__meta">2026 · In progress</span>
+              <h3 class="recent-work-card__title">Custom Drone Flight Controller</h3>
+              <p class="recent-work-card__desc">A 4-layer STM32F405 flight controller I designed from scratch in KiCad for one of the drones joining the Chakra swarm. Schematic and layout are done, gerbers are with PCBWay, and the boards aren't back yet.</p>
+              <span class="recent-work-card__link">View project →</span>
+            </a>
             <a href="project-apollo-1.html" class="recent-work-card">
               <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
               <h3 class="recent-work-card__title">Apollo 1 — EEG Rover</h3>
@@ -255,6 +261,18 @@
             Working toward a multi-robot swarm, one robot at a time. Rudra, the queen robot, now drives itself around obstacles using a camera and a ToF sensor together, pivots and drives straight reliably after tracking down two real motor-stall bugs, recovers on its own from a Bluetooth link going silently dead, and talks to a touchscreen panel live over WiFi. I've also trained a reinforcement-learning policy in a MuJoCo simulation of the real robot. After finding a sensor bug that had it training blind, and a reward-design flaw that let more training make it more reckless, it now avoids obstacles it's never seen before on 99.5% of randomized test layouts. Hasn't touched the real robot yet, and swarm logic is still ahead of all of that.
           </p>
           <a href="project-chakra.html" class="project-link">View details →</a>
+        </article>
+
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">KiCad · STM32F405 · 4-Layer PCB · PCBWay</span>
+          </div>
+          <h3 class="project-title">Custom Drone Flight Controller (In Progress)</h3>
+          <p class="project-desc">
+            A 4-layer STM32F405 flight controller I designed from scratch in KiCad, built for one of the drones joining the Chakra swarm. ICM-42688-P IMU on its own quiet 3.3V rail, DPS368 barometer, analog OSD, blackbox flash, dual buck/LDO power tree with reverse-voltage protection. Schematic and routing are done and gerbers are with PCBWay; boards aren't back yet, so nothing's bench-tested.
+          </p>
+          <a href="project-flight-controller.html" class="project-link">View details →</a>
         </article>
 
         <article class="project-card">
