@@ -97,6 +97,14 @@
         The board is 40.1 × 37.5 mm on a 4-layer stackup: signal on the top and bottom copper layers, with a dedicated ground plane and a dedicated power plane sandwiched in between. That's standard practice for a board like this, but it mattered here specifically because of how dense it is — an LQFP-64 MCU, two SPI-connected sensors, an SPI flash chip, an analog OSD chip, and two buck converters all had to be routed and given clean return paths in a footprint barely bigger than a AA battery, without the IMU or the analog video path picking up noise from a switching regulator or a digital bus running underneath them.
       </p>
 
+      <h3 class="project-detail__figure-title">Schematic</h3>
+      <figure class="project-detail__figure">
+        <img src="fc-schematic.png" alt="KiCad schematic for the custom STM32F405 flight controller, organized into Microcontroller, Power Supply, Sensors & Flash Memory, USB-C, Analog OSD, and Connectors & Solderpads blocks" />
+        <figcaption>
+          Full schematic, organized by function: microcontroller and clocking, power supply (reverse-voltage protection, dual bucks, dual LDOs), sensors and flash, USB-C, analog OSD, and connectors.
+        </figcaption>
+      </figure>
+
       <h3 class="project-detail__figure-title">Board — front and back</h3>
       <div class="project-detail__figure-grid">
         <figure class="project-detail__figure">
@@ -108,14 +116,6 @@
           <figcaption>Back. Exported from the KiCad 3D viewer of the board file: motor pads M1–M4, SBUS, UART/I²C, 5 V / 10 V, buzzer, and BOOT.</figcaption>
         </figure>
       </div>
-
-      <h3 class="project-detail__figure-title">Schematic</h3>
-      <figure class="project-detail__figure">
-        <img src="fc-schematic.png" alt="KiCad schematic for the custom STM32F405 flight controller, organized into Microcontroller, Power Supply, Sensors & Flash Memory, USB-C, Analog OSD, and Connectors & Solderpads blocks" />
-        <figcaption>
-          Full schematic, organized by function: microcontroller and clocking, power supply (reverse-voltage protection, dual bucks, dual LDOs), sensors and flash, USB-C, analog OSD, and connectors.
-        </figcaption>
-      </figure>
 
     </section>
 
