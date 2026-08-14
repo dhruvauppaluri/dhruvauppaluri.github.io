@@ -97,6 +97,30 @@
         The board is 40.1 × 37.5 mm on a 4-layer stackup: signal on the top and bottom copper layers, with a dedicated ground plane and a dedicated power plane sandwiched in between. That's standard practice for a board like this, but it mattered here specifically because of how dense it is — an LQFP-64 MCU, two SPI-connected sensors, an SPI flash chip, an analog OSD chip, and two buck converters all had to be routed and given clean return paths in a footprint barely bigger than a AA battery, without the IMU or the analog video path picking up noise from a switching regulator or a digital bus running underneath them.
       </p>
 
+      <h3 class="project-detail__figure-title">Board — front and back</h3>
+      <div class="project-detail__figure-grid">
+        <figure class="project-detail__figure">
+          <img src="fc-pcb-front.png" alt="3D view of the flight controller front: STM32F405, USB-C, and JST connectors labeled ESC, GPS, SERVO, VTX, and RX" />
+          <figcaption>Front. Populated top side: STM32F405, USB-C, and JST-GH breakouts for ESC, GPS, servo, VTX, and RX.</figcaption>
+        </figure>
+        <figure class="project-detail__figure">
+          <img src="fc-pcb-back.png" alt="KiCad 3D render of the flight controller back with labeled solder pads for motors, SBUS, UART, I2C, 5V and 10V rails" />
+          <figcaption>Back. Exported from the KiCad 3D viewer of the board file: motor pads M1–M4, SBUS, UART/I²C, 5 V / 10 V, buzzer, and BOOT.</figcaption>
+        </figure>
+      </div>
+
+      <h3 class="project-detail__figure-title">KiCad 3D viewer</h3>
+      <div class="project-detail__figure-grid">
+        <figure class="project-detail__figure">
+          <img src="fc-pcb-top.png" alt="KiCad raytraced 3D render of the flight controller top side with F405 V1 silkscreen" />
+          <figcaption>Top, raytraced from <code>fcguide.kicad_pcb</code>. Same layout as the front view, from the actual board file.</figcaption>
+        </figure>
+        <figure class="project-detail__figure">
+          <img src="fc-pcb-iso.png" alt="Isometric KiCad 3D render of the flight controller showing connector height and component placement" />
+          <figcaption>Isometric. Same KiCad model, rotated so connector height and the two buck inductors are visible.</figcaption>
+        </figure>
+      </div>
+
       <h3 class="project-detail__figure-title">Schematic</h3>
       <figure class="project-detail__figure">
         <img src="fc-schematic.png" alt="KiCad schematic for the custom STM32F405 flight controller, organized into Microcontroller, Power Supply, Sensors & Flash Memory, USB-C, Analog OSD, and Connectors & Solderpads blocks" />
