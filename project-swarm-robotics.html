@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Chakra — an in-progress swarm robotics platform. Rudra, the queen robot, is a 2-motor differential-drive ESP32 rover with camera-based (YOLOv8n) obstacle avoidance fused with a VL53L0X ToF sensor, a WebSocket/Bluetooth control bridge with heartbeat-based auto-recovery, a SenseCAP Indicator touchscreen control panel, and an in-progress MuJoCo/PPO sim-to-real training pipeline." />
-  <title>Chakra — Swarm Robotics Platform (In Progress) | Dhruva Uppaluri</title>
+  <meta name="description" content="Autonomous Swarm Robotics — an in-progress multi-robot platform. The first rover is a 2-motor differential-drive ESP32 robot with camera-based (YOLOv8n) obstacle avoidance fused with a VL53L0X ToF sensor, a WebSocket/Bluetooth control bridge with heartbeat-based auto-recovery, a SenseCAP Indicator touchscreen control panel, and an in-progress MuJoCo/PPO sim-to-real training pipeline." />
+  <title>Autonomous Swarm Robotics (In Progress) | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -33,9 +33,9 @@
 
     <header class="project-detail__header">
       <span class="project-detail__meta">2026 · In Progress · ESP32 · Computer Vision (YOLOv8n) · LVGL/Touchscreen · FastAPI/WebSocket · MuJoCo/PPO</span>
-      <h1 class="project-detail__title">Chakra — Swarm Robotics Platform (In Progress)</h1>
+      <h1 class="project-detail__title">Autonomous Swarm Robotics (In Progress)</h1>
       <p class="project-detail__subtitle">
-        A multi-robot swarm platform, starting with one robot: Rudra, the "queen," built on the chassis from my Apollo 1 rover. It drives itself around obstacles using a camera and a time-of-flight sensor together, pivots and drives in a straight line reliably after fixing two real motor-stall bugs, recovers on its own from a Bluetooth link going silently dead, and I can start, stop, and watch it from a touchscreen panel over WiFi.
+        A multi-robot swarm platform, starting with one ground rover built on the chassis from my Apollo 1 EEG rover. It drives itself around obstacles using a camera and a time-of-flight sensor together, pivots and drives in a straight line reliably after fixing two real motor-stall bugs, recovers on its own from a Bluetooth link going silently dead, and I can start, stop, and watch it from a touchscreen panel over WiFi.
       </p>
       <p class="project-detail__subtitle">
         <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a>
@@ -52,14 +52,14 @@
         <li>Repository: <a href="https://github.com/dhruvauppaluri/swarm-project" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/swarm-project</a></li>
       </ul>
       <p>
-        Note: this builds on <a href="project-apollo-1.html" class="project-link">Apollo 1, the WeaveHacks 4 EEG rover</a>: I'm reusing that chassis, but everything on top of it is a fresh rebuild in its own <code>swarm-project</code> repo. The Arduino Uno and per-motor transistors are gone; it's an ESP32 platform now, with a new drive layout, a WebSocket/Bluetooth bridge, a camera-based perception stack, and a touchscreen panel. I'd originally named this robot "Apollo1" too, which got confusing fast (same name, unrelated robot, nothing but a recycled frame in common), so it's since been renamed <strong>Rudra</strong>, and the platform itself is now <strong>Chakra</strong> — a name that actually started life as the software arbitration layer that lets manual control and the camera's vision take turns driving (see below), before it made sense as the name for the whole thing.
+        Note: this builds on <a href="project-apollo-1.html" class="project-link">Apollo 1, the WeaveHacks 4 EEG rover</a>: I'm reusing that chassis, but everything on top of it is a fresh rebuild in its own <code>swarm-project</code> repo. The Arduino Uno and per-motor transistors are gone; it's an ESP32 platform now, with a new drive layout, a WebSocket/Bluetooth bridge, a camera-based perception stack, and a touchscreen panel. Same recycled frame, unrelated robot.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>Objective</h2>
       <p>
-        The eventual goal is a colony of small robots coordinating as a swarm. That's a long way off, and I don't think it's worth chasing until one robot can reliably drive, sense, avoid obstacles, and stay reachable on its own. So that's what Rudra has been: the old chassis, rebuilt with a simpler drive layout, real perception, and enough control surfaces (a web D-pad, now a touchscreen panel) to actually trust it before I start on a second robot.
+        The eventual goal is a colony of small robots coordinating as a swarm. That's a long way off, and I don't think it's worth chasing until one robot can reliably drive, sense, avoid obstacles, and stay reachable on its own. So that's what the first rover has been: the old chassis, rebuilt with a simpler drive layout, real perception, and enough control surfaces (a web D-pad, now a touchscreen panel) to actually trust it before I start on a second robot.
       </p>
       <p>
         It's paid off. What started as a hardware bring-up exercise is now a robot that drives itself around obstacles with a camera, pivots and drives straight reliably, recovers on its own from a dead Bluetooth link, and I can start, stop, and watch it from a touchscreen over WiFi. Getting multiple robots talking to each other is still the next big step, and I haven't started on it yet.
@@ -75,7 +75,7 @@
         <li>Camera-based obstacle avoidance: a Seeed XIAO ESP32S3 Sense streams MJPEG over its own WiFi link; a Python script runs YOLOv8n on the live feed, decides a drive command from detected-object position and size, and fuses it with the VL53L0X reading: the point sensor can only escalate caution, never override the camera toward "clear." A point-blank reading now hands off to the firmware's own backup-and-turn recovery instead of just stopping, since vision alone can't steer away from anything it wasn't trained to recognize.</li>
         <li>Control bridge &amp; arbitration: a FastAPI + WebSocket server (<code>control/web_ui/server.py</code>) owns the single Bluetooth serial connection to the robot and fans it out to any number of clients at once — the browser D-pad, the vision script, and the touchscreen panel all share the same link without fighting over the serial port. In front of it, <code>chakra.py</code> arbitrates between manual and vision control: a manual command always wins immediately, then hands control back to vision automatically after a short idle period, so nobody has to remember to release control by hand.</li>
         <li>Bluetooth reliability: the link can go silently stale (accepts writes, nothing ever comes back, the robot itself stays alive) — a firmware heartbeat and a host-side watchdog now detect that and force a clean reconnect on their own, instead of needing someone to notice and restart the bridge server by hand.</li>
-        <li>Touchscreen control panel: a SeeedStudio SenseCAP Indicator D1 (ESP32-S3 + RP2040 co-processor, 480×480 touchscreen) runs an LVGL UI with a tabbed layout: a live start/stop + status tab for Rudra, and a reserved placeholder tab for the next robot. Since the Indicator's ESP32-S3 only has BLE radio hardware (no Classic Bluetooth), it reaches the robot over WiFi as a WebSocket client of the same bridge server the browser D-pad uses.</li>
+        <li>Touchscreen control panel: a SeeedStudio SenseCAP Indicator D1 (ESP32-S3 + RP2040 co-processor, 480×480 touchscreen) runs an LVGL UI with a tabbed layout: a live start/stop + status tab for the first rover, and a reserved placeholder tab for the next robot. Since the Indicator's ESP32-S3 only has BLE radio hardware (no Classic Bluetooth), it reaches the robot over WiFi as a WebSocket client of the same bridge server the browser D-pad uses.</li>
         <li>Sim-to-real RL: a MuJoCo model built to the robot's real measured dimensions, wrapped as a Gymnasium environment with the same discrete drive commands and sensor readings (VL53L0X + a rangefinder fan standing in for the camera's field of view) the real robot actually has, trained with PPO via Stable-Baselines3. The idea is to train obstacle-avoidance robustness in simulation before ever risking it on the real hardware: the policy now reliably avoids obstacles in simulation, but hasn't been deployed to the real robot yet.</li>
       </ul>
     </section>
@@ -85,7 +85,7 @@
 
       <h3>Chassis redesign: from 4-motor skid-steer to 2-motor differential drive</h3>
       <p>
-        Rudra started on the same 4WD chassis as Apollo 1, driven by two L298N modules in skid-steer. One motor channel just wouldn't spin, and a swap test made it obvious this wasn't the motor or the driver: a known-good motor failed on that same channel, and the "bad" motor was fine everywhere else, so it had to be a wiring fault I didn't want to chase down further. I dropped the front two wheels for a free-swiveling caster and rebuilt the drive around a single L298N and two rear motors instead. Simpler electronics, one less thing to go wrong. And once the camera gave the robot wide-field awareness with no moving parts, the servo that used to pan the distance sensor didn't have a job anymore, so I retired it for good.
+        The first rover started on the same 4WD chassis as Apollo 1, driven by two L298N modules in skid-steer. One motor channel just wouldn't spin, and a swap test made it obvious this wasn't the motor or the driver: a known-good motor failed on that same channel, and the "bad" motor was fine everywhere else, so it had to be a wiring fault I didn't want to chase down further. I dropped the front two wheels for a free-swiveling caster and rebuilt the drive around a single L298N and two rear motors instead. Simpler electronics, one less thing to go wrong. And once the camera gave the robot wide-field awareness with no moving parts, the servo that used to pan the distance sensor didn't have a job anymore, so I retired it for good.
       </p>
 
       <h3>Fixing pivot-in-place and straight-line breakaway stalls</h3>
@@ -96,12 +96,12 @@
         Chasing that bug surfaced a second, unrelated one: straight-line driving stalled unpredictably too — sometimes the left wheel needed a manual kick to start, sometimes the right, with no pattern and no loose wiring behind it. Turned out the baseline drive duty was simply too close to these motors' own breakaway-friction torque, so which one caught first was close to a coin flip. Raising the baseline duty (to the same value already proven reliable for pivot) and adding a brief, staggered full-power "kick" before settling into cruising speed fixed it — verified clean across repeated forward and backward trials, elevated and under load.
       </p>
 
-      <h3>Bluetooth heartbeat and the Chakra arbitration layer</h3>
+      <h3>Bluetooth heartbeat and the manual/vision arbitration layer</h3>
       <p>
         The Bluetooth link had a long-standing failure mode where it would go quiet — the OS reports it as connected, writes succeed, and nothing ever comes back, with the robot itself still alive. The bridge server had no way to tell the difference between "quiet because nothing's happening" and "quiet because the link is dead," so the only fix was noticing and restarting it by hand. I added a trivial heartbeat command to the firmware and a watchdog on the host side: if there's been silence for a while, ping once, and if that goes unanswered, force a full reconnect. I got to verify it does exactly what it's supposed to sooner than expected — a firmware reflash mid-session killed the link for real, and the watchdog caught it and reconnected on its own without me touching anything.
       </p>
       <p>
-        Around the same time I built <code>chakra.py</code>, a small orchestration layer that sits between the bridge and anything that wants to drive: the browser D-pad, the vision script, eventually a trained policy. A manual command always takes over immediately; if nothing manual comes in for a few seconds, control reverts to vision automatically. It's the piece that made "Chakra" feel like the right name for the whole platform, not just this one layer.
+        Around the same time I built <code>chakra.py</code>, a small orchestration layer that sits between the bridge and anything that wants to drive: the browser D-pad, the vision script, eventually a trained policy. A manual command always takes over immediately; if nothing manual comes in for a few seconds, control reverts to vision automatically.
       </p>
 
       <h3>Camera-based obstacle avoidance, and its blind spot</h3>
@@ -187,7 +187,7 @@
         Where things stand right now: the rebuilt 2-motor chassis drives cleanly in both directions and pivots in place over Bluetooth, both verified reliable across repeated live trials after fixing two separate motor-stall bugs. The camera and the VL53L0X are fused, and a point-blank reading now hands off to the firmware's own class-agnostic backup-and-turn recovery instead of just stopping — implemented this session, not yet re-tested live against a real obstacle. The SenseCAP touchscreen panel is flashed, renders correctly, and holds a live connection to the bridge with a real-time status feed. Bluetooth staleness, previously a manual-restart-and-hope problem, now has a real fix: a heartbeat watchdog that caught and recovered from a genuine stale link on its own during testing. On the sim side, the trained policy reliably avoids obstacles it's never seen before (2 collisions out of 400 randomized layouts, zero out of a fixed set of deliberately hard ones), after finding and fixing a sensor bug that had every earlier run training blind, and a reward-design flaw that let continued training quietly trade safety for speed. It hasn't touched the real robot yet, and there's still a real tradeoff between a faster/more confident checkpoint and a more cautious/more reliable one that I haven't fully closed.
       </p>
       <p>
-        Next up: get an IMU installed and start taking real motion measurements (turn rate, speed) to replace the sim's remaining placeholder values and properly fix a backward-drive veer I'm deferring rather than eyeballing again; re-test the point-blank recovery handoff live against a real obstacle; build the bridge that lets a trained sim policy actually drive the real robot; close the safety/performance gap in the reward design; and eventually look at whether the sim should train against a more realistic model of the real robot's actual sensing limits before starting on the swarm part — multiple robots coordinating, which is the whole reason this is called Chakra and not just "one robot." Right now it's one robot. The swarm is still ahead of me.
+        Next up: get an IMU installed and start taking real motion measurements (turn rate, speed) to replace the sim's remaining placeholder values and properly fix a backward-drive veer I'm deferring rather than eyeballing again; re-test the point-blank recovery handoff live against a real obstacle; build the bridge that lets a trained sim policy actually drive the real robot; close the safety/performance gap in the reward design; and eventually look at whether the sim should train against a more realistic model of the real robot's actual sensing limits before starting on the swarm part — multiple robots coordinating, which is the whole reason this is a swarm project and not just one rover. Right now it's one robot. The swarm is still ahead of me.
       </p>
     </section>
 
