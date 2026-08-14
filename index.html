@@ -57,63 +57,6 @@
       </div>
     </section>
 
-    <!-- Circuit schematic navigation -->
-    <section class="circuit-schematic" aria-label="Portfolio navigation">
-      <svg class="schematic-svg" viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <style>
-            .schematic-wire{fill:none;stroke:currentColor;stroke-width:1.6;}
-            .schematic-symbol{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
-          </style>
-        </defs>
-        <!-- VCC rail -->
-        <path class="schematic-wire" d="M 20 20 H 380" />
-        <!-- GND rail + ground symbols -->
-        <path class="schematic-wire" d="M 20 240 H 380" />
-        <path class="schematic-wire" d="M 80 240 v 12 M 75 252 h 10" />
-        <path class="schematic-wire" d="M 160 240 v 12 M 155 252 h 10" />
-        <path class="schematic-wire" d="M 240 240 v 12 M 235 252 h 10" />
-        <path class="schematic-wire" d="M 320 240 v 12 M 315 252 h 10" />
-
-        <!-- About: resistor -->
-        <a href="#about" class="circuit-link" aria-label="Go to About section">
-          <g class="circuit-component">
-            <path class="schematic-wire" d="M 80 20 V 55" />
-            <path class="schematic-symbol symbol" d="M 80 55 L 92 65 L 68 75 L 92 85 L 68 95 L 80 105" />
-            <path class="schematic-wire" d="M 80 105 V 240" />
-            <text x="80" y="190" text-anchor="middle" class="schematic-label">About</text>
-          </g>
-        </a>
-
-        <!-- Skills: capacitor -->
-        <a href="#skills" class="circuit-link" aria-label="Go to Skills section">
-          <g class="circuit-component">
-            <path class="schematic-wire" d="M 160 20 V 58 M 160 78 V 240" />
-            <path class="schematic-symbol symbol" d="M 145 58 H 175 M 145 78 H 175" />
-            <text x="160" y="190" text-anchor="middle" class="schematic-label">Skills</text>
-          </g>
-        </a>
-
-        <!-- Projects: inductor -->
-        <a href="#projects" class="circuit-link" aria-label="Go to Projects section">
-          <g class="circuit-component">
-            <path class="schematic-wire" d="M 240 20 V 52 M 240 108 V 240" />
-            <path class="schematic-symbol symbol" d="M 240 52 Q 252 60 240 68 Q 228 76 240 84 Q 252 92 240 100 V 108" />
-            <text x="240" y="190" text-anchor="middle" class="schematic-label">Projects</text>
-          </g>
-        </a>
-
-        <!-- Contact: diode -->
-        <a href="#contact" class="circuit-link" aria-label="Go to Contact section">
-          <g class="circuit-component">
-            <path class="schematic-wire" d="M 320 20 V 58 M 320 98 V 240" />
-            <path class="schematic-symbol symbol" d="M 305 58 L 335 58 L 320 98 Z M 314 98 L 326 98" />
-            <text x="320" y="190" text-anchor="middle" class="schematic-label">Contact</text>
-          </g>
-        </a>
-      </svg>
-    </section>
-
     <!-- About -->
     <section id="about" class="section">
       <h2 class="section-title">About</h2>
