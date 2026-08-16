@@ -72,13 +72,13 @@
             <a href="project-apollo-1.html" class="recent-work-card">
               <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
               <h3 class="recent-work-card__title">Apollo 1 — EEG Rover</h3>
-              <p class="recent-work-card__desc">Built the chassis and firmware for a 4WD rover a Muse S headband drives by focus alone, in 24 hours.</p>
+              <p class="recent-work-card__desc">4WD rover driven by Muse S focus over Bluetooth — band-power to PWM, plus the power-rail debug that made it actually move.</p>
               <span class="recent-work-card__link">View project →</span>
             </a>
             <a href="project-axiom-neural-rlhf.html" class="recent-work-card">
               <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
               <h3 class="recent-work-card__title">Axiom — Neural RLHF</h3>
-              <p class="recent-work-card__desc">Three AI agents competing for your attention, scored by your own brain signal instead of a thumbs-up button.</p>
+              <p class="recent-work-card__desc">Muse S EEG scored three competing agents: band-power features, baseline calibration, then a sync protocol so the AI only reads live brain state.</p>
               <span class="recent-work-card__link">View project →</span>
             </a>
           </div>
@@ -138,19 +138,6 @@
         </div>
         <div class="skills-row">
           <div class="skills-row__label">
-            <span class="skills-row__code">[SIG]</span>
-            <h3>Signal Processing &amp; BCI</h3>
-          </div>
-          <ul class="skills-row__tags">
-            <li>EEG acquisition (BrainFlow, Muse S)</li>
-            <li>Band-power features (α, β, θ)</li>
-            <li>Focus &amp; engagement ratios</li>
-            <li>Baseline normalization</li>
-            <li>Real-time sensor fusion</li>
-          </ul>
-        </div>
-        <div class="skills-row">
-          <div class="skills-row__label">
             <span class="skills-row__code">[TOOLS]</span>
             <h3>Software Tools</h3>
           </div>
@@ -198,11 +185,11 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Python · TypeScript · EEG · WeaveHacks · Co-creator</span>
+            <span class="project-tags">Python · EEG · BrainFlow · Muse S · WeaveHacks</span>
           </div>
           <h3 class="project-title">Axiom — Neural RLHF</h3>
           <p class="project-desc">
-            Built in 24 hours at WeaveHacks 4. I pitched Axiom as assistive communication for people who cannot easily speak or type: EEG band readings drive a neural RLHF demo where three AI agents adapt to your brain’s engagement and focus. I refined the startup sync protocol that aligns user calibration signals with live EEG features before the AI pipeline reads them.
+            Built in 24 hours at WeaveHacks 4. I pitched Axiom as assistive communication for people who cannot easily speak or type. Muse S EEG streams through BrainFlow; α/β/θ band powers become engagement and focus scores after a calibration baseline, then three agents adapt from that neural reward. I refined the startup sync so the pipeline only reads live features, not leftover samples from the previous round.
           </p>
           <a href="project-axiom-neural-rlhf.html" class="project-link">View details →</a>
         </article>
@@ -210,11 +197,11 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">EEG · WeaveHacks · Arduino/C++ · Weave · Redis</span>
+            <span class="project-tags">EEG · Muse S · Arduino/C++ · PWM · WeaveHacks</span>
           </div>
           <h3 class="project-title">Apollo 1 — EEG Brain-Wave Controlled Rover</h3>
           <p class="project-desc">
-            Built in 24 hours at WeaveHacks 4: I built the 4WD rover and refined its firmware and daemon on a team EEG project. Motors scale with Muse S focus over Bluetooth while Weave and Redis handle the upstream signal path. Proportional transistor drive per wheel; on my end the fights were software handoff to PWM and power, where 9 V cells sagged until a DMM proved we needed LiPo.
+            Built in 24 hours at WeaveHacks 4: I built the 4WD rover and refined its firmware so Muse S focus — a β/α band-power ratio over Bluetooth — scaled PWM on independent transistor stages. Upstream EEG was fused with ultrasonic ranging for approach/avoid behaviors. On my end the fights were the command handoff to the motors and power: 9 V cells sagged under load until a DMM proved we needed LiPo.
           </p>
           <a href="project-apollo-1.html" class="project-link">View details →</a>
         </article>
