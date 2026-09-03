@@ -63,6 +63,12 @@
         <div class="recent-work">
           <span class="recent-work__label">Recent work</span>
           <div class="recent-work-grid">
+            <a href="project-fpga-studio.html" class="recent-work-card">
+              <span class="recent-work-card__meta">2026 · Native macOS</span>
+              <h3 class="recent-work-card__title">FPGA Studio</h3>
+              <p class="recent-work-card__desc">A Mac IDE I wrote for VHDL and Verilog: simulate, build a Cyclone V bitstream, and program SRAM on a Terasic C5G. Blinky is running on the green LEDs.</p>
+              <span class="recent-work-card__link">View project →</span>
+            </a>
             <a href="project-swarm-robotics.html" class="recent-work-card">
               <span class="recent-work-card__meta">2026 · In progress</span>
               <h3 class="recent-work-card__title">Autonomous Swarm Robotics</h3>
@@ -73,12 +79,6 @@
               <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
               <h3 class="recent-work-card__title">Apollo 1 — EEG Rover</h3>
               <p class="recent-work-card__desc">4WD rover driven by Muse S focus over Bluetooth — band-power to PWM, plus the power-rail debug that made it actually move.</p>
-              <span class="recent-work-card__link">View project →</span>
-            </a>
-            <a href="project-axiom-neural-rlhf.html" class="recent-work-card">
-              <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
-              <h3 class="recent-work-card__title">Axiom — Neural RLHF</h3>
-              <p class="recent-work-card__desc">Muse S EEG scored three competing agents: band-power features, baseline calibration, then a sync protocol so the AI only reads live brain state.</p>
               <span class="recent-work-card__link">View project →</span>
             </a>
           </div>
@@ -134,6 +134,9 @@
             <li>C++</li>
             <li>Python</li>
             <li>MATLAB</li>
+            <li>VHDL</li>
+            <li>Verilog</li>
+            <li>Swift</li>
           </ul>
         </div>
         <div class="skills-row">
@@ -144,6 +147,8 @@
           <ul class="skills-row__tags">
             <li>KiCad</li>
             <li>LTSpice</li>
+            <li>FPGA Studio</li>
+            <li>Yosys / GHDL / nextpnr</li>
             <li>Altera Quartus</li>
             <li>ModelSim</li>
             <li>LaTeX</li>
@@ -158,6 +163,18 @@
     <section id="projects" class="section">
       <h2 class="section-title">Projects</h2>
       <div class="projects-list">
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">Swift/SwiftUI · VHDL · Verilog · Yosys · GHDL · Cyclone V</span>
+          </div>
+          <h3 class="project-title">FPGA Studio — Native macOS HDL IDE</h3>
+          <p class="project-desc">
+            I wanted a real FPGA flow on an Apple-silicon Mac without a Quartus VM. FPGA Studio is a native Swift/SwiftUI IDE I wrote for VHDL, Verilog, and SystemVerilog: TextKit editor, simulation and waveforms, Yosys + nextpnr-mistral bitstream, then openFPGALoader SRAM onto a Terasic Cyclone V GX Starter Kit. The toolchain is bundled in the app. Blinky is programmed and running on LEDG. Persistent flash stays locked; this is a tools project, not a claim of a finished chip.
+          </p>
+          <a href="project-fpga-studio.html" class="project-link">View details →</a>
+        </article>
+
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>

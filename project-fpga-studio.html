@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FPGA Studio — a native macOS IDE I wrote for VHDL, Verilog, and SystemVerilog: edit, simulate, synthesize, and program a Cyclone V board from one app." />
+  <title>FPGA Studio — Native macOS HDL IDE | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html#top" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 · Swift / SwiftUI · VHDL · Verilog · Yosys · GHDL · Cyclone V</span>
+      <h1 class="project-detail__title">FPGA Studio — Native macOS HDL IDE</h1>
+      <p class="project-detail__subtitle">
+        A native Mac app I wrote so I could edit VHDL and Verilog, simulate, build a bitstream, and program a Cyclone V board without leaving the editor — and without installing Quartus.
+      </p>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>The App</h2>
+      <figure class="project-detail__figure">
+        <img src="fpga-studio-welcome.jpg" alt="FPGA Studio welcome window on macOS: Create a Project, Open Folder, Beginner workspace, and toolchain 7 of 7 tools ready" />
+        <figcaption>The real welcome window. Toolchain is bundled; first launch unpacks Yosys, GHDL, nextpnr-mistral, Icarus, Verilator, and openFPGALoader.</figcaption>
+      </figure>
+
+      <p>
+        Click through the same loop the Mac app runs on the C5G. This in-page demo is the blinky project: validate pins, simulate, build a bitstream, then program SRAM. After Program SRAM, LEDG0 blinks like the green LED on the board.
+      </p>
+
+      <div class="fs-demo" id="fpga-demo" data-stage="idle">
+        <div class="fs-demo__chrome">
+          <span class="fs-demo__dot" aria-hidden="true"></span>
+          <span class="fs-demo__dot" aria-hidden="true"></span>
+          <span class="fs-demo__dot" aria-hidden="true"></span>
+          <span class="fs-demo__title">C5G Blinky — FPGA Studio</span>
+        </div>
+        <div class="fs-demo__toolbar">
+          <button type="button" class="fs-demo__btn" data-action="validate">Validate</button>
+          <button type="button" class="fs-demo__btn" data-action="simulate" disabled>Simulate</button>
+          <button type="button" class="fs-demo__btn" data-action="build" disabled>Build</button>
+          <button type="button" class="fs-demo__btn fs-demo__btn--accent" data-action="program" disabled>Program SRAM</button>
+          <span class="fs-demo__status" id="fpga-demo-status">C5G Connected</span>
+        </div>
+        <div class="fs-demo__layout">
+          <aside class="fs-demo__sidebar" aria-label="Project sources">
+            <p class="fs-demo__side-label">Project</p>
+            <button type="button" class="fs-demo__file is-active">rtl/blinky.sv</button>
+            <button type="button" class="fs-demo__file">sim/blinky_tb.sv</button>
+            <p class="fs-demo__side-label">Board</p>
+            <p class="fs-demo__side-meta">Terasic C5G<br />5CGXFC5C6F27C7</p>
+          </aside>
+          <pre class="fs-demo__editor" tabindex="0"><code><span class="c">// FPGA Studio Blinky — edit this file and run the simulation to experiment.</span>
+<span class="k">module</span> blinky(<span class="k">input wire</span> CLOCK_50_B5B, <span class="k">output wire</span> LEDG0);
+  <span class="k">reg</span> [25:0] counter = 0;
+
+  <span class="k">always</span> @(posedge CLOCK_50_B5B) counter &lt;= counter + 1'b1;
+
+  <span class="c">// Bit 24 gives a clearly visible blink at 50 MHz.</span>
+  <span class="k">assign</span> LEDG0 = counter[22];
+<span class="k">endmodule</span></code></pre>
+        </div>
+        <div class="fs-demo__bottom">
+          <div class="fs-demo__log-head">
+            <span>Log</span>
+            <span class="fs-demo__leds" aria-label="LEDG on the C5G">
+              <span class="fs-demo__led" data-led="0"></span>
+              <span class="fs-demo__led" data-led="1"></span>
+              <span class="fs-demo__led" data-led="2"></span>
+              <span class="fs-demo__led" data-led="3"></span>
+              <span class="fs-demo__led" data-led="4"></span>
+              <span class="fs-demo__led" data-led="5"></span>
+              <span class="fs-demo__led" data-led="6"></span>
+              <span class="fs-demo__led" data-led="7"></span>
+            </span>
+          </div>
+          <pre class="fs-demo__log" id="fpga-demo-log">Ready. Validate the blinky project to start.</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Project Overview</h2>
+      <ul>
+        <li>Role: solo project, ongoing</li>
+        <li>What it is: a native Apple-silicon macOS IDE (Swift 6 / SwiftUI) for portable VHDL, Verilog, and SystemVerilog projects</li>
+        <li>Target board: Terasic Cyclone V GX Starter Kit (C5G), device <code>5CGXFC5C6F27C7</code></li>
+        <li>Flow: Check project → Simulate → Build bitstream → Detect board → Program SRAM</li>
+        <li>On hardware: a blinky bitstream programmed over JTAG into SRAM; green LEDG toggles from an on-chip counter</li>
+        <li>Not claimed: a finished processor, persistent flash programming, or Quartus-equivalent coverage of Cyclone V hard blocks</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Why Build It</h2>
+      <p>
+        I wanted a real FPGA flow on the machine I already work on. Quartus and ModelSim are what the courseware expects; on an Apple-silicon Mac they are a VM and a pile of installers. I also wanted to understand the open-source path end to end — not just click Build in someone else’s GUI, but own the editor, the project format, the subprocess boundary, and the programmer.
+      </p>
+      <p>
+        So I wrote the IDE myself. The backends are not mine: Yosys, GHDL, nextpnr-mistral / Mistral, Icarus Verilog, Verilator, and openFPGALoader. What I built is the native shell around them — project files that are ordinary folders, a TextKit editor, simulation and waveform, pin/QSF checks, a bundled toolchain, and a SRAM-first programmer aimed at one board I actually own.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>The Flow</h2>
+      <p>
+        A project is a folder with <code>fpga-project.json</code>, HDL sources, a QSF constraints file, and optional testbenches. Build products land under <code>.fpga/build</code>. Nothing about that format is locked to the app; you can open the same folder in a text editor.
+      </p>
+      <figure class="project-detail__figure">
+        <svg class="fpga-flow" viewBox="0 0 720 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FPGA Studio flow from editor through simulation, synthesis, place-and-route, and SRAM programming">
+          <defs>
+            <marker id="fpga-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M1 1 L9 5 L1 9" fill="none" stroke="#d9823f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+          <g fill="none" stroke="#243a2d" stroke-width="1.4">
+            <rect x="8" y="36" width="118" height="72" rx="3"/>
+            <rect x="154" y="36" width="118" height="72" rx="3"/>
+            <rect x="300" y="36" width="118" height="72" rx="3"/>
+            <rect x="446" y="36" width="118" height="72" rx="3"/>
+            <rect x="592" y="36" width="118" height="72" rx="3"/>
+          </g>
+          <path d="M126 72 H154 M272 72 H300 M418 72 H446 M564 72 H592" fill="none" stroke="#d9823f" stroke-width="1.6" marker-end="url(#fpga-arrow)"/>
+          <g fill="#eef3ee" font-family="Inter, system-ui, sans-serif" font-size="13" text-anchor="middle">
+            <text x="67" y="68">Edit HDL</text>
+            <text x="213" y="68">Simulate</text>
+            <text x="359" y="68">Synthesize</text>
+            <text x="505" y="68">Place &amp; route</text>
+            <text x="651" y="68">Program SRAM</text>
+          </g>
+          <g fill="#b9ccc1" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" text-anchor="middle">
+            <text x="67" y="88">VHDL / Verilog</text>
+            <text x="213" y="88">Icarus / GHDL</text>
+            <text x="359" y="88">Yosys</text>
+            <text x="505" y="88">nextpnr-mistral</text>
+            <text x="651" y="88">openFPGALoader</text>
+          </g>
+          <text x="360" y="20" text-anchor="middle" fill="#d9823f" font-family="JetBrains Mono, ui-monospace, monospace" font-size="11">one native app · bundled toolchain · Terasic C5G</text>
+          <text x="360" y="156" text-anchor="middle" fill="#b9ccc1" font-family="Inter, system-ui, sans-serif" font-size="11">SRAM is volatile. Power cycle reloads whatever is in the board’s configuration flash.</text>
+        </svg>
+        <figcaption>
+          The path I actually use: edit in FPGA Studio, simulate to a VCD, synthesize and place-and-route for Cyclone V, then program SRAM over the on-board USB-Blaster.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>What the App Does</h2>
+      <ul>
+        <li><strong>Editor.</strong> TextKit source view with line numbers, syntax coloring, search, bracket matching, autosave, and clickable diagnostics from the tools.</li>
+        <li><strong>Simulation.</strong> Verilog/SystemVerilog through Icarus, VHDL through GHDL, lint through Verilator, and a native VCD waveform viewer. Mixed-language simulation is not in this version.</li>
+        <li><strong>Constraints.</strong> C5G pin assignments are searchable. The checker flags duplicate pins, unknown pins, missing ports, I/O-standard mismatches, and direction errors before you spend a build on them.</li>
+        <li><strong>Build.</strong> Yosys (with the GHDL plugin for VHDL) then nextpnr-mistral. Cyclone V support upstream is experimental; inferred memory and multiply map to logic in the default path. M10K, DSP blocks, LPDDR2, transceivers, and PCIe are outside what I treat as working.</li>
+        <li><strong>Programmer.</strong> Detect the USB-Blaster, write SRAM, done. SRAM is temporary on purpose. Persistent EPCQ flash stays behind a lock until that path is validated on this board. I have not used flash from this app.</li>
+        <li><strong>Toolchain.</strong> The release app ships Yosys, GHDL, nextpnr-mistral, Icarus, Verilator, and openFPGALoader inside the bundle. First launch unpacks them into Application Support. No Homebrew required to run a project.</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>On the Board</h2>
+      <p>
+        The first design that went onto the C5G through this flow is blinky: a counter on <code>CLOCK_50_B5B</code> driving <code>LEDG[0]</code> (PIN_L7). After Program SRAM, the green LED above the push-buttons toggles. That is the check that the editor, the bitstream, the pin file, and the programmer agree with the hardware.
+      </p>
+      <p>
+        Two board details matter more than they look. The RUN/PROG slide switch (SW11) has to be in RUN for JTAG SRAM programming. And the tiny LED next to the USB-Blaster is activity for the programmer, not user I/O — the output you actually watch is LEDG.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>How It’s Built</h2>
+      <p>
+        The UI is SwiftUI. The editor is AppKit/TextKit. The pipeline is a Swift package that shells out with argument arrays only — no interpolated shell strings — then streams logs and supports cancel. Environments are sanitized. One project gets one build-directory lock so two Builds cannot clobber each other.
+      </p>
+      <p>
+        Tests cover the project manifest, path safety, QSF validation, VCD parsing, templates, and that the subprocess layer does not take a shell. Simulation and synthesis are exercised in CI-style runs on arm64 macOS. The physical board work is mine, on the desk, through SRAM.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Current Status &amp; What’s Next</h2>
+      <p>
+        The app is usable for the C5G SRAM loop I described. Blinky is on the board. I still treat Cyclone V place-and-route as experimental, keep flash locked, and am not calling this a replacement for Quartus. Apple’s Gatekeeper still wants a right-click Open because the build is ad-hoc signed, not notarized.
+      </p>
+      <p>
+        Next is tightening the C5G labs that ship with the app, then notarized distribution if the SRAM path stays boring. More devices only after this one stays boring.
+      </p>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="fpga-studio-demo.js"></script>
+</body>
+</html>
