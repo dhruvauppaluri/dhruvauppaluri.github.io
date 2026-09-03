@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="FPGA Studio — a native macOS IDE I wrote for VHDL, Verilog, and SystemVerilog: edit, simulate, synthesize, and program a Cyclone V board from one app." />
+  <meta name="description" content="FPGA Studio is a native Apple-silicon macOS IDE for editing, simulating, synthesizing, and programming VHDL, Verilog, and SystemVerilog projects on a Terasic C5G." />
   <title>FPGA Studio — Native macOS HDL IDE | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,17 +32,21 @@
     </div>
 
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · Swift / SwiftUI · VHDL · Verilog · Yosys · GHDL · Cyclone V</span>
+      <span class="project-detail__meta">2026 · Swift 6 / SwiftUI · TextKit · Yosys · GHDL · Cyclone V</span>
       <h1 class="project-detail__title">FPGA Studio — Native macOS HDL IDE</h1>
       <p class="project-detail__subtitle">
-        A native Mac app I wrote so I could edit VHDL and Verilog, simulate, build a bitstream, and program a Cyclone V board without leaving the editor — and without installing Quartus.
+        A native Apple-silicon Mac app that takes an HDL project from source and simulation to a Cyclone V bitstream and safe hardware programming—without a Quartus VM or a separately installed toolchain.
       </p>
+      <div class="project-detail__actions">
+        <a href="https://github.com/dhruvauppaluri/fpga-studio-macos/releases/tag/v2026.09.1" class="btn btn-primary">Download v2026.09.1</a>
+        <a href="https://github.com/dhruvauppaluri/fpga-studio-macos" class="btn btn-ghost">View source</a>
+      </div>
     </header>
 
     <section class="project-detail__section">
       <h2>The App</h2>
       <p>
-        Screen recording of FPGA Studio running the blinky project: edit, simulate, inspect the waveform, build a Cyclone V bitstream, and program SRAM on the C5G.
+        This recording shows the real v1 app running its complete first-project path: edit the C5G Blinky design, check it, simulate it, inspect the generated waveform, build an RBF bitstream, detect the board, and program volatile SRAM.
       </p>
       <figure class="project-detail__figure">
         <video controls playsinline preload="metadata">
@@ -50,7 +54,7 @@
           Your browser does not support the video tag.
         </video>
         <figcaption>
-          FPGA Studio v1 demo. Play, pause, and scrub from the player.
+          FPGA Studio v1 running the C5G Blinky workflow. Play, pause, or scrub through the recording.
         </figcaption>
       </figure>
     </section>
@@ -58,29 +62,41 @@
     <section class="project-detail__section">
       <h2>Project Overview</h2>
       <ul>
-        <li>Role: solo project, ongoing</li>
-        <li>What it is: a native Apple-silicon macOS IDE (Swift 6 / SwiftUI) for portable VHDL, Verilog, and SystemVerilog projects</li>
+        <li>Status: independent project, actively developed; v2026.09.1 is available as a DMG pre-release</li>
+        <li>Platform: Apple silicon (M1 or later) on macOS 15 Sequoia or newer</li>
+        <li>Languages: VHDL, Verilog, and SystemVerilog in portable folder-based projects</li>
         <li>Target board: Terasic Cyclone V GX Starter Kit (C5G), device <code>5CGXFC5C6F27C7</code></li>
         <li>Flow: Check project → Simulate → Build bitstream → Detect board → Program SRAM</li>
-        <li>On hardware: a blinky bitstream programmed over JTAG into SRAM; green LEDG toggles from an on-chip counter</li>
-        <li>Not claimed: a finished processor, persistent flash programming, or Quartus-equivalent coverage of Cyclone V hard blocks</li>
+        <li>Distribution: the release bundles the synthesis, simulation, place-and-route, and programming tools; no Homebrew setup is required</li>
+        <li>Hardware result: the demo’s blinky bitstream is programmed over JTAG into SRAM and drives the board’s green LED</li>
+        <li>Deliberate limits: no mixed-language simulation, no finished RV32I processor, and no claim of Quartus-equivalent hard-block coverage</li>
       </ul>
     </section>
 
     <section class="project-detail__section">
       <h2>Why Build It</h2>
       <p>
-        I wanted a real FPGA flow on the machine I already work on. Quartus and ModelSim are what the courseware expects; on an Apple-silicon Mac they are a VM and a pile of installers. I also wanted to understand the open-source path end to end — not just click Build in someone else’s GUI, but own the editor, the project format, the subprocess boundary, and the programmer.
+        I wanted a real FPGA workflow on the machine I already use. The conventional course flow assumes Quartus and ModelSim; on an Apple-silicon Mac that usually means a virtual machine and a separate stack of installers. I also wanted to understand the open-source path end to end—not just click Build in an existing GUI, but design the editor, project format, tool boundary, diagnostics, and programming safeguards around it.
       </p>
       <p>
-        So I wrote the IDE myself. The backends are not mine: Yosys, GHDL, nextpnr-mistral / Mistral, Icarus Verilog, Verilator, and openFPGALoader. What I built is the native shell around them — project files that are ordinary folders, a TextKit editor, simulation and waveform, pin/QSF checks, a bundled toolchain, and a SRAM-first programmer aimed at one board I actually own.
+        FPGA Studio is that native layer. It brings together Yosys, GHDL, nextpnr-mistral / Mistral, Icarus Verilog, Verilator, and openFPGALoader; those backends remain their own open-source projects. My work is the Swift application around them: the project model, TextKit editor, guided workflow, validation, waveform UI, toolchain packaging, and board-specific safety policy.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Built to Grow With the User</h2>
+      <p>
+        I wanted FPGA Studio to be an editor that someone new to FPGA development could open and actually follow. Beginner mode starts with Blinky, recommends one next action at a time, explains unfamiliar terms in plain language, and lets the user validate and simulate a design before any board is connected. The tour, progress guide, safe defaults, and Learn Center make the workflow visible instead of assuming prior toolchain knowledge.
+      </p>
+      <p>
+        It is not a separate “beginner version” of the app. Hobbyist and Professional profiles reveal more direct controls, raw diagnostics, build artifacts, backend status, and advanced synthesis detail over the same project format and feature set. As a user gains experience, the guidance can move out of the way without forcing them to leave the editor they learned in.
       </p>
     </section>
 
     <section class="project-detail__section">
       <h2>The Flow</h2>
       <p>
-        A project is a folder with <code>fpga-project.json</code>, HDL sources, a QSF constraints file, and optional testbenches. Build products land under <code>.fpga/build</code>. Nothing about that format is locked to the app; you can open the same folder in a text editor.
+        A project is an ordinary folder with a versioned <code>fpga-project.json</code> manifest, HDL sources, a QSF constraints file, and optional testbenches. Deterministic build products land under <code>.fpga/build</code>. The format is intentionally inspectable and does not lock the source into the app.
       </p>
       <figure class="project-detail__figure">
         <svg class="fpga-flow" viewBox="0 0 720 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FPGA Studio flow from editor through simulation, synthesis, place-and-route, and SRAM programming">
@@ -115,7 +131,7 @@
           <text x="360" y="156" text-anchor="middle" fill="#b9ccc1" font-family="Inter, system-ui, sans-serif" font-size="11">SRAM is volatile. Power cycle reloads whatever is in the board’s configuration flash.</text>
         </svg>
         <figcaption>
-          The path I actually use: edit in FPGA Studio, simulate to a VCD, synthesize and place-and-route for Cyclone V, then program SRAM over the on-board USB-Blaster.
+          The demonstrated path: edit in FPGA Studio, simulate to a VCD, synthesize and place-and-route for Cyclone V, then program SRAM over the on-board USB-Blaster.
         </figcaption>
       </figure>
     </section>
@@ -123,42 +139,51 @@
     <section class="project-detail__section">
       <h2>What the App Does</h2>
       <ul>
-        <li><strong>Editor.</strong> TextKit source view with line numbers, syntax coloring, search, bracket matching, autosave, and clickable diagnostics from the tools.</li>
+        <li><strong>Native workspace.</strong> A welcome window, unified toolbar, project navigator, source tabs, inspector, issues, logs, simulation, waveform, and programmer panels—all built with SwiftUI and AppKit.</li>
+        <li><strong>Editor.</strong> A TextKit source view with line numbers, SF Mono, syntax coloring, search, bracket matching, undo, autosave, and clickable diagnostics.</li>
+        <li><strong>Experience profiles.</strong> Beginner, Hobbyist, and Professional modes tune guidance and technical detail without gating capabilities.</li>
+        <li><strong>Templates.</strong> Blank HDL, C5G Blinky, and an RV32I Lab scaffold. The processor lab supplies interfaces, a board wrapper, ROM image, and directed tests; it intentionally does not contain a finished CPU.</li>
         <li><strong>Simulation.</strong> Verilog/SystemVerilog through Icarus, VHDL through GHDL, lint through Verilator, and a native VCD waveform viewer. Mixed-language simulation is not in this version.</li>
         <li><strong>Constraints.</strong> C5G pin assignments are searchable. The checker flags duplicate pins, unknown pins, missing ports, I/O-standard mismatches, and direction errors before you spend a build on them.</li>
         <li><strong>Build.</strong> Yosys (with the GHDL plugin for VHDL) then nextpnr-mistral. Cyclone V support upstream is experimental; inferred memory and multiply map to logic in the default path. M10K, DSP blocks, LPDDR2, transceivers, and PCIe are outside what I treat as working.</li>
-        <li><strong>Programmer.</strong> Detect the USB-Blaster, write SRAM, done. SRAM is temporary on purpose. Persistent EPCQ flash stays behind a lock until that path is validated on this board. I have not used flash from this app.</li>
-        <li><strong>Toolchain.</strong> The release app ships Yosys, GHDL, nextpnr-mistral, Icarus, Verilator, and openFPGALoader inside the bundle. First launch unpacks them into Application Support. No Homebrew required to run a project.</li>
+        <li><strong>Programmer.</strong> Board detection and volatile SRAM programming are the default hardware path. A guarded EPCQ flash flow also exists behind advanced controls, explicit artifact confirmation, and post-write detection, but I do not yet claim that path as hardware-accepted.</li>
+        <li><strong>Managed toolchain.</strong> The release app carries every backend in a signed bootstrap archive, verifies it, and atomically installs it into Application Support on first launch. Installed toolchain versions can be activated again for rollback.</li>
       </ul>
     </section>
 
     <section class="project-detail__section">
-      <h2>On the Board</h2>
+      <h2>The Hardware Proof</h2>
       <p>
-        The first design that went onto the C5G through this flow is blinky: a counter on <code>CLOCK_50_B5B</code> driving <code>LEDG[0]</code> (PIN_L7). After Program SRAM, the green LED above the push-buttons toggles. That is the check that the editor, the bitstream, the pin file, and the programmer agree with the hardware.
+        The first design taken through the complete flow is Blinky: a counter clocked by <code>CLOCK_50_B5B</code> drives <code>LEDG[0]</code> on PIN_L7. After programming SRAM, the green LED above the push-buttons toggles. That small result checks the whole vertical slice—the editor state, source and pin validation, simulation, RBF generation, USB-Blaster connection, and physical I/O assignment.
       </p>
       <p>
-        Two board details matter more than they look. The RUN/PROG slide switch (SW11) has to be in RUN for JTAG SRAM programming. And the tiny LED next to the USB-Blaster is activity for the programmer, not user I/O — the output you actually watch is LEDG.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>How It’s Built</h2>
-      <p>
-        The UI is SwiftUI. The editor is AppKit/TextKit. The pipeline is a Swift package that shells out with argument arrays only — no interpolated shell strings — then streams logs and supports cancel. Environments are sanitized. One project gets one build-directory lock so two Builds cannot clobber each other.
-      </p>
-      <p>
-        Tests cover the project manifest, path safety, QSF validation, VCD parsing, templates, and that the subprocess layer does not take a shell. Simulation and synthesis are exercised in CI-style runs on arm64 macOS. The physical board work is mine, on the desk, through SRAM.
+        Two board details matter more than they look. The RUN/PROG slide switch (SW11) has to be in RUN for JTAG SRAM programming. The tiny LED next to the USB-Blaster shows programmer activity; the design output to watch is LEDG.
       </p>
     </section>
 
     <section class="project-detail__section">
-      <h2>Current Status &amp; What’s Next</h2>
+      <h2>Engineering the Boundary</h2>
       <p>
-        The app is usable for the C5G SRAM loop I described. Blinky is on the board. I still treat Cyclone V place-and-route as experimental, keep flash locked, and am not calling this a replacement for Quartus. Apple’s Gatekeeper still wants a right-click Open because the build is ad-hoc signed, not notarized.
+        The UI is SwiftUI, while the source editor is an AppKit/TextKit component. The build pipeline lives in a separate Swift package and launches tools with argument arrays rather than interpolated shell commands. It sanitizes child-process environments, streams logs, supports cancellation, and applies a per-project build-directory lock so concurrent builds cannot clobber each other.
       </p>
       <p>
-        Next is tightening the C5G labs that ship with the app, then notarized distribution if the SRAM path stays boring. More devices only after this one stays boring.
+        Hardware writes are treated as a separate safety boundary. Before programming, the app checks the board profile, JTAG identity, artifact device, build fingerprint, timestamp, size, and digest. Persistent flash adds an explicit acknowledgement plus sleep and app-termination protection during the non-cancellable write.
+      </p>
+      <p>
+        Tests cover manifest round trips, safe paths, QSF and port validation, diagnostics, VCD parsing, template integrity, shell-injection resistance, real Icarus simulation, and RV32I scaffold compilation. Release packaging also smoke-tests the bundled tools in an isolated prefix without Homebrew on the path.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Current Status &amp; Limits</h2>
+      <p>
+        The v2026.09.1 pre-release is usable for the C5G SRAM loop shown above, and the software build, simulation, and packaging paths are tested on arm64 macOS. Cyclone V place-and-route remains experimental upstream. Advanced hard blocks—including M10K memory, DSPs, LPDDR2, transceivers, PCIe, and advanced PLLs—are outside the validated default path.
+      </p>
+      <p>
+        The guarded persistent-flash path is implemented but still awaiting hardware acceptance, and the RV32I template is a lab scaffold rather than a completed processor. I am not presenting FPGA Studio as a drop-in replacement for Quartus. The current DMG is ad-hoc signed, so Gatekeeper requires a one-time right-click Open; notarized distribution is still ahead.
+      </p>
+      <p>
+        Next I am tightening the C5G labs, completing flash acceptance on the target board, and hardening distribution. Support for more devices comes after the first board’s workflow is repeatable.
       </p>
     </section>
 

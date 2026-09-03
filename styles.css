@@ -809,6 +809,20 @@ main {
   margin: 0;
 }
 
+.project-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+}
+
+@media (max-width: 520px) {
+  .project-detail__actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .project-detail__section {
   margin-bottom: 2.5rem;
   counter-increment: detailsection;
