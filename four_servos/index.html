@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LED Controller</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f0f0f;
+    color: #e0e0e0;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 32px;
+  }
+
+  h1 { font-size: 1.05rem; letter-spacing: 0.2em; color: #444; text-transform: uppercase; }
+
+  #leds { display: flex; gap: 32px; }
+
+  .led-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+  .led {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: #181818; border: 2px solid #242424;
+    transition: background 60ms, box-shadow 60ms;
+  }
+  .led.on {
+    background: #ffdd00; border-color: #ffaa00;
+    box-shadow: 0 0 24px 8px #ffcc0066, 0 0 56px 18px #ffaa0033;
+  }
+
+  .led-label { font-size: 0.8rem; color: #3a3a3a; }
+  .key {
+    display: inline-block; background: #1a1a1a;
+    border: 1px solid #2e2e2e; border-radius: 4px;
+    padding: 0 6px; color: #555;
+  }
+
+  /* Connection pill */
+  #conn-pill {
+    display: flex; align-items: center; gap: 10px;
+    background: #141414; border: 1px solid #222;
+    border-radius: 20px; padding: 7px 16px;
+    font-size: 0.75rem; cursor: default;
+    transition: border-color 300ms;
+  }
+  #conn-pill.ble  { border-color: #2a5a3a; }
+  #conn-pill.usb  { border-color: #1e3a5a; }
+  #conn-pill.scanning { border-color: #3a3a1e; }
+  #conn-pill.resetting { border-color: #5a2a2a; }
+
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #252525; flex-shrink: 0;
+    transition: background 300ms, box-shadow 300ms;
+  }
+  #conn-pill.ble      .dot { background: #4acf7e; box-shadow: 0 0 6px #4acf7e66; }
+  #conn-pill.usb      .dot { background: #4a8acf; box-shadow: 0 0 6px #4a8acf66; }
+  #conn-pill.scanning .dot { background: #cfb84a; animation: blink 1.2s ease-in-out infinite; }
+  #conn-pill.resetting .dot { background: #cf6a4a; animation: blink 0.6s ease-in-out infinite; }
+
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+  #conn-text { color: #555; }
+  #conn-pill.ble      #conn-text { color: #4acf7e; }
+  #conn-pill.usb      #conn-text { color: #4a8acf; }
+  #conn-pill.scanning #conn-text { color: #cfb84a; }
+  #conn-pill.resetting #conn-text { color: #cf6a4a; }
+
+  #log {
+    width: 400px; height: 110px;
+    background: #0c0c0c; border: 1px solid #1a1a1a; border-radius: 6px;
+    padding: 10px 14px; font-size: 0.7rem; color: #3a3a3a;
+    overflow-y: auto; display: flex; flex-direction: column-reverse;
+  }
+  #log p { margin: 1px 0; }
+  #log p.in  { color: #4acf7e; }
+  #log p.out { color: #4a8acf; }
+  #log p.sys { color: #505050; }
+  #log p.err { color: #cf6a4a; }
+
+  #keyhint { font-size: 0.66rem; color: #282828; text-align: center; line-height: 2; }
+
+  #alloff {
+    background: #141414; color: #555; border: 1px solid #242424;
+    border-radius: 6px; padding: 7px 18px; font-family: inherit;
+    font-size: 0.8rem; cursor: pointer;
+    transition: background 100ms, border-color 100ms;
+  }
+  #alloff:hover { background: #1c1c1c; border-color: #333; }
+</style>
+</head>
+<body>
+
+<h1>LED Controller</h1>
+
+<div id="leds">
+  <div class="led-wrap"><div class="led" id="led-0"></div><div class="led-label">LED 1 &nbsp;<span class="key">1</span></div></div>
+  <div class="led-wrap"><div class="led" id="led-1"></div><div class="led-label">LED 2 &nbsp;<span class="key">2</span></div></div>
+  <div class="led-wrap"><div class="led" id="led-2"></div><div class="led-label">LED 3 &nbsp;<span class="key">3</span></div></div>
+  <div class="led-wrap"><div class="led" id="led-3"></div><div class="led-label">LED 4 &nbsp;<span class="key">4</span></div></div>
+</div>
+
+<div id="conn-pill">
+  <div class="dot"></div>
+  <span id="conn-text">connecting to daemon…</span>
+</div>
+
+<button id="alloff" onclick="cmdAllOff()">All Off &nbsp;<span class="key">0</span></button>
+
+<div id="log"></div>
+
+<div id="keyhint">
+  Hold <span class="key">1</span>–<span class="key">4</span> to toggle LEDs &nbsp;·&nbsp;
+  <span class="key">0</span> = all off<br>
+  Daemon auto-manages BLE ↔ USB · start with: <span class="key">python3 bt_daemon.py</span>
+</div>
+
+<script>
+const ON_CODE  = { '1':0x31, '2':0x32, '3':0x33, '4':0x34 };
+const OFF_CODE = { '1':0x21, '2':0x40, '3':0x23, '4':0x24 };
+
+let ws = null;
+const held = {};
+
+// ── UI ────────────────────────────────────────────────────────────────
+const ledEl    = i => document.getElementById('led-' + i);
+const setLedUI = (i, on) => ledEl(i).classList.toggle('on', on);
+const allOffUI = () => { for (let i = 0; i < 4; i++) setLedUI(i, false); };
+
+function log(text, cls = 'sys') {
+  const el = document.getElementById('log');
+  const p  = document.createElement('p');
+  p.className = cls;
+  p.textContent = text;
+  el.prepend(p);
+  while (el.children.length > 100) el.removeChild(el.lastChild);
+}
+
+function setMode(mode, msg) {
+  const pill = document.getElementById('conn-pill');
+  const txt  = document.getElementById('conn-text');
+  pill.className = mode || '';
+  txt.textContent = msg || mode || 'disconnected';
+}
+
+// ── WebSocket (auto-reconnect) ────────────────────────────────────────
+let wsRetry = 0;
+
+function connectWs() {
+  ws = new WebSocket('ws://localhost:8765');
+
+  ws.onopen = () => {
+    wsRetry = 0;
+    log('daemon connected', 'sys');
+  };
+
+  ws.onmessage = e => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+
+    if (msg.type === 'status') {
+      const device = msg.device ? ` (${msg.device})` : '';
+      setMode(msg.mode, msg.msg || (msg.mode + device));
+      if (msg.mode === 'none' || msg.mode === 'scanning' || msg.mode === 'resetting') allOffUI();
+    }
+
+    if (msg.type === 'data') {
+      log('← ' + msg.text, 'in');
+      const m = msg.text.match(/^LED (\d) (ON|OFF)$/);
+      if (m) setLedUI(parseInt(m[1]) - 1, m[2] === 'ON');
+      if (msg.text === 'ALL OFF') allOffUI();
+    }
+  };
+
+  ws.onclose = () => {
+    ws = null;
+    allOffUI();
+    const delay = Math.min(1000 * Math.pow(1.5, wsRetry++), 10000);
+    setMode('', `daemon offline — retry in ${(delay/1000).toFixed(0)}s`);
+    log('daemon connection lost, retrying…', 'err');
+    setTimeout(connectWs, delay);
+  };
+
+  ws.onerror = () => ws.close();
+}
+
+connectWs();
+
+// ── Commands ──────────────────────────────────────────────────────────
+function send(char) {
+  if (ws && ws.readyState === WebSocket.OPEN) ws.send(char);
+}
+
+function cmdAllOff() {
+  send('0');
+  allOffUI();
+  log('→ 0  all-off', 'out');
+}
+
+// ── Keyboard ──────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.repeat) return;
+  const k = e.key;
+  if (k === '0') { cmdAllOff(); return; }
+  if (k in ON_CODE && !held[k]) {
+    held[k] = true;
+    setLedUI(parseInt(k) - 1, true);
+    send(k);
+    log('→ ' + k + '  LED ' + k + ' on', 'out');
+  }
+});
+
+document.addEventListener('keyup', e => {
+  const k = e.key;
+  if (k in OFF_CODE && held[k]) {
+    held[k] = false;
+    setLedUI(parseInt(k) - 1, false);
+    const off = {'1':'!','2':'@','3':'#','4':'$'}[k];
+    send(off);
+    log('→ ' + off + '  LED ' + k + ' off', 'out');
+  }
+});
+</script>
+</body>
+</html>
