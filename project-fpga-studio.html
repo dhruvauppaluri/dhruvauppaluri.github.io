@@ -41,85 +41,18 @@
 
     <section class="project-detail__section">
       <h2>The App</h2>
-      <figure class="project-detail__figure">
-        <img src="fpga-studio-welcome.jpg" alt="FPGA Studio welcome window on macOS: Create a Project, Open Folder, Beginner workspace, and toolchain 7 of 7 tools ready" />
-        <figcaption>The real welcome window. Toolchain is bundled; first launch unpacks Yosys, GHDL, nextpnr-mistral, Icarus, Verilator, and openFPGALoader.</figcaption>
-      </figure>
-
       <p>
-        Play the blinky walkthrough, or jump to a step. After Program SRAM, LEDG0 starts blinking — the same check that ran on the C5G.
+        Screen recording of FPGA Studio running the blinky project: edit, simulate, inspect the waveform, build a Cyclone V bitstream, and program SRAM on the C5G.
       </p>
-
-      <figure class="project-detail__figure fs-video">
-        <video id="fs-video" controls playsinline preload="metadata" poster="fpga-studio-welcome.jpg">
+      <figure class="project-detail__figure">
+        <video controls playsinline preload="metadata">
           <source src="fpga-studio-demo.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div class="fs-video__chapters" role="group" aria-label="Jump to a step in the walkthrough">
-          <button type="button" data-time="0">Start</button>
-          <button type="button" data-time="2.1">Validate</button>
-          <button type="button" data-time="4.1">Simulate</button>
-          <button type="button" data-time="5.8">Build</button>
-          <button type="button" data-time="8.0">Program SRAM</button>
-        </div>
         <figcaption>
-          Validate pins, simulate, build a Cyclone V bitstream, then program SRAM. Use the buttons to skip to a step.
+          FPGA Studio v1 demo. Play, pause, and scrub from the player.
         </figcaption>
       </figure>
-
-      <p>
-        Or drive it yourself. The panel below is the same blinky loop: Validate → Simulate → Build → Program SRAM.
-      </p>
-
-      <div class="fs-demo" id="fpga-demo" data-stage="idle">
-        <div class="fs-demo__chrome">
-          <span class="fs-demo__dot" aria-hidden="true"></span>
-          <span class="fs-demo__dot" aria-hidden="true"></span>
-          <span class="fs-demo__dot" aria-hidden="true"></span>
-          <span class="fs-demo__title">C5G Blinky — FPGA Studio</span>
-        </div>
-        <div class="fs-demo__toolbar">
-          <button type="button" class="fs-demo__btn" data-action="validate">Validate</button>
-          <button type="button" class="fs-demo__btn" data-action="simulate" disabled>Simulate</button>
-          <button type="button" class="fs-demo__btn" data-action="build" disabled>Build</button>
-          <button type="button" class="fs-demo__btn fs-demo__btn--accent" data-action="program" disabled>Program SRAM</button>
-          <span class="fs-demo__status" id="fpga-demo-status">C5G Connected</span>
-        </div>
-        <div class="fs-demo__layout">
-          <aside class="fs-demo__sidebar" aria-label="Project sources">
-            <p class="fs-demo__side-label">Project</p>
-            <button type="button" class="fs-demo__file is-active">rtl/blinky.sv</button>
-            <button type="button" class="fs-demo__file">sim/blinky_tb.sv</button>
-            <p class="fs-demo__side-label">Board</p>
-            <p class="fs-demo__side-meta">Terasic C5G<br />5CGXFC5C6F27C7</p>
-          </aside>
-          <pre class="fs-demo__editor" tabindex="0"><code><span class="c">// FPGA Studio Blinky — edit this file and run the simulation to experiment.</span>
-<span class="k">module</span> blinky(<span class="k">input wire</span> CLOCK_50_B5B, <span class="k">output wire</span> LEDG0);
-  <span class="k">reg</span> [25:0] counter = 0;
-
-  <span class="k">always</span> @(posedge CLOCK_50_B5B) counter &lt;= counter + 1'b1;
-
-  <span class="c">// Bit 24 gives a clearly visible blink at 50 MHz.</span>
-  <span class="k">assign</span> LEDG0 = counter[22];
-<span class="k">endmodule</span></code></pre>
-        </div>
-        <div class="fs-demo__bottom">
-          <div class="fs-demo__log-head">
-            <span>Log</span>
-            <span class="fs-demo__leds" aria-label="LEDG on the C5G">
-              <span class="fs-demo__led" data-led="0"></span>
-              <span class="fs-demo__led" data-led="1"></span>
-              <span class="fs-demo__led" data-led="2"></span>
-              <span class="fs-demo__led" data-led="3"></span>
-              <span class="fs-demo__led" data-led="4"></span>
-              <span class="fs-demo__led" data-led="5"></span>
-              <span class="fs-demo__led" data-led="6"></span>
-              <span class="fs-demo__led" data-led="7"></span>
-            </span>
-          </div>
-          <pre class="fs-demo__log" id="fpga-demo-log">Ready. Validate the blinky project to start.</pre>
-        </div>
-      </div>
     </section>
 
     <section class="project-detail__section">
@@ -239,6 +172,5 @@
   </footer>
 
   <script src="script.js"></script>
-  <script src="fpga-studio-demo.js"></script>
 </body>
 </html>
