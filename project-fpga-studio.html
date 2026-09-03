@@ -47,7 +47,28 @@
       </figure>
 
       <p>
-        Click through the same loop the Mac app runs on the C5G. This in-page demo is the blinky project: validate pins, simulate, build a bitstream, then program SRAM. After Program SRAM, LEDG0 blinks like the green LED on the board.
+        Play the blinky walkthrough, or jump to a step. After Program SRAM, LEDG0 starts blinking — the same check that ran on the C5G.
+      </p>
+
+      <figure class="project-detail__figure fs-video">
+        <video id="fs-video" controls playsinline preload="metadata" poster="fpga-studio-welcome.jpg">
+          <source src="fpga-studio-demo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div class="fs-video__chapters" role="group" aria-label="Jump to a step in the walkthrough">
+          <button type="button" data-time="0">Start</button>
+          <button type="button" data-time="2.1">Validate</button>
+          <button type="button" data-time="4.1">Simulate</button>
+          <button type="button" data-time="5.8">Build</button>
+          <button type="button" data-time="8.0">Program SRAM</button>
+        </div>
+        <figcaption>
+          Validate pins, simulate, build a Cyclone V bitstream, then program SRAM. Use the buttons to skip to a step.
+        </figcaption>
+      </figure>
+
+      <p>
+        Or drive it yourself. The panel below is the same blinky loop: Validate → Simulate → Build → Program SRAM.
       </p>
 
       <div class="fs-demo" id="fpga-demo" data-stage="idle">

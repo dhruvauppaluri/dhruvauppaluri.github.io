@@ -113,4 +113,60 @@
       run(action);
     });
   });
+
+  function whenIdle(fn) {
+    var timer = window.setInterval(function () {
+      if (!busy) {
+        window.clearInterval(timer);
+        fn();
+      }
+    }, 60);
+  }
+
+  function playWalkthrough() {
+    var steps = ["validate", "simulate", "build", "program"];
+    var i = 0;
+    function next() {
+      if (i >= steps.length) return;
+      var action = steps[i];
+      i += 1;
+      whenIdle(function () {
+        window.setTimeout(function () {
+          buttons[action].disabled = false;
+          run(action);
+          whenIdle(next);
+        }, 500);
+      });
+    }
+    window.setTimeout(next, 800);
+  }
+
+  if (root.getAttribute("data-autoplay") === "1") playWalkthrough();
+})();
+
+(function () {
+  var video = document.getElementById("fs-video");
+  if (!video) return;
+  var buttons = document.querySelectorAll(".fs-video__chapters button");
+  if (!buttons.length) return;
+
+  function markActive() {
+    var t = video.currentTime;
+    var active = null;
+    buttons.forEach(function (btn) {
+      btn.classList.remove("is-active");
+      if (t + 0.05 >= Number(btn.getAttribute("data-time"))) active = btn;
+    });
+    if (active) active.classList.add("is-active");
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      video.currentTime = Number(btn.getAttribute("data-time"));
+      video.play();
+      markActive();
+    });
+  });
+
+  video.addEventListener("timeupdate", markActive);
 })();

@@ -1007,6 +1007,34 @@ main {
   text-decoration: underline;
 }
 
+.fs-video video {
+  width: 100%;
+}
+
+.fs-video__chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.fs-video__chapters button {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font: 500 0.75rem var(--font-mono);
+  padding: 0.32rem 0.6rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.fs-video__chapters button:hover,
+.fs-video__chapters button.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* --- FPGA Studio in-page demo --- */
 .fs-demo {
   margin: 1.25rem 0 0;
