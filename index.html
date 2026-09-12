@@ -60,26 +60,29 @@
     <section id="about" class="section">
       <h2 class="section-title">About</h2>
       <div class="section-body">
+        <p class="about-intro">
+          I’m an electrical engineering student who learns by building. I make hardware, embedded systems, and robotics projects, then document what worked, what failed, and what I changed.
+        </p>
         <div class="recent-work">
           <span class="recent-work__label">Recent work</span>
           <div class="recent-work-grid">
             <a href="project-fpga-studio.html" class="recent-work-card">
               <span class="recent-work-card__meta">2026 · Native macOS</span>
               <h3 class="recent-work-card__title">FPGA Studio</h3>
-              <p class="recent-work-card__desc">A released native Mac IDE for HDL projects: edit, simulate, inspect waveforms, build a Cyclone V bitstream, and safely program a Terasic C5G with the complete toolchain bundled in the app.</p>
-              <span class="recent-work-card__link">View project →</span>
+              <p class="recent-work-card__desc">A native Mac app for writing, testing, and programming FPGA projects without setting up a separate toolchain.</p>
+              <span class="recent-work-card__link">Read project log →</span>
             </a>
             <a href="project-swarm-robotics.html" class="recent-work-card">
               <span class="recent-work-card__meta">2026 · In progress</span>
               <h3 class="recent-work-card__title">Autonomous Swarm Robotics</h3>
-              <p class="recent-work-card__desc">The first rover drives reliably and avoids obstacles on camera and ToF, recovers on its own from a dead Bluetooth link, and is training in simulation before I trust a learned policy on the real hardware.</p>
-              <span class="recent-work-card__link">View project →</span>
+              <p class="recent-work-card__desc">A self-driving rover that avoids obstacles, recovers dropped connections, and serves as the first step toward a multi-robot swarm.</p>
+              <span class="recent-work-card__link">Read project log →</span>
             </a>
             <a href="project-apollo-1.html" class="recent-work-card">
               <span class="recent-work-card__meta">Jun 2026 · WeaveHacks 4</span>
               <h3 class="recent-work-card__title">Apollo 1 — EEG Rover</h3>
-              <p class="recent-work-card__desc">4WD rover driven by Muse S focus over Bluetooth — band-power to PWM, plus the power-rail debug that made it actually move.</p>
-              <span class="recent-work-card__link">View project →</span>
+              <p class="recent-work-card__desc">A four-wheel rover whose speed changes with focus measured by an EEG headband.</p>
+              <span class="recent-work-card__link">Read project log →</span>
             </a>
           </div>
         </div>
@@ -166,97 +169,97 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Swift/SwiftUI · TextKit · VHDL · Verilog · Yosys · GHDL · Cyclone V</span>
+            <span class="project-tags">SwiftUI · VHDL/Verilog · FPGA Toolchain</span>
           </div>
           <h3 class="project-title">FPGA Studio — Native macOS HDL IDE</h3>
           <p class="project-desc">
-            FPGA Studio is a native Apple-silicon macOS IDE I built to take VHDL, Verilog, and SystemVerilog projects from editing and simulation through a Yosys + nextpnr-mistral Cyclone V bitstream and safe hardware programming. The release bundles the complete toolchain, adds a native waveform viewer and validated C5G pin workflow, and supports guided Beginner through direct Professional workspaces. The demo completes the SRAM Blinky loop on a Terasic C5G; persistent flash and advanced hard blocks remain outside the hardware-accepted path.
+            A native Mac app for writing, simulating, and programming FPGA projects. It brings the toolchain, waveform viewer, and board setup into one workflow.
           </p>
-          <a href="project-fpga-studio.html" class="project-link">View details →</a>
+          <a href="project-fpga-studio.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">ESP32 · Computer Vision · Touchscreen UI · FastAPI/WebSocket · MuJoCo/PPO</span>
+            <span class="project-tags">ESP32 · Computer Vision · MuJoCo/PPO</span>
           </div>
           <h3 class="project-title">Autonomous Swarm Robotics (In Progress)</h3>
           <p class="project-desc">
-            Working toward a multi-robot swarm, one robot at a time. The first rover now drives itself around obstacles using a camera and a ToF sensor together, pivots and drives straight reliably after tracking down two real motor-stall bugs, recovers on its own from a Bluetooth link going silently dead, and talks to a touchscreen panel live over WiFi. I've also trained a reinforcement-learning policy in a MuJoCo simulation of the real robot. After finding a sensor bug that had it training blind, and a reward-design flaw that let more training make it more reckless, it now avoids obstacles it's never seen before on 99.5% of randomized test layouts. Hasn't touched the real robot yet, and swarm logic is still ahead of all of that.
+            A self-driving rover that avoids obstacles, recovers dropped connections, and can be controlled from a touchscreen. It is the first step toward a coordinated multi-robot system; the swarm and real-world testing of the learned driving policy come next.
           </p>
-          <a href="project-swarm-robotics.html" class="project-link">View details →</a>
+          <a href="project-swarm-robotics.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">KiCad · STM32F405 · 4-Layer PCB · PCBWay</span>
+            <span class="project-tags">KiCad · STM32 · 4-Layer PCB</span>
           </div>
           <h3 class="project-title">Custom Drone Flight Controller (In Progress)</h3>
           <p class="project-desc">
-            A 4-layer STM32F405 flight controller I designed from scratch in KiCad, built for one of the drones joining the swarm robotics project. ICM-42688-P IMU on its own quiet 3.3V rail, DPS368 barometer, analog OSD, blackbox flash, dual buck/LDO power tree with reverse-voltage protection. Schematic and routing are done and gerbers are with PCBWay; boards aren't back yet, so nothing's bench-tested.
+            A custom circuit board that will control one of the drones in my swarm project. The design and four-layer layout are finished and sent for manufacturing; hardware testing comes next.
           </p>
-          <a href="project-flight-controller.html" class="project-link">View details →</a>
+          <a href="project-flight-controller.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Python · EEG · BrainFlow · Muse S · WeaveHacks</span>
+            <span class="project-tags">Python · EEG · Muse S</span>
           </div>
           <h3 class="project-title">Axiom — Neural RLHF</h3>
           <p class="project-desc">
-            Built in 24 hours at WeaveHacks 4. I pitched Axiom as assistive communication for people who cannot easily speak or type. Muse S EEG streams through BrainFlow; α/β/θ band powers become engagement and focus scores after a calibration baseline, then three agents adapt from that neural reward. I refined the startup sync so the pipeline only reads live features, not leftover samples from the previous round.
+            A 24-hour hackathon project that helped three AI agents adapt to a person’s focus and engagement, measured with an EEG headband. I shaped the assistive-communication concept and fixed the live-data handoff so each round used fresh signals.
           </p>
-          <a href="project-axiom-neural-rlhf.html" class="project-link">View details →</a>
+          <a href="project-axiom-neural-rlhf.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">EEG · Muse S · Arduino/C++ · PWM · WeaveHacks</span>
+            <span class="project-tags">EEG · Arduino/C++ · Bluetooth</span>
           </div>
           <h3 class="project-title">Apollo 1 — EEG Brain-Wave Controlled Rover</h3>
           <p class="project-desc">
-            Built in 24 hours at WeaveHacks 4: I built the 4WD rover and refined its firmware so Muse S focus — a β/α band-power ratio over Bluetooth — scaled PWM on independent transistor stages. Upstream EEG was fused with ultrasonic ranging for approach/avoid behaviors. On my end the fights were the command handoff to the motors and power: 9 V cells sagged under load until a DMM proved we needed LiPo.
+            A four-wheel rover whose speed changes with focus measured by an EEG headband. I built the rover and motor-control path, then traced the power problem that kept it from moving reliably.
           </p>
-          <a href="project-apollo-1.html" class="project-link">View details →</a>
+          <a href="project-apollo-1.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Arduino/C++ · Control · Signal Processing · HIL</span>
+            <span class="project-tags">Arduino/C++ · Control Systems · HIL</span>
           </div>
           <h3 class="project-title">Steering-Actuator Latency Test Bench</h3>
           <p class="project-desc">
-            I wanted to know if my components were fast enough to support real-time steering correction on an RC car I am building from scratch. This bench measures end-to-end latency from joystick input through gyroscope response. The answer was under 50 ms. First step done.
+            A test bench that measures how quickly an RC-car steering command becomes real motion. It confirmed the parts respond in under 50 milliseconds—fast enough to keep building the control system.
           </p>
-          <a href="project-hil-test-bench.html" class="project-link">View details →</a>
+          <a href="project-hil-test-bench.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Digital Logic · XOR · 74LS74 · 74LS86 · 74HC14</span>
+            <span class="project-tags">Digital Logic · 74-Series ICs</span>
           </div>
           <h3 class="project-title">Virtual EV Transmission — Discrete Logic Gearbox (In Progress)</h3>
           <p class="project-desc">
-            A hardware-only gearbox controller that cycles through four gear states using nothing but 74-series logic chips. No microcontroller, no firmware. Switch bounce was the first real problem. The 74HC14 Schmitt trigger was the fix. Shift Down is next.
+            A four-speed gearbox controller built entirely from logic chips—no microcontroller or firmware. It shifts up reliably; the shift-down circuit comes next.
           </p>
-          <a href="project-digital-logic-control.html" class="project-link">View details →</a>
+          <a href="project-digital-logic-control.html" class="project-link">Read project log →</a>
         </article>
 
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">Arduino/C++ · LDR · Embedded UI</span>
+            <span class="project-tags">Arduino/C++ · Sensors · Embedded UI</span>
           </div>
           <h3 class="project-title">DIY Light Meter — Film &amp; Mirrorless</h3>
           <p class="project-desc">
-            I shoot film with fully manual lenses and needed a way to meter light in the field. Dedicated meters cost more than I wanted to spend. So I built one. The firmware bottleneck that caused missed encoder inputs at 6Hz taught me more about embedded architecture than any tutorial did. It still lives on a breadboard. Getting it into an enclosure is what comes next.
+            A handheld meter that recommends camera settings from the available light. I built it as an affordable tool for my film and mirrorless cameras; the working breadboard will become a portable enclosure next.
           </p>
-          <a href="project-light-meter.html" class="project-link">View details →</a>
+          <a href="project-light-meter.html" class="project-link">Read project log →</a>
         </article>
       </div>
     </section>
