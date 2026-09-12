@@ -1,182 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="A four-speed gearbox controller built entirely from logic chips, with no microcontroller or firmware." />
   <title>Virtual EV Transmission — Discrete Logic Gearbox | Dhruva Uppaluri</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
-
-  <header class="header">
-    <a href="index.html#top" class="logo">&lt;/&gt;</a>
-    <nav class="nav">
-      <a href="index.html#about">About</a>
-      <a href="index.html#skills">Skills</a>
-      <a href="index.html#projects">Projects</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
-    <button class="menu-btn" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
-
+  <header class="header"><a href="index.html#top" class="logo">&lt;/&gt;</a><nav class="nav"><a href="index.html#about">About</a><a href="index.html#skills">Skills</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav><button class="menu-btn" aria-label="Toggle menu"><span></span><span></span><span></span></button></header>
   <main class="project-detail">
-    <div class="project-detail__back">
-      <a href="index.html#projects" class="project-link">← Back to Projects</a>
-    </div>
-
+    <div class="project-detail__back"><a href="index.html#projects" class="project-link">← Back to Projects</a></div>
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 - Digital Logic - XOR - 74LS74 - 74HC14</span>
+      <span class="project-detail__meta">2026 · Digital Logic · 74-Series ICs</span>
       <h1 class="project-detail__title">Virtual EV Transmission — Discrete Logic Gearbox</h1>
-      <p class="project-detail__subtitle">
-        A hardware-only gearbox controller that cycles through four gear states using nothing but 74-series logic chips. No microcontroller, no firmware.
-      </p>
+      <p class="project-detail__subtitle">A four-speed gearbox controller built entirely from logic chips—no microcontroller or firmware.</p>
     </header>
-
     <section class="project-detail__section">
-      <h2>Project Overview</h2>
+      <h2>Overview</h2>
+      <p>I built this project to understand how a circuit can store and change state without software. One button advances through four virtual gears, and two LEDs show the current gear as a two-bit binary number.</p>
       <ul>
-        <li>Role: solo project</li>
-        <li>Key hardware: 74LS74 (dual D flip-flops), 74LS86 (quad XOR gates), 74HC14 (Schmitt-trigger inverters)</li>
-        <li>Tools used: KiCAD, breadboard prototyping, DMM measurements, Arduino for power/GND supplies during testing</li>
+        <li><strong>My role:</strong> solo logic design, breadboard build, and testing.</li>
+        <li><strong>Main parts:</strong> flip-flops to remember the gear, XOR gates to choose the next gear, and a Schmitt trigger to clean the button signal.</li>
+        <li><strong>Status:</strong> shift-up works reliably; shift-down is the next revision.</li>
       </ul>
     </section>
-
     <section class="project-detail__section">
-      <h2>The Challenge</h2>
-      <p>
-        I wanted to learn how logic gates and ICs can carry binary information through a circuit, and how that learning connects to PCB design and real-world implementation.
-        That motivation grew when I saw Mazda release a fully EV car with electronic gear shifts, and I wanted to replicate the concept using only discrete IC logic (no microcontroller programming).
-      </p>
-      <p>
-        When I saw Mazda release a fully electric car with electronic gear shifts, I wanted to understand how gear state could be managed at the hardware level, before any software gets involved.
-        The constraint I set for myself was strict: no microcontroller, no firmware, no shortcuts. Every transition had to be decided by gates.
-      </p>
-      <p>
-        This first iteration handles Shift Up. Each press advances the state one step through a four-gear cycle: 00 to 01 to 10 to 11 and back to 00. Shift Down comes next.
-      </p>
+      <h2>How it works</h2>
+      <div class="flow-diagram" role="img" aria-label="A button press is cleaned, logic calculates the next gear, memory chips store it, and LEDs display the result">
+        <div class="flow-step"><span class="flow-step__number">01</span><strong>Press button</strong><small>The driver requests the next gear.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">02</span><strong>Clean signal</strong><small>The circuit turns switch bounce into one pulse.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">03</span><strong>Choose next state</strong><small>Logic gates calculate the next gear.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">04</span><strong>Store gear</strong><small>Two flip-flops remember the result.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">05</span><strong>Show result</strong><small>LEDs display 00, 01, 10, or 11.</small></div>
+      </div>
+      <p class="plain-note"><strong>State, in plain English:</strong> information the circuit remembers. Here, two stored bits are enough to represent four gears.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>Requirements</h2>
-      <p>
-        I needed three things to be true. The state had to update synchronously, meaning the flip-flops could only change on a clean clock edge, not whenever the input happened to change.
-        The shift button had to produce exactly one clock per press regardless of how bouncy the mechanical contact was.
-        And all of the transition logic had to live in discrete gates, not code. That last constraint was the point of the whole project.
-      </p>
+      <h2>Design</h2>
+      <p>The gear sequence is <code>00 → 01 → 10 → 11 → 00</code>. The XOR gates decide which stored bit must change, and the flip-flops update both bits together when they receive a clean button pulse.</p>
+      <figure class="project-detail__figure"><img src="gearbox_pcb_schematic.png" alt="Schematic for the two-bit gearbox controller" /><figcaption>The button conditioner feeds the next-state logic, which updates the two stored gear bits.</figcaption></figure>
+      <figure class="project-detail__figure"><img src="gearbox_circuit.png" alt="Breadboard prototype of the gearbox controller" /><figcaption>The breadboard prototype used to prove the logic before making a circuit board.</figcaption></figure>
     </section>
-
     <section class="project-detail__section">
-      <h2>Design &amp; Logic</h2>
-      <h3>Logic Theory</h3>
-      <p>
-        I derived the excitation/next-state mapping for a 2-bit gearbox state machine.
-        The XOR-based combinational network determines whether the state should toggle on the next synchronous update,
-        while the 74LS74 flip-flops hold the gear state.
-      </p>
-      <p>
-        Shift Up state flow (cyclic): 00 -> 01 -> 10 -> 11 -> 00.
-      </p>
-
-      <p>
-        Visual feedback uses three LEDs: LED1 indicates the manual shift button/actuation state,
-        while LED2 and LED3 represent the current 2-bit gear state (00 to 11).
-      </p>
-
-      <h3 class="project-detail__figure-title">PCB SPICE Schematic - KiCAD</h3>
-      <figure class="project-detail__figure">
-        <img src="gearbox_pcb_schematic.png" alt="KiCad schematic for XOR-based 2-bit discrete gearbox controller" />
-        <figcaption>
-          The 2-bit synchronous gearbox controller schematic. The 74HC14 conditions mechanical inputs,
-          the 74LS86 XOR network computes next-state behavior, and the 74LS74 flip-flops store the gear state.
-          Power regulation provides the stable logic rail for the discrete families.
-        </figcaption>
-      </figure>
+      <h2>Main challenge</h2>
+      <p>A mechanical button does not switch cleanly. Its contacts bounce for a few milliseconds, so one press originally looked like several presses and skipped gears. A 74HC14 Schmitt trigger filters that noisy edge into one dependable pulse.</p>
+      <p>Shorter, better-organized breadboard wires also reduced unwanted transitions. This project made it clear that correct logic equations are only part of a reliable physical circuit.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>Implementation</h2>
-
-      <h3>Prototype Phase</h3>
-      <figure class="project-detail__figure">
-        <img src="gearbox_circuit.png" alt="Gearbox discrete logic controller prototype" />
-        <figcaption>
-          Breadboard validation of the discrete gearbox controller (input conditioning, XOR transition logic, and 74LS74 state storage).
-        </figcaption>
-      </figure>
-
-      <h3>Component Selection</h3>
-      <p>
-        The 74LS74 holds the state. Two D flip-flops that only update on a rising clock edge, which is what makes the behavior synchronous.
-        The 74LS86 is the decision layer: a quad XOR gate network that figures out whether each flip-flop should toggle on the next clock based on the current state.
-        The 74HC14 is what made everything else work. Its Schmitt-trigger inputs use hysteresis to convert a bouncy mechanical switch edge into a clean transition the flip-flops can actually trust. Without it, one physical press looked like several clocks.
-      </p>
-
-      <h3>Signal Conditioning</h3>
-      <p>
-        A mechanical button does not produce a clean on-off transition. It bounces. The contacts make and break several times in a few milliseconds before settling.
-        To synchronous logic, each bounce looks like a separate clock edge. The 74HC14 uses hysteresis to ignore the noise and output one clean edge per press.
-        That single component is what made the difference between a state machine that worked and one that jumped unpredictably.
-      </p>
+      <h2>Result</h2>
+      <figure class="project-detail__figure"><video controls preload="metadata"><source src="gearboxv1.mp4" type="video/mp4" />Your browser does not support the video tag.</video><figcaption>Each button press advances the controller by exactly one gear.</figcaption></figure>
+      <p>The shift-up cycle now works repeatedly on the breadboard. The next step is adding a second input and logic for shifting down.</p>
     </section>
-
-    <section class="project-detail__section">
-      <h2>Debugging &amp; Iteration</h2>
-      <ul>
-        <li>I did not know switch bounce was a thing until this project showed me what it looks like in hardware.</li>
-        <li>Cause: the 74LS74 flip-flops treated each micro-bounce as a clock, making the gear state jump unpredictably.</li>
-        <li>Fix: routed the shift input through the 74HC14 Schmitt-trigger inverter to use hysteresis and clean the signal before it reached the flip-flops.</li>
-        <li>Outcome: one physical press now produces one reliable clock command, so transitions are stable and repeatable.</li>
-      </ul>
-      <p>
-        Wiring discipline also matters for synchronous logic: keeping XOR-to-flip-flop connections organized helps preserve clean logic levels
-        during clocked updates on the breadboard.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>Reflection</h2>
-      <p>
-        What I did not expect was how much wiring layout affects behavior on a breadboard. Long runs between the XOR gates and the flip-flop clock pins pick up enough noise to cause phantom transitions.
-        Keeping those connections short and organized was not an aesthetic choice, it was a functional one. I had to break it first to learn that.
-      </p>
-      <p>
-        The next version adds Shift Down, which means working out the down-transition excitation mapping and adding the missing logic to the XOR network. The hardware side is mostly done. The state machine just needs to go both directions.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>Final Result &amp; Validation</h2>
-
-      <figure class="project-detail__figure">
-        <video controls preload="metadata">
-          <source src="gearboxv1.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <figcaption>
-          Final product validation video showing reliable cycling through the four gear states (Shift Up).
-        </figcaption>
-      </figure>
-      <p>
-        The video shows one press, one gear change, every time. That was the goal. Shift Down is next.
-      </p>
-    </section>
-
-    <div class="project-detail__back project-detail__back--bottom">
-      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
-    </div>
+    <div class="project-detail__back project-detail__back--bottom"><a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a></div>
   </main>
-
-  <footer class="footer">
-    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
-  </footer>
-
-  <script src="script.js"></script>
+  <footer class="footer"><p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p></footer><script src="script.js"></script>
 </body>
 </html>

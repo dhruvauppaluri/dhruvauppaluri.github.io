@@ -1,150 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="A test bench that checks whether RC-car steering parts respond quickly enough for real-time correction." />
   <title>Steering-Actuator Latency Test Bench | Dhruva Uppaluri</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
-
-  <header class="header">
-    <a href="index.html#top" class="logo">&lt;/&gt;</a>
-    <nav class="nav">
-      <a href="index.html#about">About</a>
-      <a href="index.html#skills">Skills</a>
-      <a href="index.html#projects">Projects</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
-    <button class="menu-btn" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
-
+  <header class="header"><a href="index.html#top" class="logo">&lt;/&gt;</a><nav class="nav"><a href="index.html#about">About</a><a href="index.html#skills">Skills</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav><button class="menu-btn" aria-label="Toggle menu"><span></span><span></span><span></span></button></header>
   <main class="project-detail">
-    <div class="project-detail__back">
-      <a href="index.html#projects" class="project-link">← Back to Projects</a>
-    </div>
-
+    <div class="project-detail__back"><a href="index.html#projects" class="project-link">← Back to Projects</a></div>
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · Arduino/C++ · Control · Signal Processing</span>
+      <span class="project-detail__meta">2026 · Arduino/C++ · Control Systems · HIL</span>
       <h1 class="project-detail__title">Steering-Actuator Latency Test Bench</h1>
       <p class="project-detail__subtitle">A test bench that checks whether my RC-car steering parts respond quickly enough for real-time correction.</p>
     </header>
-
     <section class="project-detail__section">
-      <h2>Objective</h2>
-      <p>
-        I want to build an F1-style RC car from scratch. Not kit-built, actually designed and assembled.
-        One of the systems I want on it is active stability control, something that detects when the rear is stepping out and corrects before the driver loses it.
-        But before I could think about correction, I needed to know whether the components I had could even keep up with real-time demands. This bench was the first step.
-        It measures the time between a steering input and the moment the gyroscope detects the physical response. If that number stays under 50 ms, the setup is fast enough to build on. If not, I need different hardware. The answer was under 50 ms.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>System architecture</h2>
+      <h2>Overview</h2>
+      <p>I want to build an RC car that can notice a slide and correct its steering. Before designing that controller, I needed to know whether the basic parts could react quickly enough.</p>
       <ul>
-        <li>Reference input: joystick (analog voltage) representing driver or flight-computer intent.</li>
-        <li>Controller: Arduino Uno running C++ firmware for signal mapping, filtering, and telemetry.</li>
-        <li>Plant (actuator): SG90 servo motor representing a steering rack or gimbal.</li>
-        <li>Feedback sensor: MPU6050 MEMS gyroscope measuring yaw rate.</li>
-        <li>Telemetry: high-speed UART (115200 baud) streaming data to a host PC for analysis.</li>
+        <li><strong>My role:</strong> solo hardware, firmware, and data analysis.</li>
+        <li><strong>Parts:</strong> joystick, Arduino Uno, steering servo, and MPU6050 motion sensor.</li>
+        <li><strong>Question:</strong> does real motion begin within 50 milliseconds of a steering command?</li>
+        <li><strong>Answer:</strong> yes—the measured response stayed under that target.</li>
       </ul>
     </section>
-
     <section class="project-detail__section">
-      <h2>Technical implementation</h2>
-      <h3>Hardware integration</h3>
-      <p>
-        The Arduino drives a PWM servo while polling the MPU6050 via I²C at ~50 Hz, forming a synchronous control loop.
-        This lets me log how quickly the actuator and sensor respond to step changes in joystick command.
-      </p>
-
-      <h3>Signal processing (firmware)</h3>
-      <p>
-        A cheap MEMS gyroscope is noisy enough to make latency measurements unreliable if you use the raw data directly. Before I could trust the numbers, I needed to clean the signal without adding delay of its own. In firmware I implemented two things:
-      </p>
-      <ul>
-        <li>Startup calibration: sample the gyro 200 times at rest to estimate and subtract zero-rate bias.</li>
-        <li>Exponential moving average (EMA): low-pass filter with α = 0.2 to smooth high-frequency jitter without adding much latency.</li>
-      </ul>
+      <h2>How it works</h2>
+      <div class="flow-diagram" role="img" aria-label="A joystick command goes to the Arduino and servo, the motion sensor detects the movement, and the computer measures the delay">
+        <div class="flow-step"><span class="flow-step__number">01</span><strong>Move joystick</strong><small>Create a steering command.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">02</span><strong>Arduino commands</strong><small>Convert the input into a servo angle.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">03</span><strong>Servo turns</strong><small>Produce real mechanical movement.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">04</span><strong>Sensor detects</strong><small>The gyroscope measures the response.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">05</span><strong>Computer compares</strong><small>Measure time from command to motion.</small></div>
+      </div>
+      <p class="plain-note"><strong>Hardware-in-the-loop, in plain English:</strong> testing real electronic and mechanical parts while software measures how they behave.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>Figures &amp; data</h2>
-
-      <h3 class="project-detail__figure-title">Figure 1: Telemetry Analysis (Step Response)</h3>
-      <figure class="project-detail__figure">
-        <img src="hil-step-response.png" alt="Telemetry: raw vs filtered gyro step response" />
-        <figcaption>
-          Real-time telemetry comparison. The green line represents the raw, noisy MEMS gyro signal.
-          The orange line represents the output of the custom EMA filter implemented in firmware, showing a clean,
-          usable control signal with minimal added latency.
-        </figcaption>
-      </figure>
-
-      <h3 class="project-detail__figure-title">Figure 2: Hardware Test Bench</h3>
-      <figure class="project-detail__figure">
-        <img src="hil-hardware.png" alt="Latency test rig with Arduino, joystick, servo, and MPU6050 on a breadboard" />
-        <figcaption>
-          The latency test rig featuring the Elegoo Arduino Uno (controller), joystick (input), servo (actuator),
-          and MPU6050 (sensor) wired for I²C and PWM communication.
-        </figcaption>
-      </figure>
+      <h2>Making the data usable</h2>
+      <p>The motion sensor’s raw signal was noisy, so the start of movement was hard to identify. I first measured its resting offset, then used a lightweight moving average to smooth random spikes without hiding the real response.</p>
+      <p>The balance mattered: too much smoothing would make the system look slower than it was, while too little would make noise look like motion.</p>
+      <figure class="project-detail__figure"><img src="hil-step-response.png" alt="Graph comparing raw and filtered motion sensor readings" /><figcaption>The orange line removes most of the noise while still following the real movement closely.</figcaption></figure>
     </section>
-
     <section class="project-detail__section">
-      <h2>Firmware highlight</h2>
-      <p>EMA filter implementation for cleaning up gyro data with minimal latency penalty:</p>
-      <pre class="project-detail__code"><code>// Signal conditioning: reduce MEMS noise without heavy latency
-void processTelemetry() {
-  float rawRate = readGyroDS();
-  // Alpha (0.2) balances latency vs. smoothness
-  filteredRate = (alpha * rawRate) + ((1.0f - alpha) * filteredRate);
-  sendTelemetry(filteredRate);
-}</code></pre>
+      <h2>Test bench</h2>
+      <figure class="project-detail__figure"><img src="hil-hardware.png" alt="Test bench with Arduino, joystick, servo, and motion sensor" /><figcaption>The joystick provides the command, the servo moves, and the sensor records the response.</figcaption></figure>
     </section>
-
     <section class="project-detail__section">
-      <h2>Engineering impact &amp; skills</h2>
-      <p>
-        The part that took the longest to get right was the filter. Getting alpha tuned to 0.2 was not a guess. It came from watching the step response graph and adjusting until the filtered line tracked the raw signal closely without lagging behind it.
-        Too low and the filter added its own delay. Too high and the noise came back. The graph is what finally told me it was working. Seeing the orange line settle into a clean shape while the green line spiked around it was the moment the whole thing clicked.
-      </p>
-      <p>
-        The result was under 50 ms end-to-end. That confirms the setup can keep up with what a real-time correction loop would demand. This project did not correct for anything. It measured whether correction is possible with these components, and confirmed that it is.
-        The next step is closing the loop, feeding gyroscope output back into the steering command so the car responds to what it is actually doing rather than just what the driver is asking for. That is where the F1 car build goes from here. This bench gave me the confidence to keep going.
-      </p>
+      <h2>Result and next step</h2>
+      <p>The measured end-to-end delay was under 50 milliseconds, so these parts are fast enough for the next stage of the RC-car project.</p>
+      <p>This bench does not correct a slide by itself. The next step is closing the loop: using the measured motion to adjust steering automatically while the car is moving.</p>
     </section>
-
-    <section class="project-detail__section">
-      <h2>Final result</h2>
-      <figure class="project-detail__figure">
-        <video controls preload="metadata">
-          <source src="hil-telemetry.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </figure>
-      <p>
-        The video shows the telemetry in real time. Raw gyro data on one line, filtered output on the other, latency confirmed under 50 ms. First step done.
-      </p>
-    </section>
-
-    <div class="project-detail__back project-detail__back--bottom">
-      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
-    </div>
+    <div class="project-detail__back project-detail__back--bottom"><a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a></div>
   </main>
-
-  <footer class="footer">
-    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
-  </footer>
-
-  <script src="script.js"></script>
+  <footer class="footer"><p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p></footer><script src="script.js"></script>
 </body>
 </html>

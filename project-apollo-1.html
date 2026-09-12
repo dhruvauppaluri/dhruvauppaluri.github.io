@@ -1,169 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Apollo 1 is a four-wheel rover whose speed changes with focus measured by an EEG headband." />
   <title>Apollo 1 — EEG Brain-Wave Controlled Rover | Dhruva Uppaluri</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
-
-  <header class="header">
-    <a href="index.html#top" class="logo">&lt;/&gt;</a>
-    <nav class="nav">
-      <a href="index.html#about">About</a>
-      <a href="index.html#skills">Skills</a>
-      <a href="index.html#projects">Projects</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
-    <button class="menu-btn" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
-
+  <header class="header"><a href="index.html#top" class="logo">&lt;/&gt;</a><nav class="nav"><a href="index.html#about">About</a><a href="index.html#skills">Skills</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav><button class="menu-btn" aria-label="Toggle menu"><span></span><span></span><span></span></button></header>
   <main class="project-detail">
-    <div class="project-detail__back">
-      <a href="index.html#projects" class="project-link">← Back to Projects</a>
-    </div>
-
+    <div class="project-detail__back"><a href="index.html#projects" class="project-link">← Back to Projects</a></div>
     <header class="project-detail__header">
-      <span class="project-detail__meta">Jun 2026 · WeaveHacks 4 · EEG · Weave · Redis · Arduino/C++ · Python</span>
+      <span class="project-detail__meta">Jun 2026 · WeaveHacks 4 · EEG · Arduino/C++ · Python</span>
       <h1 class="project-detail__title">Apollo 1 — EEG Brain-Wave Controlled Rover</h1>
-      <p class="project-detail__subtitle">
-        A four-wheel rover whose speed changes with focus measured by an EEG headband.
-      </p>
-      <p class="project-detail__subtitle">
-        <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a>
-      </p>
+      <p class="project-detail__subtitle">A four-wheel rover whose speed changes with focus measured by an EEG headband.</p>
+      <p class="project-detail__subtitle"><a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">View the repository</a></p>
     </header>
-
     <section class="project-detail__section">
-      <h2>Project Overview</h2>
+      <h2>Overview</h2>
+      <p>Our team built Apollo 1 in 24 hours at WeaveHacks. Instead of using a joystick, the rover responds to sustained focus from a Muse S EEG headband.</p>
       <ul>
-        <li>Event: WeaveHacks 4 (24-hour build, June 2026)</li>
-        <li>Role: hardware builder and rover software. Built the 4WD chassis, motor drive, and wiring; refined Arduino firmware, Python daemon, and BLE/USB paths so focus-scaled commands reached the motors reliably</li>
-        <li>Key hardware: Arduino Uno, four-motor H-bridge drive with independent transistor stages, SG90 servo, HC-SR04 ultrasonic, camera for object detection, Muse S EEG headband</li>
-        <li>Stack: multi-agent LLM system traced through Weave (Weights &amp; Biases), Redis streams for live signal ingestion, Python host daemon, Arduino firmware</li>
-        <li>Repository: <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a></li>
+        <li><strong>My role:</strong> built the rover, motor electronics, firmware, and computer-to-rover connection.</li>
+        <li><strong>Team work:</strong> teammates built the EEG processing and AI-agent system.</li>
+        <li><strong>Hardware:</strong> Arduino Uno, four motors, distance sensor, camera, and Muse S headband.</li>
+        <li><strong>Purpose:</strong> explore hands-free control that could support people who cannot easily use conventional input devices.</li>
       </ul>
     </section>
-
     <section class="project-detail__section">
-      <h2>Objective</h2>
-      <p>
-        The goal at WeaveHacks was to close the loop from thought to motion: not a joystick, not a keyboard, but sustained focus on a Muse S headband translated into real-time drive commands on a rover we built from scratch in a day.
-        Apollo 1 is that rover: the team’s EEG-to-actuator pipeline intercepts focus levels over Bluetooth, normalizes them against a stored baseline, and maps the result to proportional motor PWM on four independent wheel channels.
-      </p>
-      <p>
-        My part was the rover end of the stack: building the hardware and refining the software that made it move. Not a kit car: a 4WD chassis I wired with per-motor transistor switching, plus firmware and host code I tightened so focus levels from the team pipeline translated into smooth PWM instead of jittery or dropped commands.
-      </p>
+      <h2>How it works</h2>
+      <div class="flow-diagram" role="img" aria-label="The EEG headband measures focus, software turns it into a speed command, and the Arduino drives the rover motors">
+        <div class="flow-step"><span class="flow-step__number">01</span><strong>Measure focus</strong><small>The headband reads patterns in brain activity.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">02</span><strong>Compare</strong><small>Software checks the reading against a personal baseline.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">03</span><strong>Create command</strong><small>More sustained focus becomes more drive power.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">04</span><strong>Send to rover</strong><small>Python passes the command to the Arduino.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">05</span><strong>Move safely</strong><small>Motors respond while sensors watch for obstacles.</small></div>
+      </div>
+      <p class="plain-note"><strong>EEG, in plain English:</strong> a non-invasive way to measure electrical activity at the scalp. It does not read thoughts; this demo uses broad changes associated with focus.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>System architecture</h2>
-      <ul>
-        <li>EEG acquisition: Muse S streams over Bluetooth; focus level (β/α band ratio) is the primary control axis.</li>
-        <li>Signal conditioning: multi-agent pipeline normalizes live EEG against a calibrated baseline, filtering ambient noise to isolate intentional focus shifts.</li>
-        <li>Edge orchestration: Weave traces the neural → agent → command path; Redis handles stream ingestion and pub/sub between the brain-state engine and actuators.</li>
-        <li>Motor layer: Arduino firmware receives focus-scaled commands and drives four wheels through independent transistor switching circuits, with PWM duty proportional to measured focus.</li>
-        <li>Perception: servo-mounted ultrasonic ranging plus a camera-based object detection pipeline, so the rover can locate targets and execute behaviors (circling, avoiding, or approaching) when focus is held long enough.</li>
-        <li>Fallback control: USB serial and BLE paths in the firmware repo for bench bring-up when the EEG link or power budget was fighting us.</li>
-      </ul>
+      <h2>What I built</h2>
+      <p>I assembled the chassis, wired four independent motor stages, mounted the camera and distance sensor, and refined the Arduino and Python software that carried commands to the wheels. I also made the outputs stay off during startup so the rover would not jump when it reset.</p>
+      <p>The separate <a href="project-axiom-neural-rlhf.html" class="project-link">Axiom project</a> explains the team’s EEG and AI work. My responsibility was the last mile: making a valid focus update become predictable physical motion.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>Implementation</h2>
-
-      <h3>Robot hardware</h3>
-      <p>
-        I built the 4WD platform during the hackathon: chassis, motor mounts, drive electronics, and the physical integration for the servo, ultrasonic sensor, and camera. Each motor got its own transistor switching stage so speed could be modulated independently and proportionally to focus level rather than treated as a single on/off bus.
-        Motor outputs are forced LOW at boot so the rover does not jerk on reset; that mattered when I was probing stages that were getting hot enough to smell wrong.
-      </p>
-
-      <h3>Brain signal to motor command</h3>
-      <p>
-        The team’s pipeline runs focus level from the headband through baseline normalization and into motor commands on the Arduino. I refined that handoff on the rover side: parsing, timing, and PWM mapping in <code>robot_car.ino</code> so higher sustained focus raised duty cycle on the drive channels and a drop below threshold meant coast or stop.
-        Separating “user is actually focusing” from ambient EEG noise was a team problem; my job was making sure the wheels responded cleanly when those commands arrived, not a frame late or on the wrong channel.
-      </p>
-
-      <h3>Perception and behaviors</h3>
-      <p>
-        A servo sweeps an ultrasonic sensor for ranging; a camera feed feeds an object detection pipeline on the host. With focus held, the rover can circle a detected target, back off, or close distance. These are behaviors gated on sustained neurological intent rather than a button press.
-      </p>
-
-      <h3>Host software</h3>
-      <p>
-        The open repo carries the Arduino sketches, a Python daemon for BLE/USB bridging, and bench tools like <code>probe.ino</code>. I refined <code>control/rc_daemon.py</code> and the rover firmware during the hackathon: reconnect logic when BLE dropped, serial command handling, and the paths that fed focus-scaled drive into the Uno. Weave instrumentation on the agent side helped the team see latency; my edits were about the last mile from host to wheel.
-      </p>
+      <h2>Main challenge</h2>
+      <p>The rover sometimes barely moved even though the software commands looked correct. Measuring the power line showed that disposable 9 V batteries dropped too much voltage when several motors started together. The problem looked like software, but it was electrical.</p>
+      <p>I also used simple one-motor tests to separate wiring faults from communication faults. That made debugging faster because I could prove each layer worked before reconnecting the full system.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>My contribution</h2>
-      <p>
-        I built the rover hardware and owned the software that talked to it. That meant chassis and transistor drive stages in the same 24 hours as tightening <code>robot_car.ino</code>, the Python daemon, and bring-up sketches so the demo did not die on a parsing bug or a stale Bluetooth pairing.
-      </p>
-      <p>
-        I did not write the full multi-agent EEG stack solo. Teammates handled BrainFlow, rewards, and the agent arena on <a href="project-axiom-neural-rlhf.html" class="project-link">Axiom</a>. What I refined was everything between “focus level updated” and “motor pin toggled”: command format, boot-safe outputs, daemon reconnects, and <code>probe.ino</code> when copper was lying.
-      </p>
-
-    <section class="project-detail__section">
-      <h2>Debugging &amp; iteration</h2>
-
-      <h3>Power: the main bottleneck</h3>
-      <p>
-        The biggest systemic issue was not the EEG pipeline or the motor code. It was sustaining power. Four motors, a servo, radio modules, and the logic overhead of proportional drive pull hard on the supply. We started on 9 V batteries because that is what we had on the bench at 2 AM.
-      </p>
-      <p>
-        They were not enough. Under load, rail voltage sagged enough that PWM looked fine in software while wheels barely turned, and the Arduino would brown out when all four channels demanded current at once. I spent a long stretch with a DMM probing the supply at the battery terminals, at the regulator input, and at each motor node, watching voltage collapse under drive versus at idle.
-      </p>
-      <p>
-        That tracing made the failure mode obvious: high internal resistance and poor conversion efficiency on disposable 9 V cells, not a mystery bug in the focus mapper. The fix I am planning is a LiPo pack with proper current delivery and a regulator sized for simultaneous motor load: better conversion, lower sag, and enough headroom to run the perception stack without the rail dipping every time focus ramps speed.
-      </p>
-
-      <h3>Motor wiring and bring-up</h3>
-      <ul>
-        <li>Cause: a bad solder joint or wrong transistor leg looks like “firmware is broken” until you read the node and see 0 V when you expected 5 V.</li>
-        <li>Fix: live voltage commands via <code>probe.ino</code>, per-pin drive tests, and a SCAN mode that walks motor outputs while reporting analog readings.</li>
-        <li>Outcome: separate “is the circuit alive” from “is the protocol wrong” before chasing EEG or agent logs.</li>
-      </ul>
+      <h2>Result and next step</h2>
+      <p>We completed a working hackathon demo in which focus data controlled the rover. The next hardware version needs a battery designed for higher current so all motors and sensors can run reliably at the same time.</p>
+      <p>Source code and setup notes are available in the <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">project repository</a>.</p>
     </section>
-
-    <section class="project-detail__section">
-      <h2>Reflection</h2>
-      <p>
-        Apollo 1 is the rover half of what we brought to WeaveHacks: hardware I built and software I refined so it actually moved when your brain said go, all in twenty-four hours on a table covered in jumper wires. I did not design the whole EEG agent stack alone; I made the platform and the firmware/daemon path trustworthy enough to demo.
-      </p>
-      <p>
-        The part that stuck with me is power engineering showing up late, and how often “software bug” was really sagging rails or a command that never made it past the daemon. LiPo is the next hardware revision, sized from measured stall current; the software side I would harden is the same last-mile path I already spent the sprint refining.
-      </p>
-      <p>
-        Related work from the same 24-hour hackathon (the Neural RLHF agent stack) lives on a separate project page as <a href="project-axiom-neural-rlhf.html" class="project-link">Axiom — Neural RLHF</a>. Same sprint, different slice of the stack.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>Repository</h2>
-      <p>
-        Rover firmware, daemon, and bench tools:
-        <a href="https://github.com/dhruvauppaluri/axiom" target="_blank" rel="noopener noreferrer" class="project-link">github.com/dhruvauppaluri/axiom</a>.
-        Flash <code>firmware/robot_car/robot_car.ino</code>, run <code>control/rc_daemon.py</code>, and use <code>probe/probe.ino</code> when the motors do not move and you need the DMM less often.
-      </p>
-    </section>
-
-    <div class="project-detail__back project-detail__back--bottom">
-      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
-    </div>
+    <div class="project-detail__back project-detail__back--bottom"><a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a></div>
   </main>
-
-  <footer class="footer">
-    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
-  </footer>
-
-  <script src="script.js"></script>
+  <footer class="footer"><p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p></footer><script src="script.js"></script>
 </body>
 </html>

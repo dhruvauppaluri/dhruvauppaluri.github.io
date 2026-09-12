@@ -12,190 +12,69 @@
 </head>
 <body>
   <div class="grid-bg" aria-hidden="true"></div>
-
   <header class="header">
     <a href="index.html#top" class="logo">&lt;/&gt;</a>
-    <nav class="nav">
-      <a href="index.html#about">About</a>
-      <a href="index.html#skills">Skills</a>
-      <a href="index.html#projects">Projects</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
-    <button class="menu-btn" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+    <nav class="nav"><a href="index.html#about">About</a><a href="index.html#skills">Skills</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav>
+    <button class="menu-btn" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   </header>
-
   <main class="project-detail">
-    <div class="project-detail__back">
-      <a href="index.html#projects" class="project-link">← Back to Projects</a>
-    </div>
-
+    <div class="project-detail__back"><a href="index.html#projects" class="project-link">← Back to Projects</a></div>
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · Swift 6 / SwiftUI · TextKit · Yosys · GHDL · Cyclone V</span>
+      <span class="project-detail__meta">2026 · SwiftUI · VHDL/Verilog · FPGA Toolchain</span>
       <h1 class="project-detail__title">FPGA Studio — Native macOS HDL IDE</h1>
-      <p class="project-detail__subtitle">
-        A native Mac app for writing, simulating, and programming FPGA projects without setting up a separate toolchain.
-      </p>
+      <p class="project-detail__subtitle">A native Mac app for writing, simulating, and programming FPGA projects without setting up a separate toolchain.</p>
       <div class="project-detail__actions">
         <a href="https://github.com/dhruvauppaluri/fpga-studio-macos/releases/tag/v2026.09.1" class="btn btn-primary">Download v2026.09.1</a>
         <a href="https://github.com/dhruvauppaluri/fpga-studio-macos" class="btn btn-ghost">View source</a>
       </div>
     </header>
-
     <section class="project-detail__section">
-      <h2>The App</h2>
-      <p>
-        This recording shows the real v1 app running its complete first-project path: edit the C5G Blinky design, check it, simulate it, inspect the generated waveform, build an RBF bitstream, detect the board, and program volatile SRAM.
-      </p>
-      <figure class="project-detail__figure">
-        <video controls playsinline preload="metadata">
-          <source src="fpga-studio-demo.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <figcaption>
-          FPGA Studio v1 running the C5G Blinky workflow. Play, pause, or scrub through the recording.
-        </figcaption>
-      </figure>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>Project Overview</h2>
+      <h2>Overview</h2>
+      <p>FPGA development usually requires several separate programs. FPGA Studio brings the common steps into one Mac app, so a user can move from code to a working circuit board without configuring every tool by hand.</p>
       <ul>
-        <li>Status: independent project, actively developed; v2026.09.1 is available as a DMG pre-release</li>
-        <li>Platform: Apple silicon (M1 or later) on macOS 15 Sequoia or newer</li>
-        <li>Languages: VHDL, Verilog, and SystemVerilog in portable folder-based projects</li>
-        <li>Target board: Terasic Cyclone V GX Starter Kit (C5G), device <code>5CGXFC5C6F27C7</code></li>
-        <li>Flow: Check project → Simulate → Build bitstream → Detect board → Program SRAM</li>
-        <li>Distribution: the release bundles the synthesis, simulation, place-and-route, and programming tools; no Homebrew setup is required</li>
-        <li>Hardware result: the demo’s blinky bitstream is programmed over JTAG into SRAM and drives the board’s green LED</li>
-        <li>Deliberate limits: no mixed-language simulation, no finished RV32I processor, and no claim of Quartus-equivalent hard-block coverage</li>
+        <li><strong>My role:</strong> independent designer and developer.</li>
+        <li><strong>Current release:</strong> a downloadable preview for Apple-silicon Macs.</li>
+        <li><strong>Proven result:</strong> the app builds and programs a blinking-light design on a Terasic C5G board.</li>
+        <li><strong>Built with:</strong> SwiftUI and open-source tools for checking, simulation, building, and programming.</li>
       </ul>
     </section>
-
     <section class="project-detail__section">
-      <h2>Why Build It</h2>
-      <p>
-        I wanted a real FPGA workflow on the machine I already use. The conventional course flow assumes Quartus and ModelSim; on an Apple-silicon Mac that usually means a virtual machine and a separate stack of installers. I also wanted to understand the open-source path end to end—not just click Build in an existing GUI, but design the editor, project format, tool boundary, diagnostics, and programming safeguards around it.
-      </p>
-      <p>
-        FPGA Studio is that native layer. It brings together Yosys, GHDL, nextpnr-mistral / Mistral, Icarus Verilog, Verilator, and openFPGALoader; those backends remain their own open-source projects. My work is the Swift application around them: the project model, TextKit editor, guided workflow, validation, waveform UI, toolchain packaging, and board-specific safety policy.
-      </p>
+      <h2>How it works</h2>
+      <div class="flow-diagram" role="img" aria-label="Code moves through checking, simulation, building, and programming before running on the FPGA board">
+        <div class="flow-step"><span class="flow-step__number">01</span><strong>Write</strong><small>Create the hardware design.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">02</span><strong>Check</strong><small>Catch code and pin errors.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">03</span><strong>Simulate</strong><small>Preview signals before using hardware.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">04</span><strong>Build</strong><small>Turn the design into a board file.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">05</span><strong>Program</strong><small>Load it onto the FPGA board.</small></div>
+      </div>
+      <p class="plain-note"><strong>FPGA, in plain English:</strong> a chip whose internal digital circuit can be rearranged for a specific job. The code describes hardware rather than a normal sequence of software instructions.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>Built to Grow With the User</h2>
-      <p>
-        I wanted FPGA Studio to be an editor that someone new to FPGA development could open and actually follow. Beginner mode starts with Blinky, recommends one next action at a time, explains unfamiliar terms in plain language, and lets the user validate and simulate a design before any board is connected. The tour, progress guide, safe defaults, and Learn Center make the workflow visible instead of assuming prior toolchain knowledge.
-      </p>
-      <p>
-        It is not a separate “beginner version” of the app. Hobbyist and Professional profiles reveal more direct controls, raw diagnostics, build artifacts, backend status, and advanced synthesis detail over the same project format and feature set. As a user gains experience, the guidance can move out of the way without forcing them to leave the editor they learned in.
-      </p>
+      <h2>What I built</h2>
+      <p>I built the editor, project browser, waveform viewer, guided workflow, diagnostics, and board-programming safeguards. Beginner mode recommends the next step and explains unfamiliar terms; experienced users can open the raw logs and build details.</p>
+      <p>The app packages tools such as Yosys, GHDL, and openFPGALoader behind one interface. Those tools do the underlying FPGA work; my contribution is the native application and the reliable workflow that connects them.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>The Flow</h2>
-      <p>
-        A project is an ordinary folder with a versioned <code>fpga-project.json</code> manifest, HDL sources, a QSF constraints file, and optional testbenches. Deterministic build products land under <code>.fpga/build</code>. The format is intentionally inspectable and does not lock the source into the app.
-      </p>
+      <h2>Demo</h2>
+      <p>This recording follows a real project from editing through programming the board.</p>
       <figure class="project-detail__figure">
-        <svg class="fpga-flow" viewBox="0 0 720 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FPGA Studio flow from editor through simulation, synthesis, place-and-route, and SRAM programming">
-          <defs>
-            <marker id="fpga-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M1 1 L9 5 L1 9" fill="none" stroke="#d9823f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </marker>
-          </defs>
-          <g fill="none" stroke="#243a2d" stroke-width="1.4">
-            <rect x="8" y="36" width="118" height="72" rx="3"/>
-            <rect x="154" y="36" width="118" height="72" rx="3"/>
-            <rect x="300" y="36" width="118" height="72" rx="3"/>
-            <rect x="446" y="36" width="118" height="72" rx="3"/>
-            <rect x="592" y="36" width="118" height="72" rx="3"/>
-          </g>
-          <path d="M126 72 H154 M272 72 H300 M418 72 H446 M564 72 H592" fill="none" stroke="#d9823f" stroke-width="1.6" marker-end="url(#fpga-arrow)"/>
-          <g fill="#eef3ee" font-family="Inter, system-ui, sans-serif" font-size="13" text-anchor="middle">
-            <text x="67" y="68">Edit HDL</text>
-            <text x="213" y="68">Simulate</text>
-            <text x="359" y="68">Synthesize</text>
-            <text x="505" y="68">Place &amp; route</text>
-            <text x="651" y="68">Program SRAM</text>
-          </g>
-          <g fill="#b9ccc1" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" text-anchor="middle">
-            <text x="67" y="88">VHDL / Verilog</text>
-            <text x="213" y="88">Icarus / GHDL</text>
-            <text x="359" y="88">Yosys</text>
-            <text x="505" y="88">nextpnr-mistral</text>
-            <text x="651" y="88">openFPGALoader</text>
-          </g>
-          <text x="360" y="20" text-anchor="middle" fill="#d9823f" font-family="JetBrains Mono, ui-monospace, monospace" font-size="11">one native app · bundled toolchain · Terasic C5G</text>
-          <text x="360" y="156" text-anchor="middle" fill="#b9ccc1" font-family="Inter, system-ui, sans-serif" font-size="11">SRAM is volatile. Power cycle reloads whatever is in the board’s configuration flash.</text>
-        </svg>
-        <figcaption>
-          The demonstrated path: edit in FPGA Studio, simulate to a VCD, synthesize and place-and-route for Cyclone V, then program SRAM over the on-board USB-Blaster.
-        </figcaption>
+        <video controls playsinline preload="metadata"><source src="fpga-studio-demo.mp4" type="video/mp4" />Your browser does not support the video tag.</video>
+        <figcaption>FPGA Studio checks, simulates, builds, detects the board, and programs a blinking-light design.</figcaption>
       </figure>
     </section>
-
     <section class="project-detail__section">
-      <h2>What the App Does</h2>
-      <ul>
-        <li><strong>Native workspace.</strong> A welcome window, unified toolbar, project navigator, source tabs, inspector, issues, logs, simulation, waveform, and programmer panels—all built with SwiftUI and AppKit.</li>
-        <li><strong>Editor.</strong> A TextKit source view with line numbers, SF Mono, syntax coloring, search, bracket matching, undo, autosave, and clickable diagnostics.</li>
-        <li><strong>Experience profiles.</strong> Beginner, Hobbyist, and Professional modes tune guidance and technical detail without gating capabilities.</li>
-        <li><strong>Templates.</strong> Blank HDL, C5G Blinky, and an RV32I Lab scaffold. The processor lab supplies interfaces, a board wrapper, ROM image, and directed tests; it intentionally does not contain a finished CPU.</li>
-        <li><strong>Simulation.</strong> Verilog/SystemVerilog through Icarus, VHDL through GHDL, lint through Verilator, and a native VCD waveform viewer. Mixed-language simulation is not in this version.</li>
-        <li><strong>Constraints.</strong> C5G pin assignments are searchable. The checker flags duplicate pins, unknown pins, missing ports, I/O-standard mismatches, and direction errors before you spend a build on them.</li>
-        <li><strong>Build.</strong> Yosys (with the GHDL plugin for VHDL) then nextpnr-mistral. Cyclone V support upstream is experimental; inferred memory and multiply map to logic in the default path. M10K, DSP blocks, LPDDR2, transceivers, and PCIe are outside what I treat as working.</li>
-        <li><strong>Programmer.</strong> Board detection and volatile SRAM programming are the default hardware path. A guarded EPCQ flash flow also exists behind advanced controls, explicit artifact confirmation, and post-write detection, but I do not yet claim that path as hardware-accepted.</li>
-        <li><strong>Managed toolchain.</strong> The release app carries every backend in a signed bootstrap archive, verifies it, and atomically installs it into Application Support on first launch. Installed toolchain versions can be activated again for rollback.</li>
-      </ul>
+      <h2>Main challenge</h2>
+      <p>The hardest part was making several command-line tools feel like one dependable app. I isolated each build, streamed useful progress, supported cancellation, and checked that the selected board and output file matched before allowing a hardware write.</p>
+      <p>I also kept the project folders open and portable. Source files remain ordinary files, so using FPGA Studio does not lock a project into the app.</p>
     </section>
-
     <section class="project-detail__section">
-      <h2>The Hardware Proof</h2>
-      <p>
-        The first design taken through the complete flow is Blinky: a counter clocked by <code>CLOCK_50_B5B</code> drives <code>LEDG[0]</code> on PIN_L7. After programming SRAM, the green LED above the push-buttons toggles. That small result checks the whole vertical slice—the editor state, source and pin validation, simulation, RBF generation, USB-Blaster connection, and physical I/O assignment.
-      </p>
-      <p>
-        Two board details matter more than they look. The RUN/PROG slide switch (SW11) has to be in RUN for JTAG SRAM programming. The tiny LED next to the USB-Blaster shows programmer activity; the design output to watch is LEDG.
-      </p>
+      <h2>Current status</h2>
+      <p>The released preview completes the full demonstrated workflow on a Terasic C5G board. It is not yet a replacement for every feature in Intel Quartus: advanced memory, signal-processing, and permanent-flash paths still need more hardware testing.</p>
+      <p>Next I am improving the guided labs, finishing permanent-flash validation, and preparing a smoother signed release.</p>
     </section>
-
-    <section class="project-detail__section">
-      <h2>Engineering the Boundary</h2>
-      <p>
-        The UI is SwiftUI, while the source editor is an AppKit/TextKit component. The build pipeline lives in a separate Swift package and launches tools with argument arrays rather than interpolated shell commands. It sanitizes child-process environments, streams logs, supports cancellation, and applies a per-project build-directory lock so concurrent builds cannot clobber each other.
-      </p>
-      <p>
-        Hardware writes are treated as a separate safety boundary. Before programming, the app checks the board profile, JTAG identity, artifact device, build fingerprint, timestamp, size, and digest. Persistent flash adds an explicit acknowledgement plus sleep and app-termination protection during the non-cancellable write.
-      </p>
-      <p>
-        Tests cover manifest round trips, safe paths, QSF and port validation, diagnostics, VCD parsing, template integrity, shell-injection resistance, real Icarus simulation, and RV32I scaffold compilation. Release packaging also smoke-tests the bundled tools in an isolated prefix without Homebrew on the path.
-      </p>
-    </section>
-
-    <section class="project-detail__section">
-      <h2>Current Status &amp; Limits</h2>
-      <p>
-        The v2026.09.1 pre-release is usable for the C5G SRAM loop shown above, and the software build, simulation, and packaging paths are tested on arm64 macOS. Cyclone V place-and-route remains experimental upstream. Advanced hard blocks—including M10K memory, DSPs, LPDDR2, transceivers, PCIe, and advanced PLLs—are outside the validated default path.
-      </p>
-      <p>
-        The guarded persistent-flash path is implemented but still awaiting hardware acceptance, and the RV32I template is a lab scaffold rather than a completed processor. I am not presenting FPGA Studio as a drop-in replacement for Quartus. The current DMG is ad-hoc signed, so Gatekeeper requires a one-time right-click Open; notarized distribution is still ahead.
-      </p>
-      <p>
-        Next I am tightening the C5G labs, completing flash acceptance on the target board, and hardening distribution. Support for more devices comes after the first board’s workflow is repeatable.
-      </p>
-    </section>
-
-    <div class="project-detail__back project-detail__back--bottom">
-      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
-    </div>
+    <div class="project-detail__back project-detail__back--bottom"><a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a></div>
   </main>
-
-  <footer class="footer">
-    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
-  </footer>
-
+  <footer class="footer"><p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p></footer>
   <script src="script.js"></script>
 </body>
 </html>
