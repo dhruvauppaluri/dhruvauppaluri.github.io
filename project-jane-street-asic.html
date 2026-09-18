@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A cycle-accurate protocol emulator ASIC project built by Dhruva Uppaluri and Anishkumar Senthil in response to Jane Street's competition." />
-  <title>Jane Street Protocol Emulator ASIC | Dhruva Uppaluri</title>
+  <meta name="description" content="A modular FPGA system combining a cycle-accurate protocol processor, a configurable AI accelerator, and a closed-loop hardware optimizer." />
+  <title>Jane Street ASIC &amp; Malleable FPGA AI System | Dhruva Uppaluri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -20,9 +20,9 @@
   <main class="project-detail">
     <div class="project-detail__back"><a href="index.html#projects" class="project-link">← Back to Projects</a></div>
     <header class="project-detail__header">
-      <span class="project-detail__meta">2026 · In Progress · SystemVerilog · RTL Verification · ASIC/FPGA</span>
-      <h1 class="project-detail__title">Jane Street Protocol Emulator ASIC</h1>
-      <p class="project-detail__subtitle">A programmable hardware engine for reproducing UART, SPI, I²C, and other digital protocols with exact cycle timing.</p>
+      <span class="project-detail__meta">2026 · In Progress · SystemVerilog · FPGA/ASIC · AI Acceleration</span>
+      <h1 class="project-detail__title">Jane Street ASIC &amp; Malleable FPGA AI System</h1>
+      <p class="project-detail__subtitle">A modular FPGA architecture that combines a deterministic protocol processor with a configurable neural-network accelerator—and eventually adapts that hardware to each AI model automatically.</p>
       <div class="project-detail__actions">
         <a href="https://github.com/dhruvauppaluri/Dhruva-Uppaluri-JaneStreetASIC" class="btn btn-primary">View source</a>
         <a href="https://blog.janestreet.com/protocol-emulator-asic-competition/" class="btn btn-ghost">Competition brief</a>
@@ -31,25 +31,30 @@
 
     <section class="project-detail__section">
       <h2>Overview</h2>
-      <p>We are building an open-source, cycle-accurate protocol emulator in response to Jane Street’s protocol emulator ASIC competition. The target is a small programmable processor that can read pins, write pins, and wait an exact number of clock cycles, allowing several protocols to run on the same hardware engine.</p>
+      <p>The project began with a protocol-emulator processor in response to Jane Street’s ASIC competition and is growing into a broader FPGA research system. One modular processor handles control, communication, and deterministic timing; a separate accelerator performs neural-network computation.</p>
       <ul>
         <li><strong>Builders:</strong> Dhruva Uppaluri and Anishkumar Senthil.</li>
-        <li><strong>Current milestone:</strong> verified programmable timing and a fixed 1 Mbit/s UART transmitter.</li>
+        <li><strong>Current milestone:</strong> complete the first <code>SET</code>/<code>WAIT</code>/<code>HALT</code> protocol processor.</li>
         <li><strong>Verification:</strong> self-checking simulations run locally and in GitHub Actions.</li>
-        <li><strong>Hardware result:</strong> both completed RTL blocks fit and close timing at 100 MHz on a Cyclone V FPGA.</li>
+        <li><strong>Research goal:</strong> automatically select an efficient accelerator configuration for an AI model and a target FPGA.</li>
       </ul>
+      <p class="plain-note"><strong>Research question:</strong> can an FPGA act as a malleable AI compute platform whose architecture is adapted to the workload instead of building one fixed accelerator for one model?</p>
       <p class="plain-note"><strong>Independent project:</strong> this work responds to the public competition brief and is not affiliated with or endorsed by Jane Street.</p>
     </section>
 
     <section class="project-detail__section">
-      <h2>How the finished engine will work</h2>
-      <div class="flow-diagram" role="img" aria-label="A host loads protocol instructions, the engine decodes them, waits or samples inputs with cycle accuracy, drives output pins, and repeats">
-        <div class="flow-step"><span class="flow-step__number">01</span><strong>Load</strong><small>A host writes a protocol program into instruction memory.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
-        <div class="flow-step"><span class="flow-step__number">02</span><strong>Decode</strong><small>The engine reads each instruction and chooses an operation.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
-        <div class="flow-step"><span class="flow-step__number">03</span><strong>Time</strong><small>A cycle counter creates deterministic waits and edges.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
-        <div class="flow-step"><span class="flow-step__number">04</span><strong>Interact</strong><small>The design samples input pins or drives output pins.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
-        <div class="flow-step"><span class="flow-step__number">05</span><strong>Repeat</strong><small>Branches and the program counter continue the protocol.</small></div>
-      </div>
+      <h2>Target architecture</h2>
+      <p>The processor and accelerator remain separate, independently testable blocks connected by a small internal bus. The processor coordinates data and peripherals; the accelerator stays outside the processor datapath and concentrates on multiply-accumulate workloads.</p>
+      <table class="project-detail__table">
+        <thead><tr><th>Subsystem</th><th>Responsibility</th><th>Planned structure</th></tr></thead>
+        <tbody>
+          <tr><td>Protocol processor</td><td>Control, exact timing, communication, and data movement</td><td>Program counter, instruction memory, decoder, registers, and timer</td></tr>
+          <tr><td>Protocol I/O</td><td>Communicate with external hardware</td><td>Programmable UART, SPI, I²C, and GPIO behavior</td></tr>
+          <tr><td>AI accelerator</td><td>Execute expensive neural-network operations</td><td>MAC array, weight and activation buffers, configurable datapath, and controller</td></tr>
+          <tr><td>Software optimizer</td><td>Match hardware to the model and available FPGA resources</td><td>Model analyzer, configuration search, build automation, and measured feedback</td></tr>
+        </tbody>
+      </table>
+      <p>The processor will eventually access the accelerator through registers such as control, input, weight, status, and result. A normal transaction is: supply data, issue <code>START</code>, wait for <code>DONE</code>, then read the result.</p>
     </section>
 
     <section class="project-detail__section">
@@ -58,6 +63,8 @@
       <p>The pin generator accepts a runtime timing value, toggles after the requested number of enabled clock edges, and preserves its count while paused. Its testbench checks five-cycle and three-cycle timing, a four-clock pause followed by exact continuation, and a safe idle-low output when the timing value is zero.</p>
       <h3>UART reference implementation</h3>
       <p>The UART transmitter sends 8N1 frames least-significant bit first. At a 100 MHz input clock it uses 100 clocks per bit for a 1 Mbit/s data rate, latches each byte at the start, keeps <code>busy</code> asserted through the frame, and pulses <code>done</code> afterward. The self-check verifies complete frames for <code>0x55</code> and <code>0xA3</code>.</p>
+      <h3>First instruction ROM</h3>
+      <p>A verified 16-bit program ROM now encodes the first <code>SET</code>, <code>WAIT</code>, and <code>HALT</code> sequence. The next integration step is to connect it to a program counter, decoder, exact-cycle wait timer, GPIO register, and persistent halt state.</p>
     </section>
 
     <section class="project-detail__section">
@@ -76,15 +83,35 @@
     </section>
 
     <section class="project-detail__section">
-      <h2>Main challenge</h2>
-      <p>A protocol emulator must be flexible without sacrificing deterministic timing. A conventional processor can vary in how long an operation takes, while this engine must drive or sample a pin on a precisely defined clock edge. That makes the timer, instruction format, pause behavior, and invalid inputs part of the hardware contract.</p>
-      <p>We are handling that risk by verifying small blocks independently before connecting them. Each milestone has a self-checking testbench, and continuous integration reruns those tests on every push.</p>
+      <h2>Development plan</h2>
+      <table class="project-detail__table">
+        <thead><tr><th>Phase</th><th>Goal</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>1 — Protocol foundation</td><td>Execute <code>SET</code>, <code>WAIT</code>, and <code>HALT</code> with deterministic timing; reproduce UART as a program; then add input sampling, branches, SPI, and I²C.</td><td>In progress</td></tr>
+          <tr><td>2 — AI baseline</td><td>Build a signed INT8 MAC, then a dot product, neuron, layer, and tiny network. Compare FPGA inference against a Python reference.</td><td>Planned</td></tr>
+          <tr><td>3 — Configurable accelerator</td><td>Vary MAC parallelism, precision, buffers, vector dimensions, memory organization, tiling, and dataflow.</td><td>Planned</td></tr>
+          <tr><td>4 — Model analyzer</td><td>Extract layer shapes, operations, memory needs, tensor dimensions, and precision requirements while tracking FPGA resource limits.</td><td>Planned</td></tr>
+          <tr><td>5 — Optimization loop</td><td>Generate candidates, build them, benchmark the FPGA, and feed measured latency, throughput, resource use, clock speed, and accuracy back into the search.</td><td>Long term</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section class="project-detail__section">
-      <h2>Current status and next steps</h2>
-      <p>The timing foundation and UART reference block are verified. The next major step is the programmable execution engine: define the first <code>SET</code>, <code>WAIT</code>, and <code>HALT</code> instructions, then connect instruction memory, a program counter, and a decoder.</p>
-      <p>After UART can run as a program, the roadmap adds pin sampling and conditional branches, demonstrates SPI and I²C on the same engine, and ports the design to the Tiny Tapeout IHP 130 nm CMOS flow.</p>
+      <h2>Closed-loop vision</h2>
+      <div class="flow-diagram" role="img" aria-label="An AI model is analyzed, converted into a hardware configuration, built on the FPGA, benchmarked, and used to improve the optimizer">
+        <div class="flow-step"><span class="flow-step__number">01</span><strong>Analyze model</strong><small>Extract compute, memory, shape, and precision needs.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">02</span><strong>Choose hardware</strong><small>Search accelerator configurations within FPGA limits.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">03</span><strong>Build and run</strong><small>Configure the FPGA and execute real inference.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">04</span><strong>Measure</strong><small>Collect speed, resources, clock rate, power, and accuracy.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">05</span><strong>Adapt</strong><small>Feed hardware results back into the next search.</small></div>
+      </div>
+      <p>The first versions will choose among configurable accelerator parameters. More substantial FPGA reconfiguration is a later research step, only after the baseline accelerator and optimizer work reliably.</p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Current focus</h2>
+      <p>The immediate priority remains the protocol processor—not the AI hardware. The timing foundation, fixed UART reference, and first instruction ROM are verified. Next comes the integrated processor, followed by a UART program that must match the fixed transmitter cycle for cycle.</p>
+      <p>Each major block will be developed as a small, measurable milestone with RTL, a self-checking testbench, simulation, synthesis, resource utilization, and timing results before the system grows more complex.</p>
     </section>
 
     <div class="project-detail__back project-detail__back--bottom"><a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a></div>
