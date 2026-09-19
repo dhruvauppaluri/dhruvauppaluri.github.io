@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Malleable FPGA AI is a hardware/software research project building a verified INT8 inference foundation that can adapt its datapath and eventually its FPGA fabric to each model." />
+  <title>Malleable FPGA AI Platform | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html#top" class="logo">&lt;/&gt;</a>
+    <nav class="nav">
+      <a href="index.html#about">About</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="project-detail">
+    <div class="project-detail__back">
+      <a href="index.html#projects" class="project-link">← Back to Projects</a>
+    </div>
+
+    <header class="project-detail__header">
+      <span class="project-detail__meta">2026 · Research in Progress · SystemVerilog · Python · Cyclone V</span>
+      <h1 class="project-detail__title">Malleable FPGA AI Platform</h1>
+      <p class="project-detail__subtitle">
+        A hardware/software research project asking whether an FPGA accelerator can adapt to the neural network it is running, instead of forcing every model through one permanently fixed datapath.
+      </p>
+      <div class="project-detail__actions">
+        <a href="https://github.com/dhruvauppaluri/MalleableAI-FPGA" class="btn btn-primary">View source</a>
+        <a href="project-jane-street-asic.html" class="btn btn-ghost">View ASIC project</a>
+      </div>
+    </header>
+
+    <section class="project-detail__section">
+      <h2>Project Overview</h2>
+      <ul>
+        <li>Role: solo research and implementation project</li>
+        <li>Current hardware: a signed INT8 multiply-accumulate unit and a four-lane parallel dot-product engine with INT32 accumulation</li>
+        <li>Current software: a bit-accurate Python reference, JSON model descriptor, and resource-aware model analyzer</li>
+        <li>Verification: 10,000 randomized MAC cases and 2,500 randomized dot-product cases match the Python model</li>
+        <li>Target: begin on a Cyclone V FPGA, then grow from parameterized RTL toward model-selected hardware personalities and partial reconfiguration</li>
+      </ul>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>The Research Question</h2>
+      <p>
+        Neural networks vary widely. One model may be limited by matrix multiplication, another by on-chip memory, and another by the cost of moving tensors to external memory. A fixed accelerator chooses one compromise before it sees the workload. This project explores a different path: inspect the model first, estimate its compute and memory shape, then choose or generate an accelerator organization that fits it better.
+      </p>
+      <p>
+        “Malleable” has several levels. The near-term version is parameterized RTL compiled for different lane counts and buffer sizes. A later version can select between complete prebuilt FPGA images. The long-term research goal is a fixed control shell with a partially reconfigurable accelerator region that changes without rebuilding or replacing the whole system.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>What Works Today</h2>
+      <p>
+        The project starts at the arithmetic contract, not at a large demo. The MAC accepts signed 8-bit activations and weights, produces a signed 16-bit product, and accumulates into a signed 32-bit value. It also reports signed overflow explicitly. Four MAC lanes form the first parallel dot-product unit.
+      </p>
+      <pre class="project-detail__code"><code>acc_next = acc + (signed_int8_activation × signed_int8_weight)
+
+4 lanes/cycle ──► lane products ──► signed reduction ──► INT32 accumulator</code></pre>
+      <p>
+        Self-checking SystemVerilog tests and a bit-accurate Python model share the same numerical rules, including wrapping and overflow behavior. GitHub Actions runs the RTL simulations, Python tests, and model-analyzer checks on every change.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Hardware/Software Co-Design</h2>
+      <pre class="project-detail__code"><code>model descriptor ──► Python analyzer ──► resource / traffic estimate
+                                               │
+                                               ▼
+host + external memory ──► tiled buffers ──► MAC lanes
+                                               │
+                                               ▼
+                              INT32 accumulation, bias,
+                              requantization, ReLU ──► INT8 output</code></pre>
+      <p>
+        The model descriptor records layer sizes, tensor shapes, and numeric format. The analyzer estimates operations, parameter storage, activation storage, and the pressure each layer places on compute lanes and memory. That software layer is important because changing hardware only helps when the system can explain which configuration a model needs and why.
+      </p>
+      <p>
+        The first complete inference target is a tiny dense network. Its layers will be broken into tiles, accumulated across multiple cycles, then passed through bias addition, requantization, and ReLU. That end-to-end path is the next milestone; it is not presented as complete yet.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Memory Strategy</h2>
+      <p>
+        More DRAM does not automatically make inference faster. The important question is how much data can stay close to the MAC lanes and how efficiently the design reuses it. Small working tiles belong in FPGA block RAM; larger weights and activations can live in the board's external memory and move through explicit load/compute/store stages.
+      </p>
+      <p>
+        Desktop DDR4 DIMMs would remain host memory rather than connecting directly to a typical Cyclone V board. The host can preprocess models and stream tensors, while the board uses its own supported memory interface. This keeps the early architecture realistic and makes bandwidth a measured design constraint instead of an assumption.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Path to a Malleable Accelerator</h2>
+      <ol>
+        <li><strong>Verified arithmetic foundation — complete:</strong> signed INT8 MAC, overflow behavior, four-lane dot product, and Python equivalence.</li>
+        <li><strong>Complete one network — next:</strong> tiled dense layers, persistent accumulation, bias, requantization, ReLU, and end-to-end comparison.</li>
+        <li><strong>Scale the datapath:</strong> parameterize lane count, tile shape, buffers, and memory movement; measure throughput and resource use.</li>
+        <li><strong>Close the model-to-hardware loop:</strong> use analyzer output and benchmark feedback to select a hardware personality.</li>
+        <li><strong>Explore partial reconfiguration:</strong> keep a stable shell for host I/O and memory while swapping only the accelerator region from prebuilt partial bitstreams.</li>
+      </ol>
+      <p>
+        Partial reconfiguration would not require a permanent Quartus connection at runtime. Quartus is used ahead of time to build and validate the full and partial bitstreams; deployed control software loads one of those approved images when the workload changes.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Current Limits</h2>
+      <p>
+        The repository includes Cyclone V Quartus project files and a 100 MHz timing constraint, but the design has not yet been fitted and timed in Quartus on the target board. The current evidence is simulation, randomized software equivalence, CI, and portable RTL—not measured FPGA throughput or a demonstrated partially reconfigurable system. Those boundaries are part of the project plan, not hidden behind the long-term pitch.
+      </p>
+    </section>
+
+    <section class="project-detail__section">
+      <h2>Relationship to the ASIC Project</h2>
+      <p>
+        This is separate from the <a href="project-jane-street-asic.html" class="project-link">Jane Street protocol-emulator ASIC</a>. The ASIC is a compact, deterministic protocol processor with fixed fabricated logic. This FPGA project is the larger research track: it can spend more area on neural-network arithmetic, use external memory, measure multiple architectures, and eventually change part of its hardware configuration around a model.
+      </p>
+    </section>
+
+    <div class="project-detail__back project-detail__back--bottom">
+      <a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

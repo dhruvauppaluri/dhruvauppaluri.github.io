@@ -67,9 +67,15 @@
           <span class="recent-work__label">Recent work</span>
           <div class="recent-work-grid">
             <a href="project-jane-street-asic.html" class="recent-work-card">
-              <span class="recent-work-card__meta">2026 · FPGA/ASIC · In progress</span>
-              <h3 class="recent-work-card__title">Jane Street ASIC + FPGA AI</h3>
-              <p class="recent-work-card__desc">A cycle-accurate protocol processor that will control a configurable AI accelerator and measurement-driven hardware optimizer.</p>
+              <span class="recent-work-card__meta">2026 · RTL complete</span>
+              <h3 class="recent-work-card__title">Programmable Protocol Emulator ASIC</h3>
+              <p class="recent-work-card__desc">A loadable 16-instruction processor that expresses UART, SPI, I²C, and future wire protocols as firmware, with a tiny ML-inspired signal classifier alongside it.</p>
+              <span class="recent-work-card__link">View details →</span>
+            </a>
+            <a href="project-malleable-fpga-ai.html" class="recent-work-card">
+              <span class="recent-work-card__meta">2026 · Research in progress</span>
+              <h3 class="recent-work-card__title">Malleable FPGA AI Platform</h3>
+              <p class="recent-work-card__desc">A verified INT8 MAC and four-lane dot product, plus a model analyzer, growing toward an FPGA accelerator that changes its datapath around each model.</p>
               <span class="recent-work-card__link">View details →</span>
             </a>
             <a href="project-fpga-studio.html" class="recent-work-card">
@@ -169,13 +175,25 @@
         <article class="project-card">
           <div class="project-meta">
             <span class="project-year">2026</span>
-            <span class="project-tags">SystemVerilog · FPGA/ASIC · AI Acceleration</span>
+            <span class="project-tags">SystemVerilog · ASIC · Tiny Tapeout · IHP 130 nm · FPGA · Open-source RTL</span>
           </div>
-          <h3 class="project-title">Jane Street ASIC &amp; Malleable FPGA AI System (In Progress)</h3>
+          <h3 class="project-title">Programmable Protocol Emulator ASIC — Jane Street Challenge</h3>
           <p class="project-desc">
-            A modular FPGA system that pairs a cycle-accurate protocol processor with a configurable AI accelerator. The long-term goal is to automatically adapt the hardware to each model using real FPGA measurements.
+            Instead of hard-wiring separate UART, SPI, and I²C peripherals, I built a small processor that executes protocol firmware with deterministic pin timing. The current RTL has a serially loadable 32-word program memory, four registers, eight bidirectional pins, a 16-instruction ISA, and a tiny programmable classifier for signal activity. The full regression, lint, and generic synthesis pass; physical tapeout sign-off is deliberately a later milestone.
           </p>
           <a href="project-jane-street-asic.html" class="project-link">View details →</a>
+        </article>
+
+        <article class="project-card">
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-tags">FPGA · INT8 Inference · RTL · Hardware/Software Co-design · Partial Reconfiguration</span>
+          </div>
+          <h3 class="project-title">Malleable FPGA AI Platform (Research in Progress)</h3>
+          <p class="project-desc">
+            A separate research track asking whether an FPGA accelerator can adapt itself to the model instead of forcing every model through one fixed datapath. The signed INT8 MAC and four-lane dot product are already bit-exact against Python across randomized tests. Next come tiled layer accumulation, bias, requantization, ReLU, and a complete tiny network; the longer path adds hardware personalities, benchmarking feedback, and eventually a fixed shell with a partially reconfigurable accelerator region.
+          </p>
+          <a href="project-malleable-fpga-ai.html" class="project-link">View details →</a>
         </article>
 
         <article class="project-card">
