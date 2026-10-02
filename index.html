@@ -73,9 +73,9 @@
               <span class="recent-work-card__link">View details →</span>
             </a>
             <a href="project-malleable-fpga-ai.html" class="recent-work-card">
-              <span class="recent-work-card__meta">2026 · Research in progress</span>
+              <span class="recent-work-card__meta">2026 · Stage 1 RTL MVP</span>
               <h3 class="recent-work-card__title">Malleable FPGA AI Platform</h3>
-              <p class="recent-work-card__desc">A verified INT8 MAC and four-lane dot product, plus a model analyzer, growing toward an FPGA accelerator that changes its datapath around each model.</p>
+              <p class="recent-work-card__desc">A complete INT8 dense-network accelerator in SystemVerilog—MAC lanes through ReLU, four-layer top with ping-pong buffers—verified in sim, lint, and synthesis while the golden model and host toolchain come next.</p>
               <span class="recent-work-card__link">View details →</span>
             </a>
             <a href="project-fpga-studio.html" class="recent-work-card">
@@ -189,9 +189,9 @@
             <span class="project-year">2026</span>
             <span class="project-tags">FPGA · INT8 Inference · RTL · Hardware/Software Co-design · Partial Reconfiguration</span>
           </div>
-          <h3 class="project-title">Malleable FPGA AI Platform (Research in Progress)</h3>
+          <h3 class="project-title">Malleable FPGA AI Platform (Stage 1 RTL MVP)</h3>
           <p class="project-desc">
-            A separate research track asking whether an FPGA accelerator can adapt itself to the model instead of forcing every model through one fixed datapath. The signed INT8 MAC and four-lane dot product are already bit-exact against Python across randomized tests. Next come tiled layer accumulation, bias, requantization, ReLU, and a complete tiny network; the longer path adds hardware personalities, benchmarking feedback, and eventually a fixed shell with a partially reconfigurable accelerator region.
+            A model-adaptive FPGA inference research track: inspect the network, pick a hardware personality, and run INT8 inference on the device. RTL now covers tiled MAC lanes, bias, requantization, ReLU, and an autonomous four-layer top (7→5→3 networks in self-checking sim), with Verilator lint and Yosys synthesis in CI. The bit-accurate golden model, descriptor export, and configuration analyzer are the next software milestones; board Quartus results and optional GPU/hybrid stages follow the three-stage roadmap in the repository.
           </p>
           <a href="project-malleable-fpga-ai.html" class="project-link">View details →</a>
         </article>
