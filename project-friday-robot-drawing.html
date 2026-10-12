@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Say “Friday, draw a smiley face” and a low-cost robot arm draws it, then learns from your spoken feedback. Hackathon project with friction modelled from servo data." />
+  <title>Friday — Voice-Controlled Robot Drawing Arm | Dhruva Uppaluri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <header class="header"><a href="index.html#top" class="logo">&lt;/&gt;</a><nav class="nav"><a href="index.html#about">About</a><a href="index.html#skills">Skills</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav><button class="menu-btn" aria-label="Toggle menu"><span></span><span></span><span></span></button></header>
+  <main class="project-detail">
+    <div class="project-detail__back"><a href="index.html#projects" class="project-link">← Back to Projects</a></div>
+    <header class="project-detail__header">
+      <span class="project-detail__meta">Oct 2026 · UCSC AI Hackathon · SO-101 · ElevenLabs · AMD · MuJoCo</span>
+      <h1 class="project-detail__title">Friday — Voice-Controlled Robot Drawing Arm</h1>
+      <p class="project-detail__subtitle">A hackathon project where you say “Friday, draw a smiley face” and a low-cost robot arm draws it, asks how it looked, and adjusts. We also estimated pen friction from servo data instead of force sensors.</p>
+      <p class="project-detail__subtitle"><a href="https://github.com/dhruvauppaluri/UCSCA-AI-HACKS-Porter-Tech" target="_blank" rel="noopener noreferrer" class="project-link">View the repository</a> · <a href="https://devpost.com/software/amdrobotdraweraimodel" target="_blank" rel="noopener noreferrer" class="project-link">Devpost submission</a></p>
+    </header>
+    <section class="project-detail__section">
+      <h2>Overview</h2>
+      <p>The standard SO-101 demo picks up a cube, but it is hard to tell whether the robot improved. A drawing shows every error, and a person can describe it in plain words: “the eyes are too close.” We built a voice agent, named Friday, around that idea.</p>
+      <ul>
+        <li><strong>My role:</strong> team member on a four-person hackathon build (Dhruva Uppaluri, Shubh Mehta, Harsh Gupta, Rishi Chandrasekaran).</li>
+        <li><strong>Hardware:</strong> leader/follower SO-101 arm pair with a pen on the follower, driven by an AMD Ryzen AI MAX+ 395 station.</li>
+        <li><strong>Software:</strong> LeRobot, Python/NumPy, MuJoCo, and an ElevenLabs voice agent.</li>
+        <li><strong>Status:</strong> the live voice loop ran end to end once; repeatability is untested.</li>
+      </ul>
+    </section>
+    <section class="project-detail__section">
+      <h2>How it works</h2>
+      <div class="flow-diagram" role="img" aria-label="A spoken request goes to a voice agent, over SSH to the controller, to the arm, which draws, and feedback is saved to adjust the next drawing">
+        <div class="flow-step"><span class="flow-step__number">01</span><strong>Speak</strong><small>“Friday, draw a smiley face.”</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">02</span><strong>Voice agent</strong><small>ElevenLabs picks one of five tools.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">03</span><strong>Controller</strong><small>Commands travel over SSH to the AMD station.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">04</span><strong>Arm draws</strong><small>Pen-tip paths become joint commands.</small></div><span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-step"><span class="flow-step__number">05</span><strong>Feedback</strong><small>A yes saves +1; a no proposes a bounded fix.</small></div>
+      </div>
+    </section>
+    <section class="project-detail__section">
+      <h2>What we built</h2>
+      <p>We teleoperated shapes with the leader arm and logged commands and positions at about 30 Hz. To turn joint angles into a pen position, we touched one dot from six arm poses and solved a least-squares problem; it fit a tip offset of about 38.5 mm, close to the measured 1.5 inches. We then captured the corners of a 170 × 235 mm drawing area and solved inverse kinematics so the pen follows each waypoint, with smooth start-and-stop motion.</p>
+      <p>The saved 9 is a teleoperated demonstration that we smoothed into a rounder loop. The smiley is generated from two eye dots and a circular arc, with the pen lifted between strokes.</p>
+      <figure class="project-detail__figure"><img src="friday-prediction-vs-recorded.png" alt="Chart comparing leader commands, model-predicted follower motion, and recorded follower motion for one arm recording" /><figcaption>Leader command, predicted follower, and recorded follower for one recording.</figcaption></figure>
+    </section>
+    <section class="project-detail__section">
+      <h2>Modelling friction without force sensors</h2>
+      <p>We modelled the follower servos as a delayed first-order response, fitting the delay and time constant across seven recordings. A small ridge-regression correction for the pen’s height switches on only after real motion starts. Leaving one run out at a time, the mean height error was 5.93 mm. This predictor is evaluated offline and does not yet correct the arm while drawing.</p>
+      <p>To explore pen drag, we compared the recorded path against the friction-free model and split the residual into a constant part (like Coulomb friction) and a speed-dependent part (like viscous drag). We treat these as hypotheses: without a force sensor or ink measurement, we do not claim a measured friction coefficient.</p>
+    </section>
+    <section class="project-detail__section">
+      <h2>What went wrong</h2>
+      <ul>
+        <li><strong>The arm slumped:</strong> in a hover test the shoulder did not hold its pose and the pen pressed into the paper. We dropped fully autonomous drawing and replayed paths derived from demonstrations.</li>
+        <li><strong>Imprecise geometry:</strong> repeated touches of one dot disagreed by about 10 mm RMS, and the four paper corners failed to close by about 22 mm. We report this as a limit.</li>
+        <li><strong>Two processes, one arm:</strong> duplicate teleoperation processes held the same serial ports, so the controller now allows a single owner.</li>
+        <li><strong>Audio and certificates:</strong> the Bluetooth speaker would not pair with the AMD PC, so the voice client moved to a Mac and only tool calls travel over SSH. A Python certificate error then needed a trusted CA bundle.</li>
+        <li><strong>API credits:</strong> the optional OpenAI step ran out of credits, so it stays a prototype tested only with mocked responses.</li>
+      </ul>
+    </section>
+    <section class="project-detail__section">
+      <h2>Result and next steps</h2>
+      <p>On October 11 we ran the full loop live: a spoken request on a Mac went through ElevenLabs and SSH to the AMD controller and then to the physical arm. The smiley and the 9 both completed, and the operator called the 9 “perfect.” That judgment is by eye in a single session; ink was not measured, and pen height during lifts is modelled, not measured.</p>
+      <p>Next: measure ink with a camera and a known paper scale, apply the response model during playback, add letters, and repeat the demo enough times to show it works reliably.</p>
+    </section>
+    <div class="project-detail__back project-detail__back--bottom"><a href="index.html#projects" class="btn btn-ghost">← Back to Projects</a></div>
+  </main>
+  <footer class="footer"><p>© <span id="year"></span> — <a href="index.html#top" class="contact-link">Portfolio</a></p></footer><script src="script.js"></script>
+</body>
+</html>
